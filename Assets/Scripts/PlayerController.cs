@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 	private RaycastHit Hit;
 	private bool isUIManagerActivated = false;
 	public GameObject UIManagerRef;
+	public GameObject attacker;
 
 	// Start is called before the first frame update
 	void Start()
@@ -38,11 +39,11 @@ public class PlayerController : MonoBehaviour
 		if (clickPosition != Vector3.zero && Hit.collider.CompareTag("Monster"))
 		{
 
-			Vector3 direction = clickPosition - transform.position;
+			Vector3 direction = clickPosition - attacker.transform.position;
 			direction.Normalize();
-			transform.position += direction * movespeed * Time.deltaTime;
+			attacker.transform.position += direction * movespeed * Time.deltaTime;
 
-			if (Vector3.Distance(transform.position, clickPosition) < 1f)
+			if (Vector3.Distance(attacker.transform.position, clickPosition) < 1f)
 			{
 				clickPosition = Vector3.zero;
 				ActivateUIManager();
@@ -60,7 +61,7 @@ public class PlayerController : MonoBehaviour
 			DynamicButtonGenerator DBGScriptRef = UIManagerRef.GetComponent<DynamicButtonGenerator>();
 			DBGScriptRef.targetCharacterGO = Hit.collider.gameObject;
 			Debug.Log(DBGScriptRef.targetCharacterGO);
-			DBGScriptRef.attackerGO = gameObject;
+			DBGScriptRef.attackerGO = attacker.gameObject;
 		}
 	}
 }

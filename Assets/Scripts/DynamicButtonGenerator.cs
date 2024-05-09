@@ -21,6 +21,8 @@ public class DynamicButtonGenerator : MonoBehaviour
 	private AttackType attackTypeChosen;
 
     private GameObject actionPrefab;
+
+    private bool isPlayerTurnOver = false;
     
     // Start is called before the first frame update
     void Start()
@@ -127,11 +129,17 @@ public class DynamicButtonGenerator : MonoBehaviour
 				break;
 		}
         canvas.enabled = false;
+        isPlayerTurnOver = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isPlayerTurnOver)
+        {
+            isPlayerTurnOver = false;
+            gameObject.SetActive(false);
+        }
         
     }
 }
