@@ -1,27 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
 	public Canvas canvas;
-	public GameObject Marker;
+	private GameObject marker;
 	public float movespeed = 5f;
 	private Vector3 clickPosition;
-	private RaycastHit Hit;
+	public RaycastHit Hit;
 	private bool isUIManagerActivated = false;
-	public GameObject UIManagerRef;
+	private GameObject UIManagerRef;
 	public GameObject attacker;
+	private GameObject UIManagerPrefab;
 
+	//public bool isPlayerTurn = false;
+	//public bool isEnemyTurn = false;
+
+	
 	// Start is called before the first frame update
 	void Start()
 	{
-		Marker.SetActive(false);
+		//isPlayerTurn = true;
+		canvas = GameObject.Find("Canvas1").GetComponent<Canvas>();
+		Debug.Log(canvas);
+		marker = GameObject.Find("MarkerPrefab");		
+		//UIManagerRef = GameObject.FindGameObjectWithTag("UIManager");
+		attacker = GameObject.Find("Player");
+		marker.transform.position = new Vector3(attacker.transform.position.x, attacker.transform.position.y + 2, attacker.transform.position.z);
 		canvas.enabled = false;
 	}
 
 	// Update is called once per frame
 	void Update()
+	{
+		marker.transform.position = new Vector3(attacker.transform.position.x, attacker.transform.position.y + 2, attacker.transform.position.z);
+		ClickOnMonster();	
+	}
+
+	void ActivateUIManager()
+	{
+		if (!isUIManagerActivated)
+		{
+			UIManagerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/UIManagerPrefab"));
+			isUIManagerActivated = true;
+		}
+	}
+
+	void ClickOnMonster()
 	{
 		if (Input.GetMouseButtonDown(0))
 		{
@@ -48,20 +75,6 @@ public class PlayerController : MonoBehaviour
 				clickPosition = Vector3.zero;
 				ActivateUIManager();
 			}
-		}
-
-	}
-
-	void ActivateUIManager()
-	{
-		if (!isUIManagerActivated)
-		{
-			UIManagerRef.SetActive(true);
-			isUIManagerActivated = true;
-			DynamicButtonGenerator DBGScriptRef = UIManagerRef.GetComponent<DynamicButtonGenerator>();
-			DBGScriptRef.targetCharacterGO = Hit.collider.gameObject;
-			Debug.Log(DBGScriptRef.targetCharacterGO);
-			DBGScriptRef.attackerGO = attacker.gameObject;
 		}
 	}
 }
