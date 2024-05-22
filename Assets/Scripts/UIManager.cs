@@ -58,6 +58,7 @@ public class UIManager : MonoBehaviour
 		if (isCharacterTurnOver)
 		{
 			isCharacterTurnOver = false;
+			//combatManagerRef.movesLeft--;
 			if (combatManagerRef == null)
 			{
 				combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
@@ -75,7 +76,7 @@ public class UIManager : MonoBehaviour
 			if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Monster"))
 			{
 				Destroy(monstersControllerGO);
-				if (GameObject.Find("MonstersControllerPrefab"))
+				if (GameObject.Find("MonstersControllerPrefab(Clone)"))
 				{
 					Debug.Log("ERROR: Player Controller Prefab still alive");
 				}
@@ -194,7 +195,7 @@ public class UIManager : MonoBehaviour
 				yield return null;
 				actionChoicesRef = actionChoicesPrefab.GetComponent<ActionChoices>();
 				actionChoicesRef.HandleAttackChoice();
-
+				isCharacterTurnOver = true;
 				Debug.Log("Is CharacterTurnOver true?" + isCharacterTurnOver);
 			}
 		}

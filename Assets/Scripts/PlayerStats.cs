@@ -22,7 +22,7 @@ public class PlayerStats : CharacterClass
 	private bool isDead = false;
 	[SerializeField]
 	private int potionsAvailable = 5;
-	public void Start()
+	public void Awake()
 	{
 		// Initialize the properties
 		HP = hp;

@@ -6,11 +6,13 @@ public class ActionChoices : MonoBehaviour
 {
 	private UIManager UIManagerRef;
 	private CombatManager combatManagerRef;
+	//private PlayerController playerControllerRef;
 
 	public void Start()
 	{
 		UIManagerRef = GameObject.Find("UIManagerPrefab(Clone)").GetComponent<UIManager>();
 		combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
+		//playerControllerRef = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent <PlayerController>();
 	}
 	public void HandleAttackChoice()
 	{
@@ -73,7 +75,7 @@ public class ActionChoices : MonoBehaviour
 		if (combatManagerRef.currentTurn.CompareTag("Player"))
 		{
 			UIManagerRef.canvas.enabled = false;
-			
+			//playerControllerRef.movesLeft--;
 		}
 		UIManagerRef.isCharacterTurnOver = true;
 		Destroy(gameObject);

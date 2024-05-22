@@ -20,17 +20,27 @@ public class CombatManager : MonoBehaviour
 	public GameObject UIManagerPrefabGO;
 
 	public GameObject currentTurn;
+	public int movesLeft; //Each character has 2 moves for each turn
+
+	private List<CharacterClass> charactersIOList;
+
+	private bool isDead = false;
+
+	private PlayerStats playerStats;
+	private MonsterStats monsterStats;
 
 	// Start is called before the first frame update
 	void Start()
 	{
-		TurnList.Add(GameObject.FindGameObjectWithTag("Player"));
-		foreach (var gameObject in GameObject.FindGameObjectsWithTag("Monster"))
-		{
-			TurnList.Add(gameObject);
-		}
+		//TurnList.Add(GameObject.FindGameObjectWithTag("Player"));
+		//foreach (var gameObject in GameObject.FindGameObjectsWithTag("Monster"))
+		//{
+		//	TurnList.Add(gameObject);
+		//}
 		//playerControllerRef = gameObject.GetComponent<PlayerController>();
-		string debug = string.Join(",", TurnList.Select(x=>x.ToString()).ToList());
+
+		CreateTurnList();
+		string debug = string.Join(",", TurnList.Select(x => x.ToString()).ToList());
 		Debug.Log("Characters in the Turn List: " + debug);
 		TurnManager();
 	}
@@ -38,6 +48,7 @@ public class CombatManager : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+
 
 	}
 
@@ -50,42 +61,171 @@ public class CombatManager : MonoBehaviour
 	{
 		while (TurnList.Count > 0)
 		{
-			foreach (GameObject gameObject in TurnList)
+			//bool characterDied;
+			//do
+			//{
+			//	characterDied = false;
+
+			// Creates a copy of the TurnList to iterate over
+			List<GameObject> currentTurnList = new List<GameObject>(TurnList);
+			for (int i = 0; i < currentTurnList.Count; i++)
 			{
-				currentTurn = gameObject;
-				if (gameObject != null && gameObject.CompareTag("Player"))
+				GameObject gameObject = currentTurnList[i];
+
+				if (gameObject == null)
 				{
-					PlayerControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PlayerControllerPrefab"));
-					
+					continue; // Skip null gameObjects
+				}
 
-					yield return new WaitUntil(() => playerTurnCompleted);
-					Debug.Log("Is the turn completed in combatManager? " + playerTurnCompleted);
-					playerTurnCompleted = false;
-					UIManagerPrefabGO = GameObject.Find("UIManagerPrefab(Clone)");
-					Destroy(GameObject.Find("UIManagerPrefab(Clone)"));
-					Destroy(GameObject.Find("ButtonPrefab(Clone)"));
-					GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Action");
-					foreach (GameObject obj in objectsWithTag)
+				int hp = gameObject.GetComponent<CharacterClass>().HP;
+				if (hp <= 0)
+					continue;
+				movesLeft = 2;
+				while (movesLeft > 0)
+				{
+					currentTurn = gameObject;
+
+					if (gameObject != null && gameObject.CompareTag("Player"))
 					{
-						Destroy(obj);
+
+						PlayerControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PlayerControllerPrefab"));
+						playerControllerRef = PlayerControllerPrefab.GetComponent<PlayerController>();
+
+						yield return new WaitUntil(() => playerTurnCompleted);
+						IsCharacterDead();
+
+
+						Debug.Log("Is the turn completed in combatManager? " + playerTurnCompleted);
+						playerTurnCompleted = false;
+						UIManagerPrefabGO = GameObject.Find("UIManagerPrefab(Clone)");
+						CleanUpTurn();
+						movesLeft--;
 					}
 
-				}
-				if (gameObject != null && gameObject.CompareTag("Monster"))
-				{	
-					monsterControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/MonstersControllerPrefab"));
-					yield return new WaitUntil(() => monsterTurnCompleted);
-					monsterTurnCompleted = false;
-					UIManagerPrefabGO = GameObject.Find("UIManagerPrefab(Clone)");
-					Destroy(GameObject.Find("UIManagerPrefab(Clone)"));
-					GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Action");
-					foreach (GameObject obj in objectsWithTag)
+					if (gameObject != null && gameObject.CompareTag("Monster"))
 					{
-						Destroy(obj);
+
+						monsterControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/MonstersControllerPrefab"));
+
+						yield return new WaitUntil(() => monsterTurnCompleted);
+						IsCharacterDead();
+
+						monsterTurnCompleted = false;
+						UIManagerPrefabGO = GameObject.Find("UIManagerPrefab(Clone)");
+						CleanUpTurn();
+						movesLeft--;
+						yield return StartCoroutine(WaitAndContinue());
+
 					}
 				}
+				//if (characterDied)
+				//{
+				//	break;
+				//}
+			}
+			//TurnList = TurnList.Where(go => go != null && go.GetComponent<CharacterClass>().HP > 0).ToList();
+			//}
+			//while (characterDied);
+		}
+
+	}
+	IEnumerator WaitAndContinue()
+	{
+		Debug.Log("Waiting for 3 seconds...");
+		yield return new WaitForSeconds(2);
+		Debug.Log("Waited for 3 seconds.");
+	}
+
+	private void CleanUpTurn()
+	{
+		Debug.Log("Cleaning up turn artifacts.");
+		Destroy(GameObject.Find("UIManagerPrefab(Clone)"));
+		Destroy(GameObject.Find("ButtonPrefab(Clone)"));
+		Destroy(GameObject.Find("RangeIndicatorPrefab(Clone)"));
+		Destroy(GameObject.Find("MonstersControllerPrefab(Clone)"));
+		GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Action");
+		foreach (GameObject obj in objectsWithTag)
+		{
+			Destroy(obj);
+		}
+	}
+	// Creates a list with the scripts attached to the GO. Used in IsCharacterDead().
+	private void CreateIOList()
+	{
+		if (charactersIOList == null)
+			charactersIOList = new List<CharacterClass>();
+
+		foreach (GameObject characterGO in TurnList)
+		{
+			if (characterGO == null)
+			{
+				continue; // Skip this character if it's null or already destroyed
+			}
+
+			CharacterClass character = null;
+
+			CharacterClass playerstats = characterGO.GetComponent<PlayerStats>();
+			if (playerstats != null)
+			{
+				character = playerstats;
+				Debug.Log("Character's hp :" + character + character.HP);
+			}
+			else
+			{
+				CharacterClass monsterStats = characterGO.GetComponent<MonsterStats>();
+				if (monsterStats != null)
+				{
+					character = monsterStats;
+					Debug.Log("Character's hp :" + character + character.HP);
+				}
+			}
+			if (character != null)
+			{
+				charactersIOList.Add(character);
 			}
 		}
 
+	}
+	//Checks if any character's HP < 0, places them in a new list, removes them from the TurnList and destroys the corresponding GO. 
+	private bool IsCharacterDead()
+	{
+		CreateIOList();
+		List<GameObject> charactersToRemove = new List<GameObject>();
+		foreach (CharacterClass character in charactersIOList)
+		{
+			if (character == null || (character as MonoBehaviour) == null)
+			{
+				continue; // Skip this character if it's null or already destroyed
+			}
+			if (character.HP <= 0)
+			{
+				// Get the GameObject associated with the character
+				GameObject characterGO = character.gameObject;
+				if (characterGO != null)
+				{
+					charactersToRemove.Add(characterGO);
+					//Destroy(characterGO);
+					character.IsDead = true;
+				}
+				isDead = true;
+
+			}
+
+		}
+		foreach (GameObject characterToRemove in charactersToRemove)
+		{
+			TurnList.Remove(characterToRemove);
+			Destroy(characterToRemove);
+		}
+		return isDead;
+	}
+
+	public void CreateTurnList()
+	{
+		TurnList.Add(GameObject.FindGameObjectWithTag("Player"));
+		foreach (var gameObject in GameObject.FindGameObjectsWithTag("Monster"))
+		{
+			TurnList.Add(gameObject);
+		}
 	}
 }

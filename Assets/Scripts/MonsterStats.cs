@@ -8,9 +8,9 @@ public class MonsterStats : CharacterClass
 	public CharacterType CharacterType { get; set; }
 	// Expose the fields in the Inspector
 	[SerializeField]
-	public int hp = 50;
+	public int hp = 10;
 	[SerializeField]
-	private int maxHP = 50;
+	private int maxHP = 10;
 	[SerializeField]
 	private string characterName = "MonsterX";
 	[SerializeField]
@@ -21,7 +21,7 @@ public class MonsterStats : CharacterClass
 	private bool isDead = false;
 	[SerializeField]
 	private int potionsAvailable = 1;
-	public void Start()
+	public void Awake()
 	{
 		// Initialize the properties
 		HP = hp;
@@ -33,5 +33,17 @@ public class MonsterStats : CharacterClass
 		PotionsAvailable = potionsAvailable;
 
 	}
+
+	private void OnCollisionEnter(Collision collision)
+	{
+		if (collision.gameObject.CompareTag("Player"))
+		{
+			// Find the MonstersController and call StopThere
+			MonstersController monstersController = GameObject.Find("MonstersControllerPrefab(Clone)").GetComponent<MonstersController>();
+			monstersController.StopThere();
+		}
+	}
+
+	
 }
 
