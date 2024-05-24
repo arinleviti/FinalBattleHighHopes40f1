@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
 		canvas.enabled = false;
 
 		rangeIndicatorGO = Instantiate(Resources.Load<GameObject>("Prefabs/RangeIndicatorPrefab"));
-		rangeIndicatorGO.transform.position = new Vector3(attacker.transform.position.x, 0.07f, attacker.transform.position.z);
+		rangeIndicatorGO.transform.position = new Vector3(attacker.transform.position.x, 0.5f, attacker.transform.position.z);
 		rangeIndicatorScript = rangeIndicatorGO.GetComponent<RangeIndicator>();
 		radius = rangeIndicatorGO.transform.localScale.x / 2;
 

@@ -14,6 +14,7 @@ public class RangeIndicator : MonoBehaviour
 	//public PlayerController playerControllerScript;
 	//public MonstersController monstersControllerScript;
 
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -46,19 +47,36 @@ public class RangeIndicator : MonoBehaviour
 
 	}
 
+	//public void CheckRange()
+	//{
+	//	targetsInRange.Clear();
+
+	//	Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRadius, detectionLayer);
+	//	foreach (Collider collider in colliders)
+	//	{
+	//		GameObject target = collider.gameObject;
+	//		targetsInRange.Add(target);
+	//	}
+	//}
+
+
 	private void OnTriggerEnter(Collider other)
 	{
-		isTargetInRange = true;
-		if (!targetsInRange.Contains(other.gameObject))
+		//isTargetInRange = true;
+		//if (!targetsInRange.Contains(other.gameObject))
+		//{
+		targetsInRange.Add(other.gameObject);
+		//}
+		foreach (GameObject target in targetsInRange)
 		{
-			targetsInRange.Add(other.gameObject);
+			Debug.Log("Range Indicator contains: " +  target.name);
 		}
 	}
 
-	private void OnTriggerExit(Collider other)
-	{
-		targetsInRange.Remove(other.gameObject);
-	}
+	//private void OnTriggerExit(Collider other)
+	//{
+	//	targetsInRange.Remove(other.gameObject);
+	//}
 
 	public List<GameObject> GetTargetsInRange()
 	{

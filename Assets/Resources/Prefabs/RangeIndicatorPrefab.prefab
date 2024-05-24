@@ -102,8 +102,10 @@ MonoBehaviour:
   originalMaterial: {fileID: 2100000, guid: 9e8b3307929d9b14caf6832fbbfe91c5, type: 2}
   newMaterial: {fileID: 2100000, guid: c46dc558ab82b674c99c4c77263e3038, type: 2}
   combatManagerScript: {fileID: 0}
-  playerControllerScript: {fileID: 0}
-  monstersControllerScript: {fileID: 0}
+  detectionRadius: 1
+  detectionLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!64 &2764126473282498855
 MeshCollider:
   m_ObjectHideFlags: 0

@@ -34,15 +34,15 @@ public class MonsterStats : CharacterClass
 
 	}
 
-	private void OnCollisionEnter(Collision collision)
-	{
-		if (collision.gameObject.CompareTag("Player"))
-		{
-			// Find the MonstersController and call StopThere
-			MonstersController monstersController = GameObject.Find("MonstersControllerPrefab(Clone)").GetComponent<MonstersController>();
-			monstersController.StopThere();
-		}
-	}
+	//private void OnCollisionEnter(Collision collision)
+	//{
+	//	if (collision.gameObject.CompareTag("Player"))
+	//	{
+	//		// Find the MonstersController and call StopThere
+	//		MonstersController monstersController = GameObject.Find("MonstersControllerPrefab(Clone)").GetComponent<MonstersController>();
+	//		monstersController.StopThere();
+	//	}
+	//}
 
 	
 }

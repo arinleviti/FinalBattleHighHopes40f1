@@ -31,7 +31,7 @@ public class MonstersController : MonoBehaviour
 		marker = GameObject.Find("MarkerPrefab");
 		marker.transform.position = new Vector3(monster.transform.position.x, monster.transform.position.y + 2, monster.transform.position.z);
 		rangeIndicatorGO = Instantiate(Resources.Load<GameObject>("Prefabs/RangeIndicatorPrefab"));
-		rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.07f, monster.transform.position.z);
+		rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.5f, monster.transform.position.z);
 		rangeIndicatorScript = rangeIndicatorGO.GetComponent<RangeIndicator>();
 		radius = rangeIndicatorGO.transform.localScale.x / 2;
 		pointA = monster.transform.position;
@@ -46,36 +46,89 @@ public class MonstersController : MonoBehaviour
 	}
 	private void ApproachPlayer()
 	{
-
-		if (!reachedTarget) //*(monster.transform.position != Vector3.zero)
+		if (!reachedTarget)
 		{
 			Vector3 directionToPlayer = playerTarget.transform.position - monster.transform.position;
 			directionToPlayer.Normalize();
-			monster.transform.position += directionToPlayer * movespeed * Time.deltaTime;
-			float distanceTravelled= Vector3.Distance(monster.transform.position,pointA);
-			
 
-			if (!rangeIndicatorScript.targetsInRange.Contains(playerTarget) && distanceTravelled >= radius)
-			{
-				rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.07f, monster.transform.position.z);
-				reachedTarget = true;
-				combatManagerRef.monsterTurnCompleted = true;
-				
-			}
-
+			// Check if the player is within range and attack without moving
 			if (rangeIndicatorScript.targetsInRange.Contains(playerTarget))
 			{
-				rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.07f, monster.transform.position.z);
+				// Attack if within range
+				//rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.07f, monster.transform.position.z);
 				
 				reachedTarget = true;
 				UpdateUIManager();
 			}
+			else
+			{
+				// Move towards the player
+				monster.transform.position += directionToPlayer * movespeed * Time.deltaTime;
+				float distanceToPlayer = Vector3.Distance(playerTarget.transform.position, monster.transform.position);
+				float distanceTravelled = Vector3.Distance(monster.transform.position, pointA);
 
-
-
+				if (distanceToPlayer < 0.5f)
+				{
+					// Stop when within 2 units from the player
+					//rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.07f, monster.transform.position.z);
+					reachedTarget = true;
+					combatManagerRef.monsterTurnCompleted = true;
+				}
+				else if (distanceTravelled >= radius)
+				{
+					// Stop when the monster has moved as far as it can in one move
+					//rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.07f, monster.transform.position.z);
+					reachedTarget = true;
+					combatManagerRef.monsterTurnCompleted = true;
+				}
+			}
 		}
+			//if (!reachedTarget) //*(monster.transform.position != Vector3.zero)
+			//{
+			//	Vector3 directionToPlayer = playerTarget.transform.position - monster.transform.position;
+			//	directionToPlayer.Normalize();
+			//	monster.transform.position += directionToPlayer * movespeed * Time.deltaTime;
+			//	float distanceTravelled = Vector3.Distance(monster.transform.position, pointA);
 
+			//	if (!rangeIndicatorScript.targetsInRange.Contains(playerTarget) && Vector3.Distance(playerTarget.transform.position, monster.transform.position) < 2)
+			//	{
+			//		rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.07f, monster.transform.position.z);
+			//		reachedTarget = true;
+			//		combatManagerRef.monsterTurnCompleted = true;
+			//	}
+
+			//	if (!rangeIndicatorScript.targetsInRange.Contains(playerTarget) && distanceTravelled >= radius)
+			//	{
+			//		rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.07f, monster.transform.position.z);
+			//		reachedTarget = true;
+			//		combatManagerRef.monsterTurnCompleted = true;
+			//	}
+
+			//	if (rangeIndicatorScript.targetsInRange.Contains(playerTarget))
+			//	{
+			//		rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.07f, monster.transform.position.z);
+
+			//		reachedTarget = true;
+			//		UpdateUIManager();
+			//	}
+			//}
+
+
+		
 	}
+
+	//private IEnumerator UpdateUIManager()
+	//{
+	//	if (!GameObject.Find("UIManagerPrefab(Clone)"))
+	//	{
+	//		UIManagerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/UIManagerPrefab"));
+	//		yield return null; // Wait for the next frame to ensure the UIManager is instantiated
+	//	}
+
+	//	// Your UI update logic...
+
+
+	//}
 
 	private void UpdateUIManager()
 	{
@@ -85,7 +138,7 @@ public class MonstersController : MonoBehaviour
 		{
 			if (!GameObject.Find("UIManagerPrefab(Clone)"))
 			{
-				
+
 				UIManagerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/UIManagerPrefab"));
 				yield return null;
 				Debug.Log("Is UIManagerPrefab for the monster instantiated?" + UIManagerPrefab.name);
