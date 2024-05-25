@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class MonsterStats : CharacterClass
@@ -21,6 +22,8 @@ public class MonsterStats : CharacterClass
 	private bool isDead = false;
 	[SerializeField]
 	private int potionsAvailable = 1;
+
+	private GameObject player;
 	public void Awake()
 	{
 		// Initialize the properties
@@ -31,7 +34,7 @@ public class MonsterStats : CharacterClass
 		CharacterCategory = characterCategory;
 		IsDead = isDead;
 		PotionsAvailable = potionsAvailable;
-
+		player = GameObject.Find("Player");
 	}
 
 	//private void OnCollisionEnter(Collision collision)
@@ -44,6 +47,9 @@ public class MonsterStats : CharacterClass
 	//	}
 	//}
 
-	
+public void Update()
+	{
+		transform.LookAt(player.transform);
+	}
 }
 

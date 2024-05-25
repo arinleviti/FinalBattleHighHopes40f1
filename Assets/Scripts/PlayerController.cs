@@ -18,9 +18,16 @@ public class PlayerController : MonoBehaviour
 	public RangeIndicator rangeIndicatorScript;
 	public CombatManager CombatManagerScript;
 	private float radius;
+	public Animator animator;
 
 	private float threshold = 0.1f;
 
+	public bool isWalking = false;
+	public bool isIdle = false;
+	private Vector3 direction = new Vector3();
+	private bool isAnimatorSetUp = false;
+
+	private GameObject midpoint;
 
 	// Start is called before the first frame update
 	void Start()
@@ -40,6 +47,9 @@ public class PlayerController : MonoBehaviour
 		radius = rangeIndicatorGO.transform.localScale.x / 2;
 
 		CombatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
+		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
+		midpoint = GameObject.Find("Midpoint");
+
 	}
 
 	// Update is called once per frame
@@ -48,10 +58,12 @@ public class PlayerController : MonoBehaviour
 		marker.transform.position = new Vector3(attacker.transform.position.x, attacker.transform.position.y + 2, attacker.transform.position.z);
 		ClickOnMonster();
 		//if (movesLeft < 1) CombatManagerScript.playerTurnCompleted = true;
+
 	}
 
 	void ClickOnMonster()
 	{
+
 		if (Input.GetMouseButtonDown(0))
 		{
 			clickPosition = new Vector3();
@@ -63,39 +75,53 @@ public class PlayerController : MonoBehaviour
 				clickPosition = hit.point;
 				Hit = hit;
 			}
+
 		}
 
 		if (clickPosition != Vector3.zero && Hit.collider.CompareTag("Monster") && rangeIndicatorScript.targetsInRange.Contains(Hit.transform.gameObject))
 		{
-			Vector3 direction = clickPosition - attacker.transform.position;
+			direction = clickPosition - attacker.transform.position;
 			direction.Normalize();
 			direction.y = 0;
 
 			attacker.transform.rotation = Quaternion.LookRotation(direction);
 			clickPosition = Vector3.zero;
-			
-				ActivateUIManager();
+
+			ActivateUIManager();
 
 
 		}
 		if (clickPosition != Vector3.zero && Hit.collider.CompareTag("RangeIndicator"))
 		{
-			Vector3 direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
-			direction.Normalize();
+			//Vector3 direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
+			//direction.Normalize();
+			if (!isAnimatorSetUp)
+			{
+				SetUpWalking();
+			}
+
 			attacker.transform.position += direction * movespeed * Time.deltaTime;
+			//isWalking = true;
+			//animator.SetBool("IsWalking", isWalking);
 			if (Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) < threshold)
 			{
 				// Snaps the attacker to the target position
 				attacker.transform.position = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z);
 
 				rangeIndicatorGO.transform.position = new Vector3(attacker.transform.position.x, 0.07f, attacker.transform.position.z);
+				isWalking = false;
 				
+				SetUpIdle();
 				CombatManagerScript.playerTurnCompleted = true;
 				clickPosition = Vector3.zero;
 				Destroy(gameObject);
 			}
+
 		}
-		
+
+
+
+
 
 	}
 
@@ -107,4 +133,28 @@ public class PlayerController : MonoBehaviour
 			isUIManagerActivated = true;
 		}
 	}
+
+	void SetUpWalking()
+	{
+		direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
+		direction.Normalize();
+		attacker.transform.rotation = Quaternion.LookRotation(direction);
+		isWalking = true;
+		animator.SetBool("IsWalking", isWalking);
+		isAnimatorSetUp = true;
+	}
+
+	void SetUpIdle()
+	{
+		direction = new Vector3(midpoint.transform.position.x, attacker.transform.position.y, midpoint.transform.position.z) - attacker.transform.position;
+		direction.Normalize();
+		attacker.transform.rotation = Quaternion.LookRotation(direction);
+		isWalking = false;
+		animator.SetBool("IsWalking", isWalking);
+		
+		isIdle = true;
+		animator.SetBool("IsIdle", isIdle);
+		
+	}
+
 }
