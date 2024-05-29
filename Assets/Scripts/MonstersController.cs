@@ -129,24 +129,37 @@ public class MonstersController : MonoBehaviour
 
 
 	//}
-
 	private void UpdateUIManager()
 	{
-		StartCoroutine(InstantiateAndProceed());
-
-		IEnumerator InstantiateAndProceed()
-		{
+		
 			if (!GameObject.Find("UIManagerPrefab(Clone)"))
 			{
 
 				UIManagerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/UIManagerPrefab"));
-				yield return null;
+				
 				Debug.Log("Is UIManagerPrefab for the monster instantiated?" + UIManagerPrefab.name);
 			}
 
-		}
+		
 
 	}
+	//private void UpdateUIManager()
+	//{
+	//	StartCoroutine(InstantiateAndProceed());
+
+	//	IEnumerator InstantiateAndProceed()
+	//	{
+	//		if (!GameObject.Find("UIManagerPrefab(Clone)"))
+	//		{
+
+	//			UIManagerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/UIManagerPrefab"));
+	//			yield return null;
+	//			Debug.Log("Is UIManagerPrefab for the monster instantiated?" + UIManagerPrefab.name);
+	//		}
+
+	//	}
+
+	//}
 	// Sometimes the monster gets stuck in limbo if the player is too close to the range indicator and the monster can't complete its move.
 	public void StopThere()
 	{

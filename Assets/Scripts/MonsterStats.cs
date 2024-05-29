@@ -49,7 +49,11 @@ public class MonsterStats : CharacterClass
 
 public void Update()
 	{
-		transform.LookAt(player.transform);
+		if (player != null)
+		{
+			transform.LookAt(player.transform);
+		}
+		
 	}
 }
 

@@ -9,9 +9,9 @@ public class PlayerStats : CharacterClass
 	public CharacterType CharacterType { get; set; }
 	// Expose the fields in the Inspector
 	[SerializeField]
-	public int hp = 100;
+	public int hp = 5;
 	[SerializeField]
-	private int maxHP = 100;
+	private int maxHP = 50;
 	[SerializeField]
 	private string characterName = "X";
 	[SerializeField]

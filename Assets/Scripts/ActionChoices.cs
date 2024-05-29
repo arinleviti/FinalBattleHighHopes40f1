@@ -5,14 +5,21 @@ using UnityEngine;
 public class ActionChoices : MonoBehaviour
 {
 	private UIManager UIManagerRef;
+	private GameObject UIManager;
 	private CombatManager combatManagerRef;
 	//private PlayerController playerControllerRef;
+	private Animator animatorRef;
+	private bool isIdle = false;
+	private bool isWalking = false;
 
 	public void Start()
 	{
-		UIManagerRef = GameObject.Find("UIManagerPrefab(Clone)").GetComponent<UIManager>();
+		UIManager = GameObject.Find("UIManagerPrefab(Clone)");
+		UIManagerRef=	UIManager.GetComponent<UIManager>();
+		Debug.Log("UIManagerRef" + UIManagerRef.name);
 		combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
 		//playerControllerRef = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent <PlayerController>();
+		animatorRef = GameObject.Find("OrkAssasin").GetComponent<Animator>();
 	}
 	public void HandleAttackChoice()
 	{
@@ -24,8 +31,12 @@ public class ActionChoices : MonoBehaviour
 				Punch punchScriptRef = UIManagerRef.actionPrefab.GetComponent<Punch>();
 				if (punchScriptRef != null)
 				{
+					//animatorRef.SetTrigger("IsPunching");
+					
 					UIManagerRef.targetCharacterIO.HP = punchScriptRef.Hit(UIManagerRef.targetCharacterIO, UIManagerRef.attackerIO);
-					Debug.Log("Punch Hit method executed");
+					Debug.Log("Punch Hit logic executed");
+					//StartCoroutine(HandlePunchAnimation());
+					HandlePunchAnimation();
 				}
 				else
 				{
@@ -76,9 +87,43 @@ public class ActionChoices : MonoBehaviour
 		{
 			UIManagerRef.canvas.enabled = false;
 			//playerControllerRef.movesLeft--;
+			SetupIdle();
+			UIManagerRef.isCharacterTurnOver = true;
+			Destroy(gameObject);
 		}
-		UIManagerRef.isCharacterTurnOver = true;
-		Destroy(gameObject);
+		if (combatManagerRef.currentTurn.CompareTag("Monster"))
+		{
+			UIManagerRef.SetAttackChoiceHandled(true);
+			Destroy(gameObject);
+		}
+		
+		
+		//Destroy(gameObject);
+		
 	}
 
+	private void HandlePunchAnimation()
+	{
+		animatorRef.SetTrigger("IsPunching");
+		//animatorRef.Play("idle1");
+	}
+
+	//private IEnumerator HandlePunchAnimation()
+	//{
+	//	animatorRef.SetTrigger("IsPunching");
+	//	// Wait for the punch animation to finish
+	//	yield return new WaitForSeconds(1.0f); // The punch animation lasts 1 second
+
+	//	// Transition to the idle animation
+	//	animatorRef.Play("idle1");
+	//	Debug.Log("Punch animation ended and transitioned to idle1.");
+	//}
+	void SetupIdle()
+	{
+		isWalking = false;
+		animatorRef.SetBool("IsWalking", isWalking);
+
+		isIdle = true;
+		animatorRef.SetBool("IsIdle", isIdle);
+	}
 }

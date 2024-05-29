@@ -13,7 +13,7 @@ public class RangeIndicator : MonoBehaviour
 	public CombatManager combatManagerScript;
 	//public PlayerController playerControllerScript;
 	//public MonstersController monstersControllerScript;
-
+	private int index = 1;
 
 	// Start is called before the first frame update
 	void Start()
@@ -62,14 +62,18 @@ public class RangeIndicator : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
+		
 		//isTargetInRange = true;
-		//if (!targetsInRange.Contains(other.gameObject))
-		//{
-		targetsInRange.Add(other.gameObject);
-		//}
+		if (!targetsInRange.Contains(other.gameObject))
+		{
+			targetsInRange.Add(other.gameObject);
+		}
+		index++;
 		foreach (GameObject target in targetsInRange)
 		{
-			Debug.Log("Range Indicator contains: " +  target.name);
+			
+			
+			Debug.Log("Range Indicator contains: " +  target.name + index);
 		}
 	}
 

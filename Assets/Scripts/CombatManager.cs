@@ -28,6 +28,8 @@ public class CombatManager : MonoBehaviour
 
 	private PlayerStats playerStats;
 	private MonsterStats monsterStats;
+	private Animator playerAnimator;
+	private int playerHP;
 
 	// Start is called before the first frame update
 	void Start()
@@ -43,6 +45,8 @@ public class CombatManager : MonoBehaviour
 		string debug = string.Join(",", TurnList.Select(x => x.ToString()).ToList());
 		Debug.Log("Characters in the Turn List: " + debug);
 		TurnManager();
+		playerAnimator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
+
 	}
 
 	// Update is called once per frame
@@ -59,6 +63,7 @@ public class CombatManager : MonoBehaviour
 
 	private IEnumerator ExecuteTurns()
 	{
+		//may be redundant, delete.
 		while (TurnList.Count > 0)
 		{
 			//bool characterDied;
@@ -92,13 +97,14 @@ public class CombatManager : MonoBehaviour
 						playerControllerRef = PlayerControllerPrefab.GetComponent<PlayerController>();
 
 						yield return new WaitUntil(() => playerTurnCompleted);
-						IsCharacterDead();
-
+						yield return StartCoroutine(IsCharacterDead());
+						
 
 						Debug.Log("Is the turn completed in combatManager? " + playerTurnCompleted);
 						playerTurnCompleted = false;
-						UIManagerPrefabGO = GameObject.Find("UIManagerPrefab(Clone)");
+						//UIManagerPrefabGO = GameObject.Find("UIManagerPrefab(Clone)");
 						CleanUpTurn();
+						//PlayerAnimator.Rebind();
 						movesLeft--;
 					}
 
@@ -108,53 +114,59 @@ public class CombatManager : MonoBehaviour
 						monsterControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/MonstersControllerPrefab"));
 
 						yield return new WaitUntil(() => monsterTurnCompleted);
-						IsCharacterDead();
-
+						yield return StartCoroutine(IsCharacterDead());
+						
 						monsterTurnCompleted = false;
-						UIManagerPrefabGO = GameObject.Find("UIManagerPrefab(Clone)");
+						//UIManagerPrefabGO = GameObject.Find("UIManagerPrefab(Clone)");
 						CleanUpTurn();
 						movesLeft--;
 						yield return StartCoroutine(WaitAndContinue());
 
 					}
 				}
-				//if (characterDied)
-				//{
-				//	break;
-				//}
+				
 			}
-			//TurnList = TurnList.Where(go => go != null && go.GetComponent<CharacterClass>().HP > 0).ToList();
-			//}
-			//while (characterDied);
+		 foreach (GameObject GO in currentTurnList)
+			{
+				if (GO != null)
+				{
+					Debug.Log("Elem in CURRENT TURN LIST:" + GO.name);
+				}
+				
+			}
 		}
 
 	}
 	IEnumerator WaitAndContinue()
 	{
 		Debug.Log("Waiting for 3 seconds...");
-		yield return new WaitForSeconds(2);
+		yield return new WaitForSeconds(3);
 		Debug.Log("Waited for 3 seconds.");
 	}
 
-	private void CleanUpTurn()
+	void CleanUpTurn()
 	{
 		Debug.Log("Cleaning up turn artifacts.");
 		Destroy(GameObject.Find("UIManagerPrefab(Clone)"));
 		Destroy(GameObject.Find("ButtonPrefab(Clone)"));
 		Destroy(GameObject.Find("RangeIndicatorPrefab(Clone)"));
 		Destroy(GameObject.Find("MonstersControllerPrefab(Clone)"));
+		Destroy(GameObject.Find("PlayerControllerPrefab(Clone)"));
+		Destroy(GameObject.Find("ActionChoicesPrefab(Clone"));
 		GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Action");
 		foreach (GameObject obj in objectsWithTag)
 		{
 			Destroy(obj);
 		}
+		
 	}
 	// Creates a list with the scripts attached to the GO. Used in IsCharacterDead().
 	private void CreateIOList()
 	{
+		
 		if (charactersIOList == null)
 			charactersIOList = new List<CharacterClass>();
-
+			charactersIOList.Clear();
 		foreach (GameObject characterGO in TurnList)
 		{
 			if (characterGO == null)
@@ -169,6 +181,8 @@ public class CombatManager : MonoBehaviour
 			{
 				character = playerstats;
 				Debug.Log("Character's hp :" + character + character.HP);
+				playerHP = character.HP;
+				
 			}
 			else
 			{
@@ -184,10 +198,17 @@ public class CombatManager : MonoBehaviour
 				charactersIOList.Add(character);
 			}
 		}
-
+		foreach (CharacterClass character in charactersIOList)
+		{
+			if (character !=null)
+			{
+				Debug.Log("char in CHARACTERSIOList:" + character.name);
+			}
+			
+		}
 	}
 	//Checks if any character's HP < 0, places them in a new list, removes them from the TurnList and destroys the corresponding GO. 
-	private bool IsCharacterDead()
+	private IEnumerator IsCharacterDead()
 	{
 		CreateIOList();
 		List<GameObject> charactersToRemove = new List<GameObject>();
@@ -207,17 +228,30 @@ public class CombatManager : MonoBehaviour
 					//Destroy(characterGO);
 					character.IsDead = true;
 				}
-				isDead = true;
+				//isDead = true;
 
 			}
 
 		}
+		foreach (GameObject character in charactersToRemove)
+		{
+			Debug.Log("char in CHARACTERSTOREMOVE list:" + character.name);
+		}
 		foreach (GameObject characterToRemove in charactersToRemove)
 		{
+			if (characterToRemove.CompareTag("Player"))
+			{
+				yield return StartCoroutine(TimeToDie(characterToRemove));
+			}
+			else
+			{
+				Destroy(characterToRemove);
+			}
 			TurnList.Remove(characterToRemove);
-			Destroy(characterToRemove);
+			//TurnList.Remove(characterToRemove);
+			//Destroy(characterToRemove);
 		}
-		return isDead;
+		yield break;
 	}
 
 	public void CreateTurnList()
@@ -227,5 +261,14 @@ public class CombatManager : MonoBehaviour
 		{
 			TurnList.Add(gameObject);
 		}
+	}
+
+	IEnumerator TimeToDie(GameObject characterToRemove)
+	{
+		playerAnimator.SetInteger("HP", playerHP);
+		Debug.Log("Initiated Dying");
+		yield return new WaitForSeconds(10);
+		Debug.Log("Finished dying");
+		Destroy(characterToRemove);
 	}
 }

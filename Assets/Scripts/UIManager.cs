@@ -36,18 +36,22 @@ public class UIManager : MonoBehaviour
 	private GameObject actionChoicesGO;
 	private ActionChoices actionChoicesRef;
 
+	private bool flagForCoroutine = false;
+	public bool flagForAttackChoice = false;
+
 	// Start is called before the first frame update
 	void Start()
 	{
 		combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
-
-		RetrievePlayerGO();
-		RetrieveMonsterGO();
-		RetrieveTargetIO();
-		RetrieveAttackerIO();
-		CreateButtonForPlayer();
-		MonsterAttack();
+		flagForCoroutine = true;
 		
+		//RetrievePlayerGO();
+		//RetrieveMonsterGO();
+		//RetrieveTargetIO();
+		//RetrieveAttackerIO();
+		//CreateButtonForPlayer();
+		//MonsterAttack();
+
 	}
 
 
@@ -55,6 +59,11 @@ public class UIManager : MonoBehaviour
 	// The Update method checks if the current turn is over and destroys the character's game object.
 	void Update()
 	{
+		if (flagForCoroutine)
+		{
+			TriggerSequence();
+		}
+
 		if (isCharacterTurnOver)
 		{
 			isCharacterTurnOver = false;
@@ -62,7 +71,7 @@ public class UIManager : MonoBehaviour
 			if (combatManagerRef == null)
 			{
 				combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
-			}		
+			}
 
 			if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Player"))
 			{
@@ -82,12 +91,30 @@ public class UIManager : MonoBehaviour
 				}
 				combatManagerRef.monsterTurnCompleted = true;
 			}
-			
+
 		}
 
 	}
 
-	private void RetrievePlayerGO()
+	IEnumerator ExecuteMethodsInSequence()
+	{
+		yield return StartCoroutine(RetrievePlayerGO());
+		yield return StartCoroutine(RetrieveMonsterGO());	
+		yield return StartCoroutine(RetrieveTargetIO());		
+		yield return StartCoroutine(RetrieveAttackerIO());
+		yield return StartCoroutine(InstantiateActionChoices());
+		yield return StartCoroutine(CreateButtonForPlayer());	
+		yield return StartCoroutine(MonsterAttack());		
+		//yield return StartCoroutine(DestroyUIManager());
+		
+	}
+
+	void TriggerSequence()
+	{
+		StartCoroutine(ExecuteMethodsInSequence());
+		flagForCoroutine = false;
+	}
+	private IEnumerator RetrievePlayerGO()
 	{
 		if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Player"))
 		{
@@ -98,10 +125,11 @@ public class UIManager : MonoBehaviour
 			attackerGO = playerControllerRef.attacker.gameObject;
 			targetCharacterGO = playerControllerRef.Hit.collider.gameObject;
 			canvas.enabled = true;
+			yield return null;
 		}
 	}
 
-	private void RetrieveMonsterGO()
+	private IEnumerator RetrieveMonsterGO()
 	{
 		if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Monster"))
 		{
@@ -109,11 +137,11 @@ public class UIManager : MonoBehaviour
 			monstersControllerRef = monstersControllerGO.GetComponent<MonstersController>();
 			attackerGO = monstersControllerRef.monster.gameObject;
 			targetCharacterGO = monstersControllerRef.playerTarget.gameObject;
-
+			yield return null;
 		}
 	}
 
-	private void RetrieveTargetIO()
+	private IEnumerator RetrieveTargetIO()
 	{
 		if (targetCharacterGO != null && targetCharacterGO.CompareTag("Monster"))
 		{
@@ -127,9 +155,10 @@ public class UIManager : MonoBehaviour
 			ICharacter target = targetCharacterGO.GetComponent<PlayerStats>();
 			targetCharacterIO = target;
 		}
+		yield return null;
 	}
 
-	private void RetrieveAttackerIO()
+	private IEnumerator RetrieveAttackerIO()
 	{
 		if (attackerGO != null && attackerGO.CompareTag("Monster"))
 		{
@@ -151,8 +180,16 @@ public class UIManager : MonoBehaviour
 			attackerIO = attacker;
 			Debug.Log(attackerIO);
 		}
+		yield return null;
 	}
-	private void CreateButtonForPlayer()
+
+	private IEnumerator InstantiateActionChoices()
+	{
+		actionChoicesGO = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab"));
+		actionChoicesRef = actionChoicesGO.GetComponent<ActionChoices>();
+		yield return null;
+	}
+	private IEnumerator CreateButtonForPlayer()
 	{
 		if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Player"))
 		{
@@ -166,38 +203,85 @@ public class UIManager : MonoBehaviour
 				Debug.Log("Attack type: " + attackType);
 				newButton.GetComponentInChildren<TextMeshProUGUI>().text = attackType.ToString();
 				attackTypeChosen = attackType;
-				if (!GameObject.Find("ActionChoicesPrefab(Clone)"))
+				if (GameObject.Find("ActionChoicesPrefab(Clone)"))
 				{
-					actionChoicesRef = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab")).GetComponent<ActionChoices>();
+					//actionChoicesRef = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab")).GetComponent<ActionChoices>();
+					Debug.Log("ActionChoicesRef instantiated: " + (actionChoicesRef != null));
 					newButton.onClick.AddListener(() => actionChoicesRef.HandleAttackChoice());
 				}
 
 
 			}
 		}
+		yield return null;
+		
 	}
-	private void MonsterAttack()
+	private IEnumerator MonsterAttack()
 	{
 		if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Monster"))
 		{
 			int lastIndex = attackerIO.AttackT.Count - 1;
 			Debug.Log("AttackerIO: " + attackerIO);
 			attackTypeChosen = attackerIO.AttackT[lastIndex];
-
-			if (!GameObject.Find("ActionChoicesPrefab(Clone)"))
+			Debug.Log("ATTACK TYPE CHOSEN monster" + attackTypeChosen);
+			foreach (AttackType attackType in attackerIO.AttackT)
 			{
-				StartCoroutine(InstantiateAndProceed());
+				Debug.Log("Attack type in ATTACKT for the MONSTER" + attackType.ToString());
 			}
 
-			IEnumerator InstantiateAndProceed()
+			if (!actionChoicesGO)
 			{
-				GameObject actionChoicesPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab"));
-				yield return null;
-				actionChoicesRef = actionChoicesPrefab.GetComponent<ActionChoices>();
-				actionChoicesRef.HandleAttackChoice();
-				isCharacterTurnOver = true;
-				Debug.Log("Is CharacterTurnOver true?" + isCharacterTurnOver);
+				//StartCoroutine(
+				//InstantiateAndProceed());
+				InstantiateAndProceed();
 			}
+			if (actionChoicesGO)
+			{
+				Destroy(actionChoicesGO);
+				InstantiateAndProceed();
+
+			}
+
+			//IEnumerator InstantiateAndProceed()
+			//{
+			//	GameObject actionChoicesPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab"));
+			//	yield return null;
+			//	actionChoicesRef = actionChoicesPrefab.GetComponent<ActionChoices>();
+			//	actionChoicesRef.HandleAttackChoice();
+			//	isCharacterTurnOver = true;
+			//	Debug.Log("Is CharacterTurnOver true?" + isCharacterTurnOver);
+			//}
 		}
+		yield return null;
+	}
+	void InstantiateAndProceed()
+	{
+		//if (!GameObject.Find("ActionChoicesPrefab(Clone)"))
+		//{
+			//actionChoicesRef = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab")).GetComponent<ActionChoices>();
+			
+		//yield return null;
+			flagForAttackChoice = false;
+			actionChoicesRef.HandleAttackChoice();
+		//yield return new WaitUntil(() => flagForAttackChoice);
+		//Destroy(actionChoicesRef);
+		isCharacterTurnOver = true;
+		//isCharacterTurnOver = true;
+		//Debug.Log("Is CharacterTurnOver true?" + isCharacterTurnOver);
+		//}
+		//Destroy(actionChoicesGO);
+		
+	}
+	public void SetAttackChoiceHandled(bool value)
+	{
+		flagForAttackChoice = value;
+	}
+	private IEnumerator DestroyUIManager()
+	{
+		if (gameObject!= null)
+		{
+			Destroy(gameObject);
+		}
+		yield return null;
 	}
 }

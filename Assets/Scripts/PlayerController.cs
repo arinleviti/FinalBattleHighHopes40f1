@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
 	public RangeIndicator rangeIndicatorScript;
 	public CombatManager CombatManagerScript;
 	private float radius;
-	public Animator animator;
+	private Animator animator;
 
 	private float threshold = 0.1f;
 
@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
 		CombatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
 		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
 		midpoint = GameObject.Find("Midpoint");
-
+		
 	}
 
 	// Update is called once per frame
@@ -80,6 +80,9 @@ public class PlayerController : MonoBehaviour
 
 		if (clickPosition != Vector3.zero && Hit.collider.CompareTag("Monster") && rangeIndicatorScript.targetsInRange.Contains(Hit.transform.gameObject))
 		{
+			isWalking = false;
+			animator.SetBool("IsWalking", isWalking);
+
 			direction = clickPosition - attacker.transform.position;
 			direction.Normalize();
 			direction.y = 0;
@@ -93,6 +96,8 @@ public class PlayerController : MonoBehaviour
 		}
 		if (clickPosition != Vector3.zero && Hit.collider.CompareTag("RangeIndicator"))
 		{
+			isIdle = false;
+			animator.SetBool("IsIdle", isIdle);
 			//Vector3 direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
 			//direction.Normalize();
 			if (!isAnimatorSetUp)
@@ -110,11 +115,11 @@ public class PlayerController : MonoBehaviour
 
 				rangeIndicatorGO.transform.position = new Vector3(attacker.transform.position.x, 0.07f, attacker.transform.position.z);
 				isWalking = false;
-				
+			
 				SetUpIdle();
 				CombatManagerScript.playerTurnCompleted = true;
 				clickPosition = Vector3.zero;
-				Destroy(gameObject);
+				//Destroy(gameObject);
 			}
 
 		}
@@ -151,10 +156,10 @@ public class PlayerController : MonoBehaviour
 		attacker.transform.rotation = Quaternion.LookRotation(direction);
 		isWalking = false;
 		animator.SetBool("IsWalking", isWalking);
-		
+
 		isIdle = true;
 		animator.SetBool("IsIdle", isIdle);
-		
+
 	}
 
 }

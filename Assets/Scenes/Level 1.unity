@@ -136,6 +136,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1276350902855087241, guid: 1ebe7a4c9ece0a1418df1bf7938f3fbd, type: 3}
+      propertyPath: hp
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 3841192452056205606, guid: 1ebe7a4c9ece0a1418df1bf7938f3fbd, type: 3}
       propertyPath: m_Mass
       value: 1
@@ -848,8 +852,8 @@ MonoBehaviour:
   attacker: {fileID: 0}
   rangeIndicatorScript: {fileID: 0}
   CombatManagerScript: {fileID: 0}
-  animator: {fileID: 0}
   isWalking: 0
+  isIdle: 0
 --- !u!136 &714921406
 CapsuleCollider:
   m_ObjectHideFlags: 0

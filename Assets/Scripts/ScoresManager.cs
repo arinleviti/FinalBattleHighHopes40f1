@@ -22,6 +22,8 @@ public class ScoresManager : MonoBehaviour
 	private int firstMonsterHP;
 	private int secondMonsterHP;
 	private int movesLeftInt;
+	private Animator animator;
+	private bool isCharacterDead = false;
 
 	//private List<ICharacter> charactersIOList;
 
@@ -40,9 +42,9 @@ public class ScoresManager : MonoBehaviour
 
 		GameObject combatManagerObject = GameObject.Find("CombatManager");
 		combatManager = combatManagerObject.GetComponent<CombatManager>();
-
-		//CreateIOList();
 		
+		//CreateIOList();
+
 	}
 
 	// Update is called once per frame
@@ -67,24 +69,14 @@ public class ScoresManager : MonoBehaviour
 		//movesLeftInt = GameObject.Find("CombatManager").GetComponent<CombatManager>().movesLeft;
 		movesLeft.text = $"Moves left: {movesLeftInt}";
 
+		//if (playerHP <= 0 && !isCharacterDead)
+		//{
+		//	isCharacterDead = true;
+		//	StartCoroutine(TimeToDie());
+		//}
 		
 	}
 
-	//private void CreateIOList()
-	//{
-	//	if (charactersIOList == null)
-	//		charactersIOList = new List<ICharacter>();
-
-	//	foreach (GameObject characterGO in combatManager.TurnList)
-	//	{
-	//		ICharacter character = characterGO.GetComponent<CharacterClass>();
-
-	//		if (character != null)
-	//		{
-	//			// Add the character to the characters list
-	//			charactersIOList.Add(character);
-	//		}
-	//	}	
-
-	//}
+	
+	
 }
