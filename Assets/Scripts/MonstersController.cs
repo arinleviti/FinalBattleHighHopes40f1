@@ -19,7 +19,7 @@ public class MonstersController : MonoBehaviour
 	public RangeIndicator rangeIndicatorScript;
 	private Vector3 pointA;
 	private float radius;
-	
+
 
 	// Start is called before the first frame update
 	void Start()
@@ -56,7 +56,7 @@ public class MonstersController : MonoBehaviour
 			{
 				// Attack if within range
 				//rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.07f, monster.transform.position.z);
-				
+
 				reachedTarget = true;
 				UpdateUIManager();
 			}
@@ -83,88 +83,33 @@ public class MonstersController : MonoBehaviour
 				}
 			}
 		}
-			//if (!reachedTarget) //*(monster.transform.position != Vector3.zero)
-			//{
-			//	Vector3 directionToPlayer = playerTarget.transform.position - monster.transform.position;
-			//	directionToPlayer.Normalize();
-			//	monster.transform.position += directionToPlayer * movespeed * Time.deltaTime;
-			//	float distanceTravelled = Vector3.Distance(monster.transform.position, pointA);
-
-			//	if (!rangeIndicatorScript.targetsInRange.Contains(playerTarget) && Vector3.Distance(playerTarget.transform.position, monster.transform.position) < 2)
-			//	{
-			//		rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.07f, monster.transform.position.z);
-			//		reachedTarget = true;
-			//		combatManagerRef.monsterTurnCompleted = true;
-			//	}
-
-			//	if (!rangeIndicatorScript.targetsInRange.Contains(playerTarget) && distanceTravelled >= radius)
-			//	{
-			//		rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.07f, monster.transform.position.z);
-			//		reachedTarget = true;
-			//		combatManagerRef.monsterTurnCompleted = true;
-			//	}
-
-			//	if (rangeIndicatorScript.targetsInRange.Contains(playerTarget))
-			//	{
-			//		rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.07f, monster.transform.position.z);
-
-			//		reachedTarget = true;
-			//		UpdateUIManager();
-			//	}
-			//}
 
 
-		
+
+
 	}
 
-	//private IEnumerator UpdateUIManager()
-	//{
-	//	if (!GameObject.Find("UIManagerPrefab(Clone)"))
-	//	{
-	//		UIManagerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/UIManagerPrefab"));
-	//		yield return null; // Wait for the next frame to ensure the UIManager is instantiated
-	//	}
 
-	//	// Your UI update logic...
-
-
-	//}
 	private void UpdateUIManager()
 	{
-		
-			if (!GameObject.Find("UIManagerPrefab(Clone)"))
-			{
 
-				UIManagerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/UIManagerPrefab"));
-				
-				Debug.Log("Is UIManagerPrefab for the monster instantiated?" + UIManagerPrefab.name);
-			}
+		if (!GameObject.Find("UIManagerPrefab(Clone)"))
+		{
 
-		
+			UIManagerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/UIManagerPrefab"));
+
+			Debug.Log("Is UIManagerPrefab for the monster instantiated?" + UIManagerPrefab.name);
+		}
+
+
 
 	}
-	//private void UpdateUIManager()
-	//{
-	//	StartCoroutine(InstantiateAndProceed());
 
-	//	IEnumerator InstantiateAndProceed()
-	//	{
-	//		if (!GameObject.Find("UIManagerPrefab(Clone)"))
-	//		{
-
-	//			UIManagerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/UIManagerPrefab"));
-	//			yield return null;
-	//			Debug.Log("Is UIManagerPrefab for the monster instantiated?" + UIManagerPrefab.name);
-	//		}
-
-	//	}
-
-	//}
 	// Sometimes the monster gets stuck in limbo if the player is too close to the range indicator and the monster can't complete its move.
 	public void StopThere()
 	{
 		combatManagerRef.monsterTurnCompleted = true;
 	}
 
-	
+
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,13 +20,14 @@ public class PlayerController : MonoBehaviour
 	public CombatManager CombatManagerScript;
 	private float radius;
 	private Animator animator;
+	private AnimScript animScript;
 
 	private float threshold = 0.1f;
 
 	public bool isWalking = false;
 	public bool isIdle = false;
 	private Vector3 direction = new Vector3();
-	private bool isAnimatorSetUp = false;
+	private bool isAnimatorSetup = false;
 
 	private GameObject midpoint;
 
@@ -49,6 +51,7 @@ public class PlayerController : MonoBehaviour
 		CombatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
 		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
 		midpoint = GameObject.Find("Midpoint");
+		animScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
 		
 	}
 
@@ -64,7 +67,7 @@ public class PlayerController : MonoBehaviour
 	void ClickOnMonster()
 	{
 
-		if (Input.GetMouseButtonDown(0))
+		if (Input.GetMouseButtonDown(0) && !IsPointerOverUIElement())
 		{
 			clickPosition = new Vector3();
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -80,8 +83,8 @@ public class PlayerController : MonoBehaviour
 
 		if (clickPosition != Vector3.zero && Hit.collider.CompareTag("Monster") && rangeIndicatorScript.targetsInRange.Contains(Hit.transform.gameObject))
 		{
-			isWalking = false;
-			animator.SetBool("IsWalking", isWalking);
+			//isWalking = false;
+			//animator.SetBool("IsWalking", isWalking);
 
 			direction = clickPosition - attacker.transform.position;
 			direction.Normalize();
@@ -96,13 +99,15 @@ public class PlayerController : MonoBehaviour
 		}
 		if (clickPosition != Vector3.zero && Hit.collider.CompareTag("RangeIndicator"))
 		{
-			isIdle = false;
-			animator.SetBool("IsIdle", isIdle);
+			//isIdle = false;
+			//animator.SetBool("IsIdle", isIdle);
 			//Vector3 direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
 			//direction.Normalize();
-			if (!isAnimatorSetUp)
+
+			if (!isAnimatorSetup)
 			{
-				SetUpWalking();
+				direction = animScript.SetupWalking(attacker, clickPosition );/*SetUpWalking();*/
+				isAnimatorSetup = true;
 			}
 
 			attacker.transform.position += direction * movespeed * Time.deltaTime;
@@ -110,13 +115,14 @@ public class PlayerController : MonoBehaviour
 			//animator.SetBool("IsWalking", isWalking);
 			if (Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) < threshold)
 			{
+				animScript.SetUpIdle(attacker, midpoint);
 				// Snaps the attacker to the target position
 				attacker.transform.position = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z);
 
 				rangeIndicatorGO.transform.position = new Vector3(attacker.transform.position.x, 0.07f, attacker.transform.position.z);
 				isWalking = false;
 			
-				SetUpIdle();
+				
 				CombatManagerScript.playerTurnCompleted = true;
 				clickPosition = Vector3.zero;
 				//Destroy(gameObject);
@@ -139,27 +145,32 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
-	void SetUpWalking()
+	private bool IsPointerOverUIElement()
 	{
-		direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
-		direction.Normalize();
-		attacker.transform.rotation = Quaternion.LookRotation(direction);
-		isWalking = true;
-		animator.SetBool("IsWalking", isWalking);
-		isAnimatorSetUp = true;
+		return EventSystem.current.IsPointerOverGameObject();
 	}
 
-	void SetUpIdle()
-	{
-		direction = new Vector3(midpoint.transform.position.x, attacker.transform.position.y, midpoint.transform.position.z) - attacker.transform.position;
-		direction.Normalize();
-		attacker.transform.rotation = Quaternion.LookRotation(direction);
-		isWalking = false;
-		animator.SetBool("IsWalking", isWalking);
+	//void SetUpWalking()
+	//{
+	//	direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
+	//	direction.Normalize();
+	//	attacker.transform.rotation = Quaternion.LookRotation(direction);
+	//	isWalking = true;
+	//	animator.SetBool("IsWalking", isWalking);
+	//	isAnimatorSetup = true;
+	//}
 
-		isIdle = true;
-		animator.SetBool("IsIdle", isIdle);
+	//void SetUpIdle()
+	//{
+		
+	//	isWalking = false;
+	//	animator.SetBool("IsWalking", isWalking);
 
-	}
+	//	isIdle = true;
+	//	animator.SetBool("IsIdle", isIdle);
+	//	direction = new Vector3(midpoint.transform.position.x, attacker.transform.position.y, midpoint.transform.position.z) - attacker.transform.position;
+	//	direction.Normalize();
+	//	attacker.transform.rotation = Quaternion.LookRotation(direction);
+	//}
 
 }

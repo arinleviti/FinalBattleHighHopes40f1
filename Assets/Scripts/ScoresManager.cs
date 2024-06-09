@@ -15,6 +15,7 @@ public class ScoresManager : MonoBehaviour
 	private MonsterStats firstMonsterStats;
 	private MonsterStats secondMonsterStats;
 	private CombatManager combatManager;
+	private GameObject playerGO;
 	//private GameObject targetCharacterGOSM;
 	//private GameObject attackerGOSM;
 
@@ -22,7 +23,8 @@ public class ScoresManager : MonoBehaviour
 	private int firstMonsterHP;
 	private int secondMonsterHP;
 	private int movesLeftInt;
-	private Animator animator;
+	//private Animator animator;
+	private AnimScript animScript;
 	private bool isCharacterDead = false;
 
 	//private List<ICharacter> charactersIOList;
@@ -32,6 +34,7 @@ public class ScoresManager : MonoBehaviour
 	{
 		// Cache the references to GameObjects and components
 		GameObject player = GameObject.Find("Player");
+		playerGO = player;
 		playerStats = player.GetComponent<PlayerStats>();
 
 		GameObject firstMonster = GameObject.Find("Zombie 1");
@@ -42,9 +45,9 @@ public class ScoresManager : MonoBehaviour
 
 		GameObject combatManagerObject = GameObject.Find("CombatManager");
 		combatManager = combatManagerObject.GetComponent<CombatManager>();
-		
-		//CreateIOList();
 
+		//CreateIOList();
+		animScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
 	}
 
 	// Update is called once per frame
@@ -69,12 +72,12 @@ public class ScoresManager : MonoBehaviour
 		//movesLeftInt = GameObject.Find("CombatManager").GetComponent<CombatManager>().movesLeft;
 		movesLeft.text = $"Moves left: {movesLeftInt}";
 
-		//if (playerHP <= 0 && !isCharacterDead)
-		//{
-		//	isCharacterDead = true;
-		//	StartCoroutine(TimeToDie());
-		//}
-		
+		if (playerHP <= 0 && !isCharacterDead)
+		{
+			isCharacterDead = true;
+			//animScript.PlayDeathAnim(GameObject characterToRemove)
+		}
+
 	}
 
 	

@@ -28,7 +28,8 @@ public class CombatManager : MonoBehaviour
 
 	private PlayerStats playerStats;
 	private MonsterStats monsterStats;
-	private Animator playerAnimator;
+	//private Animator playerAnimator;
+	public AnimScript animatorScript;
 	private int playerHP;
 
 	// Start is called before the first frame update
@@ -45,8 +46,8 @@ public class CombatManager : MonoBehaviour
 		string debug = string.Join(",", TurnList.Select(x => x.ToString()).ToList());
 		Debug.Log("Characters in the Turn List: " + debug);
 		TurnManager();
-		playerAnimator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
-
+		//playerAnimator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
+		animatorScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
 	}
 
 	// Update is called once per frame
@@ -241,7 +242,7 @@ public class CombatManager : MonoBehaviour
 		{
 			if (characterToRemove.CompareTag("Player"))
 			{
-				yield return StartCoroutine(TimeToDie(characterToRemove));
+				animatorScript.PlayDeathAnim(characterToRemove);
 			}
 			else
 			{
@@ -263,12 +264,5 @@ public class CombatManager : MonoBehaviour
 		}
 	}
 
-	IEnumerator TimeToDie(GameObject characterToRemove)
-	{
-		playerAnimator.SetInteger("HP", playerHP);
-		Debug.Log("Initiated Dying");
-		yield return new WaitForSeconds(10);
-		Debug.Log("Finished dying");
-		Destroy(characterToRemove);
-	}
+	
 }
