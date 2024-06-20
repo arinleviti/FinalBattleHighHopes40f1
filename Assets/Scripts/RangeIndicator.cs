@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class RangeIndicator : MonoBehaviour
 {
 	public bool isTargetInRange = false;
-	public List<GameObject> targetsInRange = new List<GameObject>();
+	public List<GameObject> targetsInRange;
 
 	public Material originalMaterial;
 	public Material newMaterial;
@@ -14,13 +15,17 @@ public class RangeIndicator : MonoBehaviour
 	//public PlayerController playerControllerScript;
 	//public MonstersController monstersControllerScript;
 	private int index = 1;
+	private bool isInitialized = false;
+	public float detectionRadius = 5f;
+	public LayerMask detectionLayer;
 
 	// Start is called before the first frame update
 	void Start()
 	{
 		originalMaterial = GetComponent<Material>();
 		combatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
-
+		targetsInRange = new List<GameObject>();
+		targetsInRange = GetInRangeTargets();
 	}
 
 	// Update is called once per frame
@@ -59,31 +64,57 @@ public class RangeIndicator : MonoBehaviour
 	//	}
 	//}
 
-
-	private void OnTriggerEnter(Collider other)
+	public void CheckRange()
 	{
-		
-		//isTargetInRange = true;
-		if (!targetsInRange.Contains(other.gameObject))
+		targetsInRange.Clear();
+		detectionRadius = gameObject.transform.localScale.x / 2;
+		Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRadius, detectionLayer);
+		foreach (Collider collider in colliders)
 		{
-			targetsInRange.Add(other.gameObject);
+			GameObject target = collider.gameObject;
+			if (!targetsInRange.Contains(target))
+			{
+				targetsInRange.Add(target);
+				Debug.Log($"Added {target.name} to targetsInRange. InstanceID: {target.GetInstanceID()}");
+			}
 		}
-		index++;
 		foreach (GameObject target in targetsInRange)
 		{
-			
-			
-			Debug.Log("Range Indicator contains: " +  target.name + index);
+			Debug.Log($"Range Indicator contains: {target.name} with InstanceID: {target.GetInstanceID()}");
 		}
 	}
 
+	public List<GameObject> GetInRangeTargets()
+	{
+		CheckRange();
+		return targetsInRange;
+	}
+
+	//private void OnTriggerEnter(Collider other)
+	//{
+		
+	//	//isTargetInRange = true;
+	//	if (!targetsInRange.Contains(other.gameObject))
+	//	{
+	//		targetsInRange.Add(other.gameObject);
+	//		Debug.Log($"Added {other.gameObject.name} to targetsInRange.");
+	//	}
+
+	//	index++;
+	//	foreach (GameObject target in targetsInRange)
+	//	{
+
+	//		Debug.Log("Range Indicator contains: " + target.name + index);
+	//	}
+	//}
+	
 	//private void OnTriggerExit(Collider other)
 	//{
 	//	targetsInRange.Remove(other.gameObject);
 	//}
 
-	public List<GameObject> GetTargetsInRange()
-	{
-		return targetsInRange;
-	}
+	//public List<GameObject> GetTargetsInRange()
+	//{
+	//	return targetsInRange;
+	//}
 }

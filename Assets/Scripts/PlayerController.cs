@@ -22,7 +22,8 @@ public class PlayerController : MonoBehaviour
 	private Animator animator;
 	private AnimScript animScript;
 
-	private float threshold = 0.1f;
+	private float threshold = 1f;
+	private float thresholdRI = 0.1f;
 
 	public bool isWalking = false;
 	public bool isIdle = false;
@@ -91,38 +92,45 @@ public class PlayerController : MonoBehaviour
 			direction.y = 0;
 
 			attacker.transform.rotation = Quaternion.LookRotation(direction);
-			clickPosition = Vector3.zero;
 
-			ActivateUIManager();
-
-
+			if (Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) > threshold)
+			{
+				if (!isAnimatorSetup)
+				{
+					direction = animScript.SetupWalking(attacker, animator,clickPosition);
+					isAnimatorSetup = true;
+				}
+				attacker.transform.position += direction * movespeed * Time.deltaTime;
+			}
+			else
+			{
+				animScript.SetupIdle();
+				clickPosition = Vector3.zero;
+				ActivateUIManager();
+			}
 		}
 		if (clickPosition != Vector3.zero && Hit.collider.CompareTag("RangeIndicator"))
 		{
-			//isIdle = false;
-			//animator.SetBool("IsIdle", isIdle);
-			//Vector3 direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
-			//direction.Normalize();
+
 
 			if (!isAnimatorSetup)
 			{
-				direction = animScript.SetupWalking(attacker, clickPosition );/*SetUpWalking();*/
+				direction = animScript.SetupWalking(attacker, animator, clickPosition);
 				isAnimatorSetup = true;
 			}
 
 			attacker.transform.position += direction * movespeed * Time.deltaTime;
-			//isWalking = true;
-			//animator.SetBool("IsWalking", isWalking);
-			if (Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) < threshold)
+
+			if (Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) < thresholdRI)
 			{
-				animScript.SetUpIdle(attacker, midpoint);
+				animScript.SetUpIdle(attacker, animator, midpoint);
 				// Snaps the attacker to the target position
-				attacker.transform.position = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z);
+				//attacker.transform.position = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z);
 
 				rangeIndicatorGO.transform.position = new Vector3(attacker.transform.position.x, 0.07f, attacker.transform.position.z);
 				isWalking = false;
-			
-				
+
+
 				CombatManagerScript.playerTurnCompleted = true;
 				clickPosition = Vector3.zero;
 				//Destroy(gameObject);
@@ -162,7 +170,7 @@ public class PlayerController : MonoBehaviour
 
 	//void SetUpIdle()
 	//{
-		
+
 	//	isWalking = false;
 	//	animator.SetBool("IsWalking", isWalking);
 

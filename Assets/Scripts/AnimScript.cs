@@ -7,52 +7,66 @@ using UnityEngine;
 public class AnimScript : MonoBehaviour
 {
     public Animator animator;
-
+	public Animator monsterAnim;
+	public CombatManager combatManager;
 	private bool isIdle = false;
 	private bool isWalking = false;
+	//private GameObject currentTurn;
 	
 
 	// Start is called before the first frame update
 	void Start()
     {
-        
+        //combatManager = GameObject.Find("CombatManager").GetComponent<CombatManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+		//currentTurn = combatManager.currentTurn;
     }
 
-	public void PunchAnimation()
+	public void HitAnimation(IAction action, Animator animator)
 	{
-		StartCoroutine(WaitForPunchAnimation());	
+		StartCoroutine(WaitForPunchAnimation(action, animator));	
 	}
 
-	private IEnumerator WaitForPunchAnimation()
+	private IEnumerator WaitForPunchAnimation(IAction action, Animator animator )
 	{
 		isWalking = false;
 		animator.SetBool("IsWalking", isWalking);
-		animator.SetTrigger("IsPunching");
 
-		//AnimatorStateInfo: A structure that holds information about the current state of an Animator.Gets the current state of the Animator for the first layer (index 0).
+		switch (action)
+		{
+			case Punch:
+				animator.SetTrigger("IsPunching");
+				break;
+			case BoneCrunch:
+				animator.SetTrigger("IsBoneCrunching");
+				break;
+			default:
+				Debug.LogWarning("Unknown action type.");
+				break;
+		}
 
-		AnimatorStateInfo punchStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-		while (!punchStateInfo.IsName("Punch"))
+				//AnimatorStateInfo: A structure that holds information about the current state of an Animator.Gets the current state of the Animator for the first layer (index 0).
+
+				AnimatorStateInfo hitStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+		while (!hitStateInfo.IsName("Attack"))
 		{
 			yield return null;
 			//normalizedTime is a value between 0 and 1 that represents the progress of the animation (0 is the start, and 1 is the end).
-			punchStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+			hitStateInfo = animator.GetCurrentAnimatorStateInfo(0);
 		}
-		while (punchStateInfo.normalizedTime < 1.0f)
+		while (hitStateInfo.normalizedTime < 1.0f)
 		{
 			yield return null;
-			punchStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+			hitStateInfo = animator.GetCurrentAnimatorStateInfo(0);
 		}
 		animator.Play("idle1");
 	}
 
-	void SetupIdle()
+	public void SetupIdle()
 	{
 		isWalking = false;
 		animator.SetBool("IsWalking", isWalking);
@@ -75,7 +89,7 @@ public class AnimScript : MonoBehaviour
 		Destroy(characterToRemove);
 	}
 
-	public Vector3 SetupWalking(GameObject attacker, Vector3 clickPosition)
+	public Vector3 SetupWalking(GameObject attacker, Animator animator, Vector3 clickPosition)
 	{
 
 		isIdle = false;
@@ -90,7 +104,7 @@ public class AnimScript : MonoBehaviour
 		return direction;	
 	}
 
-	public void SetUpIdle(GameObject attacker, GameObject midpoint)
+	public void SetUpIdle(GameObject attacker, Animator animator, GameObject midpoint)
 	{
 
 		isWalking = false;
@@ -103,4 +117,6 @@ public class AnimScript : MonoBehaviour
 		attacker.transform.rotation = Quaternion.LookRotation(direction);
 		
 	}
+
+	
 }

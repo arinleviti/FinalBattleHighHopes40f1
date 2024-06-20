@@ -87,7 +87,7 @@ public class UIManager : MonoBehaviour
 				Destroy(monstersControllerGO);
 				if (GameObject.Find("MonstersControllerPrefab(Clone)"))
 				{
-					Debug.Log("ERROR: Player Controller Prefab still alive");
+					Debug.Log("ERROR: Monster Controller Prefab still alive");
 				}
 				combatManagerRef.monsterTurnCompleted = true;
 			}

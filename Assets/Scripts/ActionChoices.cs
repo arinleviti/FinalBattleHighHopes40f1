@@ -8,19 +8,25 @@ public class ActionChoices : MonoBehaviour
 	private GameObject UIManager;
 	private CombatManager combatManagerRef;
 	private AnimScript animScript;
-	
-	
+	private Animator animator;
+	private Animator animatorZ1;
+	private Animator animatorZ2;
+
 
 	public void Start()
 	{
 		UIManager = GameObject.Find("UIManagerPrefab(Clone)");
-		UIManagerRef=	UIManager.GetComponent<UIManager>();
+		UIManagerRef = UIManager.GetComponent<UIManager>();
 		Debug.Log("UIManagerRef" + UIManagerRef.name);
 		combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
 		//playerControllerRef = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent <PlayerController>();
-		//animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
+		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
 		animScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
+		animatorZ1 = GameObject.Find("Zombie 1").GetComponentInChildren<Animator>();
+		animatorZ2 = GameObject.Find("Zombie 2").GetComponentInChildren<Animator>();
 	}
+	
+
 	public void HandleAttackChoice()
 	{
 
@@ -32,11 +38,13 @@ public class ActionChoices : MonoBehaviour
 				if (punchScriptRef != null)
 				{
 					//animatorRef.SetTrigger("IsPunching");
-					
+
 					UIManagerRef.targetCharacterIO.HP = punchScriptRef.Hit(UIManagerRef.targetCharacterIO, UIManagerRef.attackerIO);
 					Debug.Log("Punch Hit logic executed");
 					//StartCoroutine(HandlePunchAnimation());
-					animScript.PunchAnimation();
+
+					animScript.HitAnimation(punchScriptRef, animator);
+					//UIManagerRef.targetCharacterIO.HP = punchScriptRef.Hit(UIManagerRef.targetCharacterIO, UIManagerRef.attackerIO);
 				}
 				else
 				{
@@ -49,6 +57,15 @@ public class ActionChoices : MonoBehaviour
 				if (boneCrunchScriptRef != null)
 				{
 					UIManagerRef.targetCharacterIO.HP = boneCrunchScriptRef.Hit(UIManagerRef.targetCharacterIO, UIManagerRef.attackerIO);
+					if (combatManagerRef.currentTurn.name == "Zombie 1")
+					{
+						animScript.HitAnimation(boneCrunchScriptRef, animatorZ1);
+					}
+					else if (combatManagerRef.currentTurn.name == "Zombie 2")
+					{
+						animScript.HitAnimation(boneCrunchScriptRef, animatorZ2);
+					}
+					//UIManagerRef.targetCharacterIO.HP = boneCrunchScriptRef.Hit(UIManagerRef.targetCharacterIO, UIManagerRef.attackerIO);
 				}
 				else
 				{
@@ -96,45 +113,11 @@ public class ActionChoices : MonoBehaviour
 			UIManagerRef.SetAttackChoiceHandled(true);
 			Destroy(gameObject);
 		}
-		
-		
+
+
 		//Destroy(gameObject);
-		
+
 	}
 
-	//private void HandlePunchAnimation()
-	//{
-	//	isWalking = false;
-	//	animator.SetBool("IsWalking", isWalking);
-	//	animator.SetTrigger("IsPunching");
-	//	animator.Play("idle1");
-	//	//WaitForPunchAnimation();
-	//}
-
-	//private void WaitForPunchAnimation()
-	//{
-	//	//AnimatorStateInfo: A structure that holds information about the current state of an Animator.Gets the current state of the Animator for the first layer (index 0).
-		
-	//	AnimatorStateInfo punchStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-	//	while (!punchStateInfo.IsName("Punch"))
-	//	{
-			
-	//		//normalizedTime is a value between 0 and 1 that represents the progress of the animation (0 is the start, and 1 is the end).
-	//		punchStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-	//	}
-	//	while (punchStateInfo.normalizedTime < 1.0f)
-	//	{
-			
-	//		punchStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-	//	}
-	//	animator.Play("idle1");
-	//}
-	//void SetupIdle()
-	//{
-	//	isWalking = false;
-	//	animator.SetBool("IsWalking", isWalking);
-
-	//	isIdle = true;
-	//	animator.SetBool("IsIdle", isIdle);
-	//}
+	
 }

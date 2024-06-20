@@ -16,6 +16,9 @@ public class ScoresManager : MonoBehaviour
 	private MonsterStats secondMonsterStats;
 	private CombatManager combatManager;
 	private GameObject playerGO;
+	private GameObject currentPlayer;
+
+	public GameObject monsterGO;
 	//private GameObject targetCharacterGOSM;
 	//private GameObject attackerGOSM;
 
@@ -63,6 +66,7 @@ public class ScoresManager : MonoBehaviour
 		firstMonsterHP = firstMonsterStats.HP;
 		secondMonsterHP = secondMonsterStats.HP;
 		movesLeftInt = combatManager.movesLeft;
+		currentPlayer = combatManager.currentTurn;
 
 		playerHPText.text = $"Player HP: {playerHP}";
 		monster1HPText.text = $"Monster 1: {firstMonsterHP}";
@@ -70,7 +74,7 @@ public class ScoresManager : MonoBehaviour
 
 
 		//movesLeftInt = GameObject.Find("CombatManager").GetComponent<CombatManager>().movesLeft;
-		movesLeft.text = $"Moves left: {movesLeftInt}";
+		movesLeft.text = $"Current Turn: {currentPlayer.name} Moves left: {movesLeftInt}";
 
 		if (playerHP <= 0 && !isCharacterDead)
 		{

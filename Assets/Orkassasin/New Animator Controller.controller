@@ -1699,7 +1699,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: atack13 Punch
+  m_Name: Attack
   m_Speed: 2
   m_CycleOffset: 0
   m_Transitions:
@@ -2469,7 +2469,7 @@ AnimatorStateMachine:
     m_Position: {x: 228, y: 372, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102510009296495318}
-    m_Position: {x: -380, y: 140, z: 0}
+    m_Position: {x: -400, y: 140, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102519733983702834}
     m_Position: {x: 228, y: 276, z: 0}
@@ -2571,7 +2571,7 @@ AnimatorStateMachine:
     m_Position: {x: 444, y: 540, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102293202071623278}
-    m_Position: {x: -260, y: 250, z: 0}
+    m_Position: {x: -220, y: 290, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102175115006238470}
     m_Position: {x: 24, y: 540, z: 0}
@@ -2673,10 +2673,10 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.5043844
-  m_TransitionOffset: 0.5
-  m_ExitTime: 0.00000003823202
-  m_HasExitTime: 1
+  m_TransitionDuration: 0.35534796
+  m_TransitionOffset: 0.7944014
+  m_ExitTime: 0.15551624
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1

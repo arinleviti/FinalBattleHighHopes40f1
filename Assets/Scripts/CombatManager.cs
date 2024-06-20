@@ -107,6 +107,11 @@ public class CombatManager : MonoBehaviour
 						CleanUpTurn();
 						//PlayerAnimator.Rebind();
 						movesLeft--;
+						if (movesLeft < 1)
+						{
+							yield return StartCoroutine(WaitAndContinue2());
+						}
+						
 					}
 
 					if (gameObject != null && gameObject.CompareTag("Monster"))
@@ -121,7 +126,11 @@ public class CombatManager : MonoBehaviour
 						//UIManagerPrefabGO = GameObject.Find("UIManagerPrefab(Clone)");
 						CleanUpTurn();
 						movesLeft--;
-						yield return StartCoroutine(WaitAndContinue());
+						if (movesLeft < 1)
+						{
+							yield return StartCoroutine(WaitAndContinue2());
+						}
+						else yield return StartCoroutine(WaitAndContinue1());
 
 					}
 				}
@@ -138,13 +147,15 @@ public class CombatManager : MonoBehaviour
 		}
 
 	}
-	IEnumerator WaitAndContinue()
+	IEnumerator WaitAndContinue2()
 	{
-		Debug.Log("Waiting for 3 seconds...");
-		yield return new WaitForSeconds(3);
-		Debug.Log("Waited for 3 seconds.");
+		yield return new WaitForSeconds(2);	
 	}
 
+	IEnumerator WaitAndContinue1()
+	{		
+		yield return new WaitForSeconds(1);	
+	}
 	void CleanUpTurn()
 	{
 		Debug.Log("Cleaning up turn artifacts.");
