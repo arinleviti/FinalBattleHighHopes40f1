@@ -32,6 +32,10 @@ public class CombatManager : MonoBehaviour
 	public AnimScript animatorScript;
 	private int playerHP;
 
+	private Animator animator;
+	private Animator animatorZ1;
+	private Animator animatorZ2;
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -48,6 +52,9 @@ public class CombatManager : MonoBehaviour
 		TurnManager();
 		//playerAnimator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
 		animatorScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
+		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
+		animatorZ1 = GameObject.Find("Zombie 1").GetComponentInChildren<Animator>();
+		animatorZ2 = GameObject.Find("Zombie 2").GetComponentInChildren<Animator>();
 	}
 
 	// Update is called once per frame
@@ -253,11 +260,14 @@ public class CombatManager : MonoBehaviour
 		{
 			if (characterToRemove.CompareTag("Player"))
 			{
-				animatorScript.PlayDeathAnim(characterToRemove);
+				animatorScript.PlayDeathAnim(characterToRemove, animator);
 			}
 			else
 			{
-				Destroy(characterToRemove);
+				if (characterToRemove != null && characterToRemove.name == "Zombie 1")
+					animatorScript.PlayDeathAnim(characterToRemove, animatorZ1);
+				else if (characterToRemove != null && characterToRemove.name == "Zombie 2")
+					animatorScript.PlayDeathAnim(characterToRemove, animatorZ2);
 			}
 			TurnList.Remove(characterToRemove);
 			//TurnList.Remove(characterToRemove);

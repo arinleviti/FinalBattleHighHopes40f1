@@ -27,7 +27,7 @@ public class MonstersController : MonoBehaviour
 	private float radius;
 	private GameObject currentTurn;
 	private GameObject midpoint;
-	private float threshold = 2f;
+	private float threshold = 1.5f;
 	private Vector3 directionToPlayer;
 	private List<GameObject> rangeIndicatorList = new List<GameObject>();
 	private bool rangeIndicatorListTransferred = false;
@@ -101,6 +101,7 @@ public class MonstersController : MonoBehaviour
 					}
 				}
 				directionToPlayer = playerTarget.transform.position - monster.transform.position;
+				directionToPlayer.Normalize();
 				monster.transform.position += directionToPlayer * movespeed * Time.deltaTime;
 				float distanceToPlayer = Vector3.Distance(playerTarget.transform.position, monster.transform.position);
 				float distanceTravelled = Vector3.Distance(monster.transform.position, pointA);
@@ -180,7 +181,7 @@ public class MonstersController : MonoBehaviour
 						isIdleSetup2 = true;
 
 					}
-					else if (monster == GameObject.Find("Zombie 2") && monster != null)
+					if (monster == GameObject.Find("Zombie 2") && monster != null)
 					{
 						animScript.SetUpIdle(monster, animatorZ2, midpoint);
 						isIdleSetup2 = true;

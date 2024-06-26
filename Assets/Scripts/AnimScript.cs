@@ -75,13 +75,14 @@ public class AnimScript : MonoBehaviour
 		animator.SetBool("IsIdle", isIdle);
 	}
 
-	public void PlayDeathAnim(GameObject characterToRemove)
+	public void PlayDeathAnim(GameObject characterToRemove, Animator animator)
 	{
-		StartCoroutine(TimeToDie( characterToRemove));
+		StartCoroutine(TimeToDie( characterToRemove, animator));
 	}
 
-	private IEnumerator TimeToDie(GameObject characterToRemove)
+	private IEnumerator TimeToDie(GameObject characterToRemove, Animator animator)
 	{
+		yield return new WaitForSeconds(0.5f);
 		animator.SetInteger("HP", -2);
 		Debug.Log("Initiated Dying");
 		yield return new WaitForSeconds(5);
@@ -118,5 +119,27 @@ public class AnimScript : MonoBehaviour
 		
 	}
 
+	public void GetHitAnimation(Animator animAttacker, Animator animAttacked)
+	{
+		StartCoroutine(SetupGetHit(animAttacker, animAttacked));
+	}
+
+	public IEnumerator SetupGetHit(Animator animAttacker, Animator animAttacked)
+	{
+		//AnimatorStateInfo hitStateInfo = animAttacker.GetCurrentAnimatorStateInfo(0);
+		//while (!hitStateInfo.IsName("Attack"))
+		//{
+		//	yield return null;
+		//	hitStateInfo = animAttacker.GetCurrentAnimatorStateInfo(0);
+		//}
+		//while (hitStateInfo.normalizedTime < 1f)
+		//{
+		//	yield return null;
+		//	hitStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+		//}
+		yield return new WaitForSeconds(0.3f);
+		animAttacked.SetTrigger("GetHit");
+		
+	}
 	
 }
