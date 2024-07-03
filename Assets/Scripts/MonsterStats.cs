@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -22,7 +23,16 @@ public class MonsterStats : CharacterClass
 	private bool isDead = false;
 	[SerializeField]
 	private int potionsAvailable = 1;
-
+	private Rigidbody rb;
+	private Vector3 initialPosition;
+	private float distanceMoved;
+	//public float pushForce = 10f;
+	public float maxDistanceToMove = 2f;
+	public float moveSpeed = 5f;
+	public float pushForce =1000f; // Adjust this to control how far aside the zombie moves
+	public float freezeDuration = 5.0f;
+	private Vector3 originalDirection;
+	private bool isHandlingCollision = false;
 	private GameObject player;
 	public void Awake()
 	{
@@ -35,25 +45,46 @@ public class MonsterStats : CharacterClass
 		IsDead = isDead;
 		PotionsAvailable = potionsAvailable;
 		player = GameObject.Find("Player");
+		rb = GetComponent<Rigidbody>();
+		initialPosition = transform.position;
+		distanceMoved = 0f;
+		originalDirection = (GameObject.Find("Player").transform.position - transform.position).normalized;
+
 	}
 
-	//private void OnCollisionEnter(Collision collision)
-	//{
-	//	if (collision.gameObject.CompareTag("Player"))
-	//	{
-	//		// Find the MonstersController and call StopThere
-	//		MonstersController monstersController = GameObject.Find("MonstersControllerPrefab(Clone)").GetComponent<MonstersController>();
-	//		monstersController.StopThere();
-	//	}
-	//}
+	
 
-public void Update()
+	public void Update()
 	{
-		if (player != null)
-		{
-			transform.LookAt(player.transform);
-		}
-		
+		// Keep the monster upright
+		transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
 	}
+	public void FixedUpdate()
+	{
+
+
+		//if (player != null)
+		//{
+		//	transform.LookAt(player.transform);
+		//}
+
+		//Vector3 directionToPlayer = (GameObject.Find("Player").transform.position - transform.position).normalized;
+
+
+		////Track the distance moved since the collision
+		//distanceMoved = Vector3.Distance(transform.position, initialPosition);
+
+		//// Stop moving if the distance moved exceeds the maximum allowed distance
+		//if (distanceMoved >= maxDistanceToMove)
+		//{
+		//	rb.velocity = Vector3.zero;
+		//	//rotation speed.
+		//	rb.angularVelocity = Vector3.zero;
+		//}
+
+
+	}
+	
+
 }
 

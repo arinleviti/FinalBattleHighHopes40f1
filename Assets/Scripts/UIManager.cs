@@ -59,6 +59,7 @@ public class UIManager : MonoBehaviour
 	// The Update method checks if the current turn is over and destroys the character's game object.
 	void Update()
 	{
+		
 		if (flagForCoroutine)
 		{
 			TriggerSequence();

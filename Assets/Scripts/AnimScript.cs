@@ -82,27 +82,34 @@ public class AnimScript : MonoBehaviour
 
 	private IEnumerator TimeToDie(GameObject characterToRemove, Animator animator)
 	{
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(0.25f);
 		animator.SetInteger("HP", -2);
 		Debug.Log("Initiated Dying");
 		yield return new WaitForSeconds(5);
 		Debug.Log("Finished dying");
 		Destroy(characterToRemove);
 	}
+	public void SetupWalkingMonster(GameObject attacker, Animator animator, Vector3 clickPosition)
+	{
+		isIdle = false;
+		animator.SetBool("IsIdle", isIdle);
+		isWalking = true;
+		animator.SetBool("IsWalking", isWalking);
 
+	}
 	public Vector3 SetupWalking(GameObject attacker, Animator animator, Vector3 clickPosition)
 	{
 
 		isIdle = false;
 		animator.SetBool("IsIdle", isIdle);
 		Vector3 direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
-			direction.Normalize();
-			attacker.transform.rotation = Quaternion.LookRotation(direction);
-			
-			isWalking = true;
+		direction.Normalize();
+		attacker.transform.rotation = Quaternion.LookRotation(direction);
+
+		isWalking = true;
 			animator.SetBool("IsWalking", isWalking);
 
-		return direction;	
+		return direction;
 	}
 
 	public void SetUpIdle(GameObject attacker, Animator animator, GameObject midpoint)
@@ -113,9 +120,9 @@ public class AnimScript : MonoBehaviour
 
 		isIdle = true;
 		animator.SetBool("IsIdle", isIdle);
-		Vector3 direction = new Vector3(midpoint.transform.position.x, attacker.transform.position.y, midpoint.transform.position.z) - attacker.transform.position;
-		direction.Normalize();
-		attacker.transform.rotation = Quaternion.LookRotation(direction);
+		//Vector3 direction = new Vector3(midpoint.transform.position.x, attacker.transform.position.y, midpoint.transform.position.z) - attacker.transform.position;
+		//direction.Normalize();
+		//attacker.transform.rotation = Quaternion.LookRotation(direction);
 		
 	}
 
