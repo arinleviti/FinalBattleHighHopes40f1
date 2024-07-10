@@ -13,7 +13,9 @@ public class ActionChoices : MonoBehaviour
 	private Animator animatorZ2;
 	private GameObject zombie1;
 	private GameObject zombie2;
-
+	private GameObject bloodObjRef;
+	private BloodSplatter bloodSplatterScript;
+	
 
 	public void Start()
 	{
@@ -26,9 +28,27 @@ public class ActionChoices : MonoBehaviour
 		animScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
 		zombie1 = GameObject.Find("Zombie 1");
 		zombie2 = GameObject.Find("Zombie 2");
-		animatorZ1 = zombie1.GetComponentInChildren<Animator>();
-		animatorZ2 = zombie2.GetComponentInChildren<Animator>();
 		
+		if (zombie1 != null)
+		{
+			animatorZ1 = zombie1.GetComponentInChildren<Animator>();
+		}
+		if (zombie2 != null)
+		{
+			animatorZ2 = zombie2.GetComponentInChildren<Animator>();
+		}
+		if (!GameObject.Find("BloodObj(Clone)"))
+		{
+			bloodObjRef = Instantiate(Resources.Load<GameObject>("Prefabs/BloodObj"));
+			bloodSplatterScript = bloodObjRef.GetComponent<BloodSplatter>();
+		}
+		else if (GameObject.Find("BloodObj(Clone)"))
+		{
+			bloodObjRef = GameObject.Find("BloodObj(Clone)");
+			bloodSplatterScript = bloodObjRef.GetComponent<BloodSplatter>();
+		}
+		
+
 	}
 	
 
@@ -54,10 +74,14 @@ public class ActionChoices : MonoBehaviour
 					if (UIManagerRef.targetCharacterGO != null && UIManagerRef.targetCharacterGO.name == "Zombie 1" )
 					{
 						animScript.GetHitAnimation(animator, animatorZ1);
+										
+						bloodSplatterScript.ActivateCorBlood(UIManagerRef.targetCharacterGO);
 					}
 					else if (UIManagerRef.targetCharacterGO != null && UIManagerRef.targetCharacterGO.name == "Zombie 2")
 					{
 						animScript.GetHitAnimation(animator, animatorZ2 );
+													
+						bloodSplatterScript.ActivateCorBlood(UIManagerRef.targetCharacterGO);
 					}
 				}
 				else
@@ -75,11 +99,16 @@ public class ActionChoices : MonoBehaviour
 					{
 						animScript.HitAnimation(boneCrunchScriptRef, animatorZ1);
 						animScript.GetHitAnimation(animatorZ1, animator);
+						
+						bloodSplatterScript.ActivateCorBlood(UIManagerRef.targetCharacterGO);
+
 					}
 					else if (combatManagerRef.currentTurn.name == "Zombie 2")
 					{
 						animScript.HitAnimation(boneCrunchScriptRef, animatorZ2);
 						animScript.GetHitAnimation(animatorZ2, animator);
+												
+						bloodSplatterScript.ActivateCorBlood(UIManagerRef.targetCharacterGO);
 					}
 					
 						

@@ -63,10 +63,7 @@ public class MonsterStats : CharacterClass
 	{
 
 
-		//if (player != null)
-		//{
-		//	transform.LookAt(player.transform);
-		//}
+		
 
 		//Vector3 directionToPlayer = (GameObject.Find("Player").transform.position - transform.position).normalized;
 

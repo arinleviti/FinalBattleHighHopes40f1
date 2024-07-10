@@ -100,7 +100,7 @@ public class CombatManager : MonoBehaviour
 
 					if (gameObject != null && gameObject.CompareTag("Player"))
 					{
-
+						CleanUpTurn();
 						PlayerControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PlayerControllerPrefab"));
 						playerControllerRef = PlayerControllerPrefab.GetComponent<PlayerController>();
 
@@ -111,7 +111,7 @@ public class CombatManager : MonoBehaviour
 						Debug.Log("Is the turn completed in combatManager? " + playerTurnCompleted);
 						playerTurnCompleted = false;
 						//UIManagerPrefabGO = GameObject.Find("UIManagerPrefab(Clone)");
-						CleanUpTurn();
+						
 						//PlayerAnimator.Rebind();
 						movesLeft--;
 						if (movesLeft < 1)
@@ -123,7 +123,8 @@ public class CombatManager : MonoBehaviour
 
 					if (gameObject != null && gameObject.CompareTag("Monster"))
 					{
-
+						
+						CleanUpTurn();
 						monsterControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/MonstersControllerPrefab"));
 
 						yield return new WaitUntil(() => monsterTurnCompleted);
@@ -131,7 +132,7 @@ public class CombatManager : MonoBehaviour
 						
 						monsterTurnCompleted = false;
 						//UIManagerPrefabGO = GameObject.Find("UIManagerPrefab(Clone)");
-						CleanUpTurn();
+						//CleanUpTurn();
 						movesLeft--;
 						if (movesLeft < 1)
 						{
@@ -171,7 +172,8 @@ public class CombatManager : MonoBehaviour
 		Destroy(GameObject.Find("RangeIndicatorPrefab(Clone)"));
 		Destroy(GameObject.Find("MonstersControllerPrefab(Clone)"));
 		Destroy(GameObject.Find("PlayerControllerPrefab(Clone)"));
-		Destroy(GameObject.Find("ActionChoicesPrefab(Clone"));
+		Destroy(GameObject.Find("ActionChoicesPrefab(Clone)"));
+
 		GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Action");
 		foreach (GameObject obj in objectsWithTag)
 		{

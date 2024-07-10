@@ -9,6 +9,8 @@ public class AnimScript : MonoBehaviour
     public Animator animator;
 	public Animator monsterAnim;
 	public CombatManager combatManager;
+	
+
 	private bool isIdle = false;
 	private bool isWalking = false;
 	//private GameObject currentTurn;
@@ -17,8 +19,9 @@ public class AnimScript : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-        //combatManager = GameObject.Find("CombatManager").GetComponent<CombatManager>();
-    }
+		//combatManager = GameObject.Find("CombatManager").GetComponent<CombatManager>();
+		
+	}
 
     // Update is called once per frame
     void Update()
