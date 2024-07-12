@@ -36,18 +36,18 @@ public class RangeIndicator : MonoBehaviour
 			//playerControllerScript = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent<PlayerController>();
 			if (combatManagerScript.currentTurn.CompareTag("Player") && combatManagerScript.movesLeft < 2)
 			{
-				
-				GetComponent<Renderer>().material = newMaterial;
-			}
+
+			GetComponent<Renderer>().material = newMaterial;
+		}
 		//}
 		//if (GameObject.Find("MonstersControllerPrefab(Clone)"))
 		//{
 			//monstersControllerScript = GameObject.Find("MonstersControllerPrefab(Clone)").GetComponent<MonstersController>();
 			if (combatManagerScript.currentTurn.CompareTag("Monster") && combatManagerScript.movesLeft < 2)
 			{
-				
-				GetComponent<Renderer>().material = newMaterial;
-			}
+
+			GetComponent<Renderer>().material = newMaterial;
+		}
 		//}
 
 	}

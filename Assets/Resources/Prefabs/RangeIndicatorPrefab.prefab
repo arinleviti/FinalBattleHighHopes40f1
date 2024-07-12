@@ -30,8 +30,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.25, y: -1.471205, z: -3.0417228}
-  m_LocalScale: {x: 5.55, y: 0.028682172, z: 5.55}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 5.55, y: 0.19, z: 5.55}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9e8b3307929d9b14caf6832fbbfe91c5, type: 2}
+  - {fileID: -876546973899608171, guid: 66ca1d9a4f2162646b85fd076151e3dd, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -99,8 +99,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isTargetInRange: 0
   targetsInRange: []
-  originalMaterial: {fileID: 2100000, guid: 9e8b3307929d9b14caf6832fbbfe91c5, type: 2}
-  newMaterial: {fileID: 2100000, guid: c46dc558ab82b674c99c4c77263e3038, type: 2}
+  originalMaterial: {fileID: -876546973899608171, guid: 66ca1d9a4f2162646b85fd076151e3dd, type: 3}
+  newMaterial: {fileID: -876546973899608171, guid: 1c2644c58558c594291da7f9ca2a9706, type: 3}
   combatManagerScript: {fileID: 0}
   detectionRadius: 1
   detectionLayer:
