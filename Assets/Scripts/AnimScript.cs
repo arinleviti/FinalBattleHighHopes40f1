@@ -69,14 +69,7 @@ public class AnimScript : MonoBehaviour
 		animator.Play("idle1");
 	}
 
-	public void SetupIdle()
-	{
-		isWalking = false;
-		animator.SetBool("IsWalking", isWalking);
 
-		isIdle = true;
-		animator.SetBool("IsIdle", isIdle);
-	}
 
 	public void PlayDeathAnim(GameObject characterToRemove, Animator animator)
 	{
@@ -107,15 +100,15 @@ public class AnimScript : MonoBehaviour
 		animator.SetBool("IsIdle", isIdle);
 		Vector3 direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
 		direction.Normalize();
-		attacker.transform.rotation = Quaternion.LookRotation(direction);
+		//attacker.transform.rotation = Quaternion.LookRotation(direction);
 
 		isWalking = true;
-			animator.SetBool("IsWalking", isWalking);
+		animator.SetBool("IsWalking", isWalking);
 
 		return direction;
 	}
 
-	public void SetUpIdle(GameObject attacker, Animator animator, GameObject midpoint)
+	public void SetUpIdle(GameObject attacker, Animator animator)
 	{
 
 		isWalking = false;
@@ -123,10 +116,6 @@ public class AnimScript : MonoBehaviour
 
 		isIdle = true;
 		animator.SetBool("IsIdle", isIdle);
-		//Vector3 direction = new Vector3(midpoint.transform.position.x, attacker.transform.position.y, midpoint.transform.position.z) - attacker.transform.position;
-		//direction.Normalize();
-		//attacker.transform.rotation = Quaternion.LookRotation(direction);
-		
 	}
 
 	public void GetHitAnimation(Animator animAttacker, Animator animAttacked)

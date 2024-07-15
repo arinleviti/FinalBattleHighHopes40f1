@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
@@ -20,17 +21,26 @@ public class PlayerController : MonoBehaviour
 	public CombatManager CombatManagerScript;
 	private float radius;
 	private Animator animator;
-	private AnimScript animScript;
+	private AnimScript animScriptS;
 
-	private float threshold = 1f;
-	private float thresholdRI = 0.1f;
+	private float threshold = 0.1f;
+	private float maxDistanceFromMonster = 1.2f;
 
 	public bool isWalking = false;
 	public bool isIdle = false;
 	private Vector3 direction = new Vector3();
 	private bool isAnimatorSetup = false;
+	private GameObject animatorObj;
 
 	private GameObject midpoint;
+	private NavMeshAgent navMeshAgentPlayer;
+	private bool flag1 = false;
+	private bool flag2 = false;
+	private bool flag3 = false;
+	private bool flag4 = false;
+	private bool reachedTarget = false;
+	private Vector3 pointA;
+	private Rigidbody rb;
 
 	// Start is called before the first frame update
 	void Start()
@@ -52,12 +62,21 @@ public class PlayerController : MonoBehaviour
 		CombatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
 		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
 		midpoint = GameObject.Find("Midpoint");
-		animScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
-		
+		animatorObj = GameObject.Find("AnimatorObj");
+		animScriptS = animatorObj.GetComponent<AnimScript>();
+		navMeshAgentPlayer = attacker.GetComponent<NavMeshAgent>();
+		pointA = attacker.transform.position;
+		ConfigureNavMeshAgent(navMeshAgentPlayer);
+		if (attacker != null)
+		{
+			rb = attacker.GetComponent<Rigidbody>();
+			rb.isKinematic = true;
+		}
+
 	}
 
 	// Update is called once per frame
-	void Update()
+	void FixedUpdate()
 	{
 		marker.transform.position = new Vector3(attacker.transform.position.x, attacker.transform.position.y + 2, attacker.transform.position.z);
 		ClickOnMonster();
@@ -67,80 +86,133 @@ public class PlayerController : MonoBehaviour
 
 	void ClickOnMonster()
 	{
-
-		if (Input.GetMouseButtonDown(0) && !IsPointerOverUIElement())
+		if (!reachedTarget)
 		{
-			clickPosition = new Vector3();
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
 
-			if (Physics.Raycast(ray, out hit))
+			if (Input.GetMouseButtonDown(0) && !IsPointerOverUIElement())
 			{
-				clickPosition = hit.point;
-				Hit = hit;
-			}
+				
+				clickPosition = new Vector3();
+				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				RaycastHit hit;
 
-		}
-
-		if (clickPosition != Vector3.zero && Hit.collider.CompareTag("Monster") && rangeIndicatorScript.targetsInRange.Contains(Hit.transform.gameObject))
-		{
-			//isWalking = false;
-			//animator.SetBool("IsWalking", isWalking);
-
-			direction = clickPosition - attacker.transform.position;
-			direction.Normalize();
-			direction.y = 0;
-
-			attacker.transform.rotation = Quaternion.LookRotation(direction);
-
-			if (Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) > threshold)
-			{
-				if (!isAnimatorSetup)
+				if (Physics.Raycast(ray, out hit))
 				{
-					direction = animScript.SetupWalking(attacker, animator,clickPosition);
-					isAnimatorSetup = true;
+					clickPosition = hit.point;
+					Hit = hit;
 				}
-				attacker.transform.position += direction * movespeed * Time.deltaTime;
 			}
-			else
+
+
+			if (clickPosition != Vector3.zero && Hit.collider.CompareTag("Monster") && rangeIndicatorScript.targetsInRange.Contains(Hit.transform.gameObject)
+				&& Vector3.Distance(attacker.transform.position, Hit.transform.position) > maxDistanceFromMonster)
+				/*Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) > threshold*/
 			{
-				animScript.SetupIdle();
+				//isWalking = false;
+				//animator.SetBool("IsWalking", isWalking);
+				
+				if (!flag1)
+				{
+					//direction = clickPosition - attacker.transform.position;
+					//direction.Normalize();
+					//direction.y = 0;
+					//float distanceFromMonster1 = Vector3.Distance(attacker.transform.position, Hit.transform.position);
+					//Debug.Log(distanceFromMonster1);
+					//Debug.Log(maxDistanceFromMonster);
+					rb.isKinematic = false;
+					animScriptS.SetupWalking(attacker, animator, clickPosition);
+					navMeshAgentPlayer.isStopped = false;
+					navMeshAgentPlayer.SetDestination(Hit.transform.position);
+					flag1 = true;
+				}
+			}
+			//float distanceFromMonster = Vector3.Distance(attacker.transform.position, Hit.transform.position);
+			//Debug.Log("This should be the max distance the player can ge tto the monster: "+distanceFromMonster);
+			//attacker.transform.rotation = Quaternion.LookRotation(direction);
+
+			//if (Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) > threshold)
+			//{
+			//	//if (!isAnimatorSetup)
+			//	//{
+			//	direction = animScriptS.SetupWalking(attacker, animator, clickPosition);
+			//	isAnimatorSetup = true;
+			//	//}				
+			//	navMeshAgentPlayer.SetDestination(direction);
+			//	flag1 = true;
+
+
+			//	//attacker.transform.position += direction * movespeed * Time.deltaTime;
+			//}
+			//else
+			//{
+			if (clickPosition != Vector3.zero && Hit.collider.CompareTag("Monster") && rangeIndicatorScript.targetsInRange.Contains(Hit.transform.gameObject) &&
+				 Vector3.Distance(attacker.transform.position, Hit.transform.position) <= maxDistanceFromMonster)
+			/*Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) <= threshold*/
+			{
+				//animScriptS.SetupIdle();
+				animScriptS.SetUpIdle(attacker, animator);
+				rb.isKinematic = true;
 				clickPosition = Vector3.zero;
+				StopMoving();
+				TurnToTarget(40,Hit.transform.gameObject);
+				navMeshAgentPlayer.isStopped = true;
+				reachedTarget = true;
 				ActivateUIManager();
+				//CombatManagerScript.playerTurnCompleted = true;
 			}
-		}
-		if (clickPosition != Vector3.zero && Hit.collider.CompareTag("RangeIndicator"))
-		{
 
+			//}
 
-			if (!isAnimatorSetup)
+			if (clickPosition != Vector3.zero && Hit.collider.CompareTag("RangeIndicator"))
 			{
-				direction = animScript.SetupWalking(attacker, animator, clickPosition);
-				isAnimatorSetup = true;
+				//if (!isAnimatorSetup)
+				//{
+				if (!flag2)
+				{
+					rb.isKinematic = false;
+					animScriptS.SetupWalking(attacker, animator, clickPosition);
+					navMeshAgentPlayer.isStopped = false;
+					navMeshAgentPlayer.SetDestination(clickPosition);
+					flag2 = true;
+				}
+				Debug.Log("Checkpoint");
+				float distance = Vector3.Distance(attacker.transform.position, pointA);
+
+				if (!navMeshAgentPlayer.pathPending && navMeshAgentPlayer.remainingDistance <= navMeshAgentPlayer.stoppingDistance && !flag3)
+				{
+					StopMoving();
+					rb.isKinematic = true;
+					clickPosition = Vector3.zero;
+					reachedTarget = true;
+					animScriptS.SetUpIdle(attacker, animator);
+					TurnToTarget(40, midpoint.gameObject);
+					CombatManagerScript.playerTurnCompleted = true;
+					flag3 = true;
+				}
+
 			}
+			//attacker.transform.position += direction * movespeed * Time.deltaTime;
 
-			attacker.transform.position += direction * movespeed * Time.deltaTime;
+			//if (Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) < thresholdRI)
+			//{
+			//	animScriptS.SetUpIdle(attacker, animator, midpoint);
+			//	// Snaps the attacker to the target position
+			//	//attacker.transform.position = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z);
 
-			if (Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) < thresholdRI)
-			{
-				animScript.SetUpIdle(attacker, animator, midpoint);
-				// Snaps the attacker to the target position
-				//attacker.transform.position = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z);
-
-				rangeIndicatorGO.transform.position = new Vector3(attacker.transform.position.x, 0.07f, attacker.transform.position.z);
-				isWalking = false;
+			//	rangeIndicatorGO.transform.position = new Vector3(attacker.transform.position.x, 0.07f, attacker.transform.position.z);
+			//	isWalking = false;
 
 
-				CombatManagerScript.playerTurnCompleted = true;
-				clickPosition = Vector3.zero;
-				//Destroy(gameObject);
-			}
+			//	CombatManagerScript.playerTurnCompleted = true;
+			//	clickPosition = Vector3.zero;
+			//	//Destroy(gameObject);
+			//}
+
+
+
+
 
 		}
-
-
-
-
 
 	}
 
@@ -157,7 +229,12 @@ public class PlayerController : MonoBehaviour
 	{
 		return EventSystem.current.IsPointerOverGameObject();
 	}
-
+	private void TurnToTarget(float speed, GameObject target)
+	{
+		Vector3 direction = (target.transform.position - attacker.transform.position).normalized;
+		Quaternion targetRotation = Quaternion.LookRotation(direction);
+		attacker.transform.rotation = Quaternion.Lerp(attacker.transform.rotation, targetRotation, Time.deltaTime * speed);
+	}
 	//void SetUpWalking()
 	//{
 	//	direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
@@ -180,5 +257,30 @@ public class PlayerController : MonoBehaviour
 	//	direction.Normalize();
 	//	attacker.transform.rotation = Quaternion.LookRotation(direction);
 	//}
-	
+	private void StopMoving()
+	{
+
+		if (attacker != null)
+		{
+			if (navMeshAgentPlayer.isOnNavMesh)
+			{
+				navMeshAgentPlayer.isStopped = true; // Stop the agent from moving further
+				navMeshAgentPlayer.velocity = Vector3.zero; // Ensure the velocity is zero to prevent sliding
+			}
+		}
+
+	}
+
+	private void ConfigureNavMeshAgent(NavMeshAgent agent)
+	{
+		agent.avoidancePriority = 50;
+		
+		
+		agent.angularSpeed = 5000f;
+		agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+		
+		agent.speed = movespeed;
+		agent.stoppingDistance = 0.1f;
+
+	}
 }

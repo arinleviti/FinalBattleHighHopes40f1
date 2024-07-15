@@ -21,7 +21,7 @@ public class MonstersController : MonoBehaviour
 	private bool isWalkSetup2 = false;
 	private bool isIdleSetup1 = false;
 	private bool isIdleSetup2 = false;
-	private AnimScript animScript;
+	private AnimScript animScriptS;
 	private Animator animatorZ1;
 	private Animator animatorZ2;
 	private GameObject rangeIndicatorGO;
@@ -30,7 +30,7 @@ public class MonstersController : MonoBehaviour
 	private float radius;
 	private GameObject currentTurn;
 	private GameObject midpoint;
-	private float threshold = 1.5f;
+	private float threshold = 0f;
 	private Vector3 directionToPlayer;
 	private List<GameObject> rangeIndicatorList = new List<GameObject>();
 	private bool rangeIndicatorListTransferred = false;
@@ -45,7 +45,9 @@ public class MonstersController : MonoBehaviour
 	private bool flag1 = false;
 	private bool flag2 = false;
 	private float distanceToPlayer;
-
+	private Rigidbody zombie1RB;
+	private Rigidbody zombie2RB;
+	
 
 
 	void Start()
@@ -63,15 +65,18 @@ public class MonstersController : MonoBehaviour
 		pointA = monster.transform.position;
 		zombie1GO = GameObject.Find("Zombie 1");
 		zombie2GO = GameObject.Find("Zombie 2");
+		
 		if (zombie1GO != null)
 		{
 			animatorZ1 = zombie1GO.GetComponentInChildren<Animator>();
+			zombie1RB = zombie1GO.GetComponent<Rigidbody>();
 		}
 		if (zombie2GO != null)
 		{
 			animatorZ2 = zombie2GO.GetComponentInChildren<Animator>();
+			zombie2RB = zombie2GO.GetComponent<Rigidbody>();
 		}
-		animScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
+		animScriptS = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
 		midpoint = GameObject.Find("Midpoint");
 		currentTurn = combatManagerRef.currentTurn;
 		//
@@ -81,6 +86,8 @@ public class MonstersController : MonoBehaviour
 			SetupNavMeshObst(zombie1GO, false, out navMeshObstacleZ1);
 			SetupNavMeshAgent(zombie2GO, false, out navMeshAgentZ2); //RESUME
 			SetupNavMeshObst(zombie2GO, true, out navMeshObstacleZ2);
+			zombie1RB.isKinematic = false;
+			zombie2RB.isKinematic = true;
 		}
 		else if (currentTurn != null && currentTurn == zombie2GO & zombie1GO != null)
 		{
@@ -88,79 +95,23 @@ public class MonstersController : MonoBehaviour
 			SetupNavMeshObst(zombie2GO, false, out navMeshObstacleZ2);
 			SetupNavMeshAgent(zombie1GO, false , out navMeshAgentZ1);
 			SetupNavMeshObst(zombie1GO, true, out navMeshObstacleZ2);
+			zombie2RB.isKinematic = false;
+			zombie1RB.isKinematic = true;
 		}
 		else if (currentTurn != null && currentTurn == zombie1GO && zombie2GO == null)
 		{
 			SetupNavMeshAgent(zombie1GO, true, out navMeshAgentZ1);
 			SetupNavMeshObst(zombie1GO, false, out navMeshObstacleZ1);
+			zombie1RB.isKinematic = false;
 		}
 		else if (currentTurn != null && currentTurn == zombie2GO && zombie1GO == null)
 		{
 			SetupNavMeshAgent(zombie2GO, true, out navMeshAgentZ2);
 			SetupNavMeshObst(zombie2GO, false, out navMeshObstacleZ2);
+			zombie2RB.isKinematic = false;
 		}
-		//
-
-		//if (currentTurn != null && currentTurn == zombie1GO && zombie2GO != null)
-		//{
-		//	navMeshAgentZ1 = zombie1GO.GetComponent<NavMeshAgent>();
-		//	navMeshAgentZ1.enabled = true;
-		//	navMeshAgentZ2 = zombie2GO.GetComponent<NavMeshAgent>();
-		//	navMeshAgentZ2.enabled = false;
-		//	navMeshObstacleZ2 = zombie2GO.GetComponent<NavMeshObstacle>();
-		//	navMeshObstacleZ2.enabled = true;
-		//	navMeshObstacleZ1 = zombie1GO.GetComponent<NavMeshObstacle>();
-		//	navMeshObstacleZ1.enabled = false;
-		//	navMeshAgentZ1.speed = movespeed;
-		//	navMeshAgentZ1.stoppingDistance = threshold;
-		//	navMeshAgentZ1.isStopped = false;
-		//	navMeshAgentZ1.stoppingDistance = 1f;
-		//	ConfigureNavMeshAgent(navMeshAgentZ1);
-		//	ConfigureNavMeshObstacle(navMeshObstacleZ1);
-		//}
-		//else if (currentTurn != null && currentTurn == zombie2GO & zombie1GO != null)
-		//{
-		//	navMeshAgentZ2 = zombie2GO.GetComponent<NavMeshAgent>();
-		//	navMeshAgentZ2.enabled = true;
-		//	navMeshAgentZ1 = zombie1GO.GetComponent<NavMeshAgent>();
-		//	navMeshAgentZ1.enabled = false;
-		//	navMeshObstacleZ1 = zombie1GO.GetComponent<NavMeshObstacle>();
-		//	navMeshObstacleZ1.enabled = true;
-		//	navMeshObstacleZ2 = zombie2GO.GetComponent<NavMeshObstacle>();
-		//	navMeshObstacleZ2.enabled = false;
-		//	navMeshAgentZ2.speed = movespeed;
-		//	navMeshAgentZ2.stoppingDistance = threshold;
-		//	navMeshAgentZ2.isStopped = false;
-		//	navMeshAgentZ2.stoppingDistance = 1f;
-		//	ConfigureNavMeshAgent(navMeshAgentZ2);
-		//	ConfigureNavMeshObstacle(navMeshObstacleZ2);
-		//}
-		//else if (currentTurn != null && currentTurn == zombie1GO && zombie2GO == null)
-		//{
-		//	navMeshAgentZ1 = zombie1GO.GetComponent<NavMeshAgent>();
-		//	navMeshAgentZ1.enabled = true;
-		//	navMeshObstacleZ1 = zombie1GO.GetComponent<NavMeshObstacle>();
-		//	navMeshObstacleZ1.enabled = false;
-		//	navMeshAgentZ1.speed = movespeed;
-		//	navMeshAgentZ1.stoppingDistance = threshold;
-		//	navMeshAgentZ1.isStopped = false;
-		//	navMeshAgentZ1.stoppingDistance = 1f;
-		//	ConfigureNavMeshAgent(navMeshAgentZ1);
-		//	ConfigureNavMeshObstacle(navMeshObstacleZ1);
-		//}
-		//else if (currentTurn != null && currentTurn == zombie2GO && zombie1GO == null)
-		//{
-		//	navMeshAgentZ2 = zombie2GO.GetComponent<NavMeshAgent>();
-		//	navMeshAgentZ2.enabled = true;
-		//	navMeshObstacleZ2 = zombie2GO.GetComponent<NavMeshObstacle>();
-		//	navMeshObstacleZ2.enabled = false;
-		//	navMeshAgentZ2.speed = movespeed;
-		//	navMeshAgentZ2.stoppingDistance = threshold;
-		//	navMeshAgentZ2.isStopped = false;
-		//	navMeshAgentZ2.stoppingDistance = 1f;
-		//	ConfigureNavMeshAgent(navMeshAgentZ2);
-		//	ConfigureNavMeshObstacle(navMeshObstacleZ2);
-		//}
+		
+		
 
 
 	}
@@ -209,7 +160,7 @@ public class MonstersController : MonoBehaviour
 
 			Debug.Log($"ApproachPlayer - Checking if playerTarget {playerTarget.name} is in range. InstanceID: {playerTarget.GetInstanceID()}");
 			
-			if (!rangeIndicatorList.Contains(playerTarget))
+			////if (!rangeIndicatorList.Contains(playerTarget))
 			{
 				Debug.Log($"Player target {playerTarget.name} (InstanceID: {playerTarget.GetInstanceID()}) is not in targetsInRange.");
 				
@@ -217,12 +168,12 @@ public class MonstersController : MonoBehaviour
 				{
 					if (monster != null && monster == zombie1GO)
 					{
-						animScript.SetupWalkingMonster(monster, animatorZ1, playerTarget.transform.position);
+						animScriptS.SetupWalkingMonster(monster, animatorZ1, playerTarget.transform.position);
 						isWalkSetup1 = true;
 					}
 					else if (monster != null && monster == zombie2GO)
 					{
-						animScript.SetupWalkingMonster(monster, animatorZ2, playerTarget.transform.position);
+						animScriptS.SetupWalkingMonster(monster, animatorZ2, playerTarget.transform.position);
 						isWalkSetup1 = true;
 					}
 				}
@@ -251,12 +202,12 @@ public class MonstersController : MonoBehaviour
 					{
 						if (monster != null && monster == zombie1GO)
 						{
-							animScript.SetUpIdle(monster, animatorZ1, midpoint);
+							animScriptS.SetUpIdle(monster, animatorZ1);
 							isIdleSetup1 = true;
 						}
 						else if (monster != null && monster == zombie2GO)
 						{
-							animScript.SetUpIdle(monster, animatorZ2, midpoint);
+							animScriptS.SetUpIdle(monster, animatorZ2);
 							isIdleSetup1 = true;
 						}
 					}
@@ -276,12 +227,12 @@ public class MonstersController : MonoBehaviour
 				{
 					if (monster == GameObject.Find("Zombie 1") && monster != null)
 					{
-						animScript.SetupWalkingMonster(monster, animatorZ1, playerTarget.transform.position);
+						animScriptS.SetupWalkingMonster(monster, animatorZ1, playerTarget.transform.position);
 						isWalkSetup2 = true;
 					}
 					else if (monster == GameObject.Find("Zombie 2") && monster != null)
 					{
-						animScript.SetupWalkingMonster(monster, animatorZ2, playerTarget.transform.position);
+						animScriptS.SetupWalkingMonster(monster, animatorZ2, playerTarget.transform.position);
 						isWalkSetup2 = true;
 					}
 				}
@@ -312,7 +263,7 @@ public class MonstersController : MonoBehaviour
 					reachedTarget = true;
 					StopMoving();
 					ResetNavMesh();
-					TurnToPlayer(20);
+					TurnToPlayer(50);
 					UpdateUIManager();
 					Debug.Log("It's blocking here 2");
 				}
@@ -327,7 +278,7 @@ public class MonstersController : MonoBehaviour
 					reachedTarget = true;
 					StopMoving();
 					ResetNavMesh();
-					TurnToPlayer(20);
+					TurnToPlayer(50);
 					UpdateUIManager();
 					Debug.Log("It's blocking here 2");
 
@@ -345,6 +296,7 @@ public class MonstersController : MonoBehaviour
 	}
 	private void StopMoving()
 	{
+		monster.GetComponent<Rigidbody>().isKinematic = true;
 		if (monster != null && monster == zombie1GO)
 		{
 			if (navMeshAgentZ1.isOnNavMesh)
