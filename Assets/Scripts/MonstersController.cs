@@ -155,25 +155,18 @@ public class MonstersController : MonoBehaviour
 	private void ApproachPlayer()
 	{
 		if (!reachedTarget)
-		{
-			
-
-			Debug.Log($"ApproachPlayer - Checking if playerTarget {playerTarget.name} is in range. InstanceID: {playerTarget.GetInstanceID()}");
-			
-			////if (!rangeIndicatorList.Contains(playerTarget))
-			{
-				Debug.Log($"Player target {playerTarget.name} (InstanceID: {playerTarget.GetInstanceID()}) is not in targetsInRange.");
+		{				
 				
 				if (!isWalkSetup1)
 				{
 					if (monster != null && monster == zombie1GO)
 					{
-						animScriptS.SetupWalkingMonster(monster, animatorZ1, playerTarget.transform.position);
+						animScriptS.SetupWalkingMonster(monster, animatorZ1);
 						isWalkSetup1 = true;
 					}
 					else if (monster != null && monster == zombie2GO)
 					{
-						animScriptS.SetupWalkingMonster(monster, animatorZ2, playerTarget.transform.position);
+						animScriptS.SetupWalkingMonster(monster, animatorZ2);
 						isWalkSetup1 = true;
 					}
 				}
@@ -218,7 +211,7 @@ public class MonstersController : MonoBehaviour
 
 				}
 
-			}
+			
 
 			if (rangeIndicatorList.Contains(playerTarget) /*&& Vector3.Distance(monster.transform.position, playerTarget.transform.position) >= threshold*/ /*&& !flag0*/)
 			{
@@ -227,12 +220,12 @@ public class MonstersController : MonoBehaviour
 				{
 					if (monster == GameObject.Find("Zombie 1") && monster != null)
 					{
-						animScriptS.SetupWalkingMonster(monster, animatorZ1, playerTarget.transform.position);
+						animScriptS.SetupWalkingMonster(monster, animatorZ1);
 						isWalkSetup2 = true;
 					}
 					else if (monster == GameObject.Find("Zombie 2") && monster != null)
 					{
-						animScriptS.SetupWalkingMonster(monster, animatorZ2, playerTarget.transform.position);
+						animScriptS.SetupWalkingMonster(monster, animatorZ2);
 						isWalkSetup2 = true;
 					}
 				}
@@ -353,9 +346,9 @@ public class MonstersController : MonoBehaviour
 	private void ConfigureNavMeshAgent(NavMeshAgent agent)
 	{
 		agent.avoidancePriority = 50;
-		agent.radius = 0.5f;
+		agent.radius = 0.2f;
 		agent.height = 2.0f;
-		agent.angularSpeed = 5000f;
+		agent.angularSpeed = 10000f;
 		agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
 		agent.autoBraking = true;
 	}

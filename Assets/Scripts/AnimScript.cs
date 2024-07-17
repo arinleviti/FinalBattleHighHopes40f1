@@ -6,35 +6,49 @@ using UnityEngine;
 
 public class AnimScript : MonoBehaviour
 {
-    public Animator animator;
+	public Animator animator;
 	public Animator monsterAnim;
 	public CombatManager combatManager;
-	
+
 
 	private bool isIdle = false;
 	private bool isWalking = false;
 	//private GameObject currentTurn;
-	
+	public bool turnToTarget = false;
 
+	private float speed;
+	private GameObject target;
+	private GameObject attacker;
+	private PlayerController playerControllerRef;
+	public bool isRotating = false;
+	public bool flag2 = false;
+	private float turnSpeed = 20;
+	private GameObject midpoint;
+	private GameObject player;
 	// Start is called before the first frame update
 	void Start()
-    {
+	{
 		//combatManager = GameObject.Find("CombatManager").GetComponent<CombatManager>();
-		
+		//playerControllerRef = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent<PlayerController>();
 	}
 
-    // Update is called once per frame
-    void Update()
-    {
-		//currentTurn = combatManager.currentTurn;
-    }
+	// Update is called once per frame
+	void Update()
+	{
+		if (isRotating )
+		{
+			PlayerTurnEndShell();
+		}
+		
+
+	}
 
 	public void HitAnimation(IAction action, Animator animator)
 	{
-		StartCoroutine(WaitForPunchAnimation(action, animator));	
+		StartCoroutine(WaitForPunchAnimation(action, animator));
 	}
 
-	private IEnumerator WaitForPunchAnimation(IAction action, Animator animator )
+	private IEnumerator WaitForPunchAnimation(IAction action, Animator animator)
 	{
 		isWalking = false;
 		animator.SetBool("IsWalking", isWalking);
@@ -52,9 +66,9 @@ public class AnimScript : MonoBehaviour
 				break;
 		}
 
-				//AnimatorStateInfo: A structure that holds information about the current state of an Animator.Gets the current state of the Animator for the first layer (index 0).
+		//AnimatorStateInfo: A structure that holds information about the current state of an Animator.Gets the current state of the Animator for the first layer (index 0).
 
-				AnimatorStateInfo hitStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+		AnimatorStateInfo hitStateInfo = animator.GetCurrentAnimatorStateInfo(0);
 		while (!hitStateInfo.IsName("Attack"))
 		{
 			yield return null;
@@ -69,11 +83,30 @@ public class AnimScript : MonoBehaviour
 		animator.Play("idle1");
 	}
 
-
+	private void PlayerTurnEndShell()
+	{
+		PlayerTurnEndOfTurn();
+	}
+	private void PlayerTurnEndOfTurn()
+	{
+		//playerControllerRef = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent<PlayerController>();
+		midpoint = GameObject.Find("Midpoint");
+		player = GameObject.Find("Player");
+		Vector3 turnDirection = midpoint.transform.position - player.transform.position;
+		Quaternion turnRotation = Quaternion.LookRotation(turnDirection);
+		player.transform.rotation = Quaternion.Lerp(player.transform.rotation, turnRotation, Time.deltaTime * turnSpeed);
+		if (Quaternion.Angle(player.transform.rotation, turnRotation) < 10f)
+		{
+			// Ensure the final rotation is exactly the target rotation
+			player.transform.rotation = turnRotation;
+			isRotating = false;
+			Debug.Log("Rotation completed!");
+		}
+	}
 
 	public void PlayDeathAnim(GameObject characterToRemove, Animator animator)
 	{
-		StartCoroutine(TimeToDie( characterToRemove, animator));
+		StartCoroutine(TimeToDie(characterToRemove, animator));
 	}
 
 	private IEnumerator TimeToDie(GameObject characterToRemove, Animator animator)
@@ -85,7 +118,7 @@ public class AnimScript : MonoBehaviour
 		Debug.Log("Finished dying");
 		Destroy(characterToRemove);
 	}
-	public void SetupWalkingMonster(GameObject attacker, Animator animator, Vector3 clickPosition)
+	public void SetupWalkingMonster(GameObject attacker, Animator animator)
 	{
 		isIdle = false;
 		animator.SetBool("IsIdle", isIdle);
@@ -93,19 +126,19 @@ public class AnimScript : MonoBehaviour
 		animator.SetBool("IsWalking", isWalking);
 
 	}
-	public Vector3 SetupWalking(GameObject attacker, Animator animator, Vector3 clickPosition)
+	public void SetupWalking(GameObject attacker, Animator animator)
 	{
 
 		isIdle = false;
 		animator.SetBool("IsIdle", isIdle);
-		Vector3 direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
-		direction.Normalize();
+		//Vector3 direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
+		//direction.Normalize();
 		//attacker.transform.rotation = Quaternion.LookRotation(direction);
 
 		isWalking = true;
 		animator.SetBool("IsWalking", isWalking);
 
-		return direction;
+
 	}
 
 	public void SetUpIdle(GameObject attacker, Animator animator)
@@ -138,7 +171,17 @@ public class AnimScript : MonoBehaviour
 		//}
 		yield return new WaitForSeconds(0.3f);
 		animAttacked.SetTrigger("GetHit");
-		
+
 	}
-	
+
+	public void TurnToTargetCapsule(float speed, GameObject target, GameObject attacker)
+	{
+		TurnToTarget(speed, target, attacker);
+	}
+	private void TurnToTarget(float speed, GameObject target, GameObject attacker)
+	{
+		Vector3 direction = (target.transform.position - attacker.transform.position).normalized;
+		Quaternion targetRotation = Quaternion.LookRotation(direction);
+		attacker.transform.rotation = Quaternion.Lerp(attacker.transform.rotation, targetRotation, Time.deltaTime * speed);
+	}
 }

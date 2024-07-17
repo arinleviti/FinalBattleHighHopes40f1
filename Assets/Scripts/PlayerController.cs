@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
 	private bool isAnimatorSetup = false;
 	private GameObject animatorObj;
 
-	private GameObject midpoint;
+	public GameObject midpoint;
 	private NavMeshAgent navMeshAgentPlayer;
 	private bool flag1 = false;
 	private bool flag2 = false;
@@ -41,6 +41,15 @@ public class PlayerController : MonoBehaviour
 	private bool reachedTarget = false;
 	private Vector3 pointA;
 	private Rigidbody rb;
+
+	private Vector2 Velocity;
+	private Vector2 SmoothDeltaPosition;
+
+	private bool attackerMustTurn = false;
+
+	public float turnSpeed = 50;
+
+	private Quaternion targetRotation;
 
 	// Start is called before the first frame update
 	void Start()
@@ -61,6 +70,7 @@ public class PlayerController : MonoBehaviour
 
 		CombatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
 		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
+		animator.applyRootMotion = true; //
 		midpoint = GameObject.Find("Midpoint");
 		animatorObj = GameObject.Find("AnimatorObj");
 		animScriptS = animatorObj.GetComponent<AnimScript>();
@@ -82,6 +92,7 @@ public class PlayerController : MonoBehaviour
 		ClickOnMonster();
 		//if (movesLeft < 1) CombatManagerScript.playerTurnCompleted = true;
 
+
 	}
 
 	void ClickOnMonster()
@@ -91,7 +102,7 @@ public class PlayerController : MonoBehaviour
 
 			if (Input.GetMouseButtonDown(0) && !IsPointerOverUIElement())
 			{
-				
+
 				clickPosition = new Vector3();
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				RaycastHit hit;
@@ -106,11 +117,11 @@ public class PlayerController : MonoBehaviour
 
 			if (clickPosition != Vector3.zero && Hit.collider.CompareTag("Monster") && rangeIndicatorScript.targetsInRange.Contains(Hit.transform.gameObject)
 				&& Vector3.Distance(attacker.transform.position, Hit.transform.position) > maxDistanceFromMonster)
-				/*Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) > threshold*/
+			/*Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) > threshold*/
 			{
 				//isWalking = false;
 				//animator.SetBool("IsWalking", isWalking);
-				
+
 				if (!flag1)
 				{
 					//direction = clickPosition - attacker.transform.position;
@@ -120,7 +131,7 @@ public class PlayerController : MonoBehaviour
 					//Debug.Log(distanceFromMonster1);
 					//Debug.Log(maxDistanceFromMonster);
 					rb.isKinematic = false;
-					animScriptS.SetupWalking(attacker, animator, clickPosition);
+					animScriptS.SetupWalking(attacker, animator);
 					navMeshAgentPlayer.isStopped = false;
 					navMeshAgentPlayer.SetDestination(Hit.transform.position);
 					flag1 = true;
@@ -154,7 +165,7 @@ public class PlayerController : MonoBehaviour
 				rb.isKinematic = true;
 				clickPosition = Vector3.zero;
 				StopMoving();
-				TurnToTarget(40,Hit.transform.gameObject);
+				TurnToTarget(40, Hit.transform.gameObject);
 				navMeshAgentPlayer.isStopped = true;
 				reachedTarget = true;
 				ActivateUIManager();
@@ -165,30 +176,58 @@ public class PlayerController : MonoBehaviour
 
 			if (clickPosition != Vector3.zero && Hit.collider.CompareTag("RangeIndicator"))
 			{
-				//if (!isAnimatorSetup)
-				//{
+
+
+				navMeshAgentPlayer.isStopped = false;
 				if (!flag2)
 				{
 					rb.isKinematic = false;
-					animScriptS.SetupWalking(attacker, animator, clickPosition);
-					navMeshAgentPlayer.isStopped = false;
 					navMeshAgentPlayer.SetDestination(clickPosition);
+					animScriptS.SetupWalking(attacker, animator);
+
 					flag2 = true;
 				}
-				Debug.Log("Checkpoint");
-				float distance = Vector3.Distance(attacker.transform.position, pointA);
+
+
+
+
+
+				//Vector3 direction = clickPosition - attacker.transform.position;
+				/*direction.y = 0;*/ // Ensure rotation is only on the Y axis
+									 //targetRotation = Quaternion.LookRotation(direction);
+									 //attacker.transform.rotation = Quaternion.Lerp(attacker.transform.rotation, targetRotation, Time.deltaTime * turnSpeed);
+									 //}
+									 //	flag2 = true; 
+									 //}
+									 //Debug.Log("Checkpoint");
+									 //float distance = Vector3.Distance(attacker.transform.position, pointA);
 
 				if (!navMeshAgentPlayer.pathPending && navMeshAgentPlayer.remainingDistance <= navMeshAgentPlayer.stoppingDistance && !flag3)
 				{
-					StopMoving();
+					//StopMoving();
 					rb.isKinematic = true;
 					clickPosition = Vector3.zero;
 					reachedTarget = true;
 					animScriptS.SetUpIdle(attacker, animator);
-					TurnToTarget(40, midpoint.gameObject);
-					CombatManagerScript.playerTurnCompleted = true;
+					navMeshAgentPlayer.isStopped = true;
+					//animScriptS.flag1 = true;
+					//animScriptS.turnToTarget = true;
+					//TurnToTarget(10f, midpoint.gameObject);
 					flag3 = true;
+					animScriptS.isRotating = true;
+					CombatManagerScript.playerTurnCompleted = true;
+
+
+					//StopMoving();
 				}
+				//if(flag4)
+				//{
+
+				//	Vector3 turnDirection = midpoint.transform.position - attacker.transform.position;
+				//	Quaternion turnRotation = Quaternion.LookRotation(turnDirection);
+				//	attacker.transform.rotation = Quaternion.Lerp(attacker.transform.rotation, turnRotation, Time.deltaTime * turnSpeed);
+
+				//}
 
 			}
 			//attacker.transform.position += direction * movespeed * Time.deltaTime;
@@ -235,28 +274,7 @@ public class PlayerController : MonoBehaviour
 		Quaternion targetRotation = Quaternion.LookRotation(direction);
 		attacker.transform.rotation = Quaternion.Lerp(attacker.transform.rotation, targetRotation, Time.deltaTime * speed);
 	}
-	//void SetUpWalking()
-	//{
-	//	direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
-	//	direction.Normalize();
-	//	attacker.transform.rotation = Quaternion.LookRotation(direction);
-	//	isWalking = true;
-	//	animator.SetBool("IsWalking", isWalking);
-	//	isAnimatorSetup = true;
-	//}
 
-	//void SetUpIdle()
-	//{
-
-	//	isWalking = false;
-	//	animator.SetBool("IsWalking", isWalking);
-
-	//	isIdle = true;
-	//	animator.SetBool("IsIdle", isIdle);
-	//	direction = new Vector3(midpoint.transform.position.x, attacker.transform.position.y, midpoint.transform.position.z) - attacker.transform.position;
-	//	direction.Normalize();
-	//	attacker.transform.rotation = Quaternion.LookRotation(direction);
-	//}
 	private void StopMoving()
 	{
 
@@ -274,13 +292,24 @@ public class PlayerController : MonoBehaviour
 	private void ConfigureNavMeshAgent(NavMeshAgent agent)
 	{
 		agent.avoidancePriority = 50;
-		
-		
-		agent.angularSpeed = 5000f;
+		/*agent.updatePosition = false;*///
+		agent.updateRotation = true; //
+		agent.radius = 0.2f;
 		agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-		
-		agent.speed = movespeed;
+		agent.enabled = true;
+		//agent.speed = movespeed;
 		agent.stoppingDistance = 0.1f;
 
 	}
+	//THis overrides the default RootMotion behaviour
+	//private void OnAnimatorMove() //
+	//{
+	//	Vector3 rootPosition = animator.rootPosition;
+	//	rootPosition.y = navMeshAgentPlayer.nextPosition.y;
+	//	attacker.transform.position = rootPosition;
+	//	//attacker.transform.rotation = animator.rootRotation;
+	//	navMeshAgentPlayer.nextPosition = rootPosition;
+	//}
+
+
 }

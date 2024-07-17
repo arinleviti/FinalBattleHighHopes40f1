@@ -100,6 +100,8 @@ public class CombatManager : MonoBehaviour
 
 					if (gameObject != null && gameObject.CompareTag("Player"))
 					{
+
+						 
 						CleanUpTurn();
 						PlayerControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PlayerControllerPrefab"));
 						playerControllerRef = PlayerControllerPrefab.GetComponent<PlayerController>();
