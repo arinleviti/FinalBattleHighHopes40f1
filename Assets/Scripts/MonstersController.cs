@@ -30,7 +30,7 @@ public class MonstersController : MonoBehaviour
 	private float radius;
 	private GameObject currentTurn;
 	private GameObject midpoint;
-	private float threshold = 0f;
+	private float threshold = 1f;
 	private Vector3 directionToPlayer;
 	private List<GameObject> rangeIndicatorList = new List<GameObject>();
 	private bool rangeIndicatorListTransferred = false;
@@ -48,7 +48,7 @@ public class MonstersController : MonoBehaviour
 	private Rigidbody zombie1RB;
 	private Rigidbody zombie2RB;
 	
-
+	
 
 	void Start()
 	{
@@ -186,12 +186,12 @@ public class MonstersController : MonoBehaviour
 				distanceToPlayer = Vector3.Distance(playerTarget.transform.position, monster.transform.position);
 				float distanceTravelled = Vector3.Distance(monster.transform.position, pointA);
 
-				if (distanceToPlayer < threshold || distanceTravelled >= radius)
+				if (/*distanceToPlayer < threshold || */distanceTravelled >= radius)
 				{
-					
 
+					//animScriptS.isRotating = true;
 
-					if (!isIdleSetup1)
+				if (!isIdleSetup1)
 					{
 						if (monster != null && monster == zombie1GO)
 						{
@@ -205,9 +205,12 @@ public class MonstersController : MonoBehaviour
 						}
 					}
 					reachedTarget = true;
-					StopMoving();
+
+				TurnToPlayer(50);
+				
 					ResetNavMesh();
-					combatManagerRef.monsterTurnCompleted = true;
+				StopMoving();
+				combatManagerRef.monsterTurnCompleted = true;
 
 				}
 
@@ -254,10 +257,13 @@ public class MonstersController : MonoBehaviour
 
 
 					reachedTarget = true;
-					StopMoving();
+					
 					ResetNavMesh();
+
 					TurnToPlayer(50);
+					//animScriptS.isRotating = true;
 					UpdateUIManager();
+					StopMoving();
 					Debug.Log("It's blocking here 2");
 				}
 			}
@@ -269,10 +275,12 @@ public class MonstersController : MonoBehaviour
 
 
 					reachedTarget = true;
-					StopMoving();
+					
 					ResetNavMesh();
+					
 					TurnToPlayer(50);
 					UpdateUIManager();
+					StopMoving();
 					Debug.Log("It's blocking here 2");
 
 				}

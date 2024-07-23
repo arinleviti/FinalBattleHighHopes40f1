@@ -43,13 +43,15 @@ public class PlayerController : MonoBehaviour
 	private Rigidbody rb;
 
 	private Vector2 Velocity;
-	private Vector2 SmoothDeltaPosition;
+	
 
 	private bool attackerMustTurn = false;
 
 	public float turnSpeed = 50;
 
 	private Quaternion targetRotation;
+
+	
 
 	// Start is called before the first frame update
 	void Start()
@@ -70,7 +72,7 @@ public class PlayerController : MonoBehaviour
 
 		CombatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
 		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
-		animator.applyRootMotion = true; //
+		
 		midpoint = GameObject.Find("Midpoint");
 		animatorObj = GameObject.Find("AnimatorObj");
 		animScriptS = animatorObj.GetComponent<AnimScript>();
@@ -82,19 +84,21 @@ public class PlayerController : MonoBehaviour
 			rb = attacker.GetComponent<Rigidbody>();
 			rb.isKinematic = true;
 		}
-
+		
+		
 	}
 
 	// Update is called once per frame
 	void FixedUpdate()
 	{
+		
 		marker.transform.position = new Vector3(attacker.transform.position.x, attacker.transform.position.y + 2, attacker.transform.position.z);
 		ClickOnMonster();
 		//if (movesLeft < 1) CombatManagerScript.playerTurnCompleted = true;
 
 
 	}
-
+	
 	void ClickOnMonster()
 	{
 		if (!reachedTarget)
@@ -113,7 +117,14 @@ public class PlayerController : MonoBehaviour
 					Hit = hit;
 				}
 			}
-
+			if(navMeshAgentPlayer.hasPath)
+			{
+				Vector3 dir = (navMeshAgentPlayer.steeringTarget  -  attacker.transform.position).normalized;
+				Vector3 animDir = attacker.transform.InverseTransformDirection(dir);
+				attacker.transform.rotation = Quaternion.RotateTowards(attacker.transform.rotation, Quaternion.LookRotation(dir), 360 * Time.deltaTime);
+			}
+			
+			
 
 			if (clickPosition != Vector3.zero && Hit.collider.CompareTag("Monster") && rangeIndicatorScript.targetsInRange.Contains(Hit.transform.gameObject)
 				&& Vector3.Distance(attacker.transform.position, Hit.transform.position) > maxDistanceFromMonster)
@@ -230,6 +241,8 @@ public class PlayerController : MonoBehaviour
 				//}
 
 			}
+
+
 			//attacker.transform.position += direction * movespeed * Time.deltaTime;
 
 			//if (Vector3.Distance(attacker.transform.position, new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z)) < thresholdRI)
@@ -310,6 +323,6 @@ public class PlayerController : MonoBehaviour
 	//	//attacker.transform.rotation = animator.rootRotation;
 	//	navMeshAgentPlayer.nextPosition = rootPosition;
 	//}
-
+	
 
 }

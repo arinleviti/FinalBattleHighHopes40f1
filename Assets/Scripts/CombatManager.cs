@@ -11,6 +11,7 @@ public class CombatManager : MonoBehaviour
 	public bool monsterTurnCompleted = false;
 	public bool isEnemyTurn = false;
 
+	//public PlayerController playerControllerRef;
 	public PlayerController playerControllerRef;
 
 	public List<GameObject> TurnList = new List<GameObject>();
@@ -104,6 +105,7 @@ public class CombatManager : MonoBehaviour
 						 
 						CleanUpTurn();
 						PlayerControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PlayerControllerPrefab"));
+						//playerControllerRef = PlayerControllerPrefab.GetComponent<NewPlayerController>();
 						playerControllerRef = PlayerControllerPrefab.GetComponent<PlayerController>();
 
 						yield return new WaitUntil(() => playerTurnCompleted);
@@ -171,6 +173,7 @@ public class CombatManager : MonoBehaviour
 		Debug.Log("Cleaning up turn artifacts.");
 		Destroy(GameObject.Find("UIManagerPrefab(Clone)"));
 		Destroy(GameObject.Find("ButtonPrefab(Clone)"));
+		Destroy(GameObject.Find("ButtonPrefab(Clone)(Clone)"));
 		Destroy(GameObject.Find("RangeIndicatorPrefab(Clone)"));
 		Destroy(GameObject.Find("MonstersControllerPrefab(Clone)"));
 		Destroy(GameObject.Find("PlayerControllerPrefab(Clone)"));

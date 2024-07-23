@@ -24,23 +24,30 @@ public class AnimScript : MonoBehaviour
 	public bool flag2 = false;
 	private float turnSpeed = 20;
 	private GameObject midpoint;
-	private GameObject player;
+	
+	private CombatManager combatManagerScript;
+	private GameObject currentTurn;
+	private Vector3 turnDirection;
+
 	// Start is called before the first frame update
 	void Start()
 	{
 		//combatManager = GameObject.Find("CombatManager").GetComponent<CombatManager>();
 		//playerControllerRef = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent<PlayerController>();
+		combatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
+		combatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
+		currentTurn = combatManagerScript.currentTurn;
 		if (isRotating )
 		{
 			PlayerTurnEndShell();
 		}
-		
 
+		
 	}
 
 	public void HitAnimation(IAction action, Animator animator)
@@ -91,14 +98,16 @@ public class AnimScript : MonoBehaviour
 	{
 		//playerControllerRef = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent<PlayerController>();
 		midpoint = GameObject.Find("Midpoint");
-		player = GameObject.Find("Player");
-		Vector3 turnDirection = midpoint.transform.position - player.transform.position;
+		
+			turnDirection = midpoint.transform.position - currentTurn.transform.position;
+
+		
 		Quaternion turnRotation = Quaternion.LookRotation(turnDirection);
-		player.transform.rotation = Quaternion.Lerp(player.transform.rotation, turnRotation, Time.deltaTime * turnSpeed);
-		if (Quaternion.Angle(player.transform.rotation, turnRotation) < 10f)
+		currentTurn.transform.rotation = Quaternion.Lerp(currentTurn.transform.rotation, turnRotation, Time.deltaTime * turnSpeed);
+		if (Quaternion.Angle(currentTurn.transform.rotation, turnRotation) < 10f)
 		{
 			// Ensure the final rotation is exactly the target rotation
-			player.transform.rotation = turnRotation;
+			currentTurn.transform.rotation = turnRotation;
 			isRotating = false;
 			Debug.Log("Rotation completed!");
 		}
