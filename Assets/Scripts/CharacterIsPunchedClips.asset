@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61b13d967f3df264ca6670428cc7680b, type: 3}
+  m_Name: CharacterIsPunchedClips
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: f12b64cb5302c3e4c93b188ebf892220, type: 3}
+  - {fileID: 8300000, guid: d936857873c124140861fc224ccdcb41, type: 3}
+  - {fileID: 8300000, guid: 1f2c53611bafe5f4eb337e1dbf22e115, type: 3}
+  - {fileID: 8300000, guid: c71b4d882d59b8743854609370d0397c, type: 3}
+  - {fileID: 8300000, guid: 83776413010cbce4289049e2d4cc2877, type: 3}

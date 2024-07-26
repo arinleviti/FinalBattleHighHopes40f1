@@ -272,9 +272,15 @@ public class CombatManager : MonoBehaviour
 			else
 			{
 				if (characterToRemove != null && characterToRemove.name == "Zombie 1")
+				{
 					animatorScript.PlayDeathAnim(characterToRemove, animatorZ1);
+				}
+					
 				else if (characterToRemove != null && characterToRemove.name == "Zombie 2")
+				{
 					animatorScript.PlayDeathAnim(characterToRemove, animatorZ2);
+				}				
+				
 			}
 			TurnList.Remove(characterToRemove);
 			//TurnList.Remove(characterToRemove);

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61b13d967f3df264ca6670428cc7680b, type: 3}
+  m_Name: ZombieIsAttackedClips
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: e15656497c056464caf671964baeaaf2, type: 3}
+  - {fileID: 8300000, guid: aa523d4b9a1977f47938edd6801e1fca, type: 3}
+  - {fileID: 8300000, guid: 21de85a1ecec4d842ab001a6ce22d2fa, type: 3}
+  - {fileID: 8300000, guid: e53ada1dc9592f84f85d458ed7dbc7bc, type: 3}
+  - {fileID: 8300000, guid: e3545f54c173ffd4798b6ba43d87d858, type: 3}

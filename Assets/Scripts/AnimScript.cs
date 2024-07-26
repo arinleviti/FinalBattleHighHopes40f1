@@ -123,7 +123,7 @@ public class AnimScript : MonoBehaviour
 		yield return new WaitForSeconds(0.25f);
 		animator.SetInteger("HP", -2);
 		Debug.Log("Initiated Dying");
-		yield return new WaitForSeconds(5);
+		yield return new WaitForSeconds(3);
 		Debug.Log("Finished dying");
 		Destroy(characterToRemove);
 	}

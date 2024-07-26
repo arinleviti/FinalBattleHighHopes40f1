@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ScoresManager : MonoBehaviour
 {
@@ -26,9 +28,15 @@ public class ScoresManager : MonoBehaviour
 	private int firstMonsterHP;
 	private int secondMonsterHP;
 	private int movesLeftInt;
-	//private Animator animator;
+	private Animator animator;
 	private AnimScript animScript;
 	private bool isCharacterDead = false;
+
+	private GameObject canvasYouWin;
+	private GameObject canvasYouDie;
+	private Button restartButton;
+	private bool flag1 = false;
+	
 
 	//private List<ICharacter> charactersIOList;
 
@@ -48,9 +56,11 @@ public class ScoresManager : MonoBehaviour
 
 		GameObject combatManagerObject = GameObject.Find("CombatManager");
 		combatManager = combatManagerObject.GetComponent<CombatManager>();
-
+		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
 		//CreateIOList();
 		animScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
+
+		
 	}
 
 	// Update is called once per frame
@@ -76,14 +86,43 @@ public class ScoresManager : MonoBehaviour
 		//movesLeftInt = GameObject.Find("CombatManager").GetComponent<CombatManager>().movesLeft;
 		movesLeft.text = $"Current Turn: {currentPlayer.name} Moves left: {movesLeftInt}";
 
-		if (playerHP <= 0 && !isCharacterDead)
+		if (playerHP <= 0 && !isCharacterDead )
 		{
 			isCharacterDead = true;
 			//animScript.PlayDeathAnim(GameObject characterToRemove)
 		}
-
+		IsGameOver();
 	}
+	
+	private void IsGameOver()
+	{
+		if (firstMonsterHP <= 0 && secondMonsterHP <= 0 && !flag1)
+		{
+			canvasYouWin = Instantiate(Resources.Load<GameObject>("Prefabs/Canvas YouWin"));
+			restartButton = canvasYouWin.GetComponentInChildren<Button>();			
+			flag1 = true;
+			restartButton.onClick.AddListener(RestartGame);
+			StartCoroutine(WaitAndPauseGame(3));
 
-	
-	
+		}
+		if (playerHP <= 0 && !flag1)
+		{
+			canvasYouDie = Instantiate(Resources.Load<GameObject>("Prefabs/Canvas YouDie"));
+			restartButton = canvasYouDie.GetComponentInChildren<Button>();
+			flag1 = true;
+			animScript.PlayDeathAnim(playerGO, animator);
+			restartButton.onClick.AddListener(RestartGame);
+			StartCoroutine(WaitAndPauseGame(2));
+		}
+	}
+	private void RestartGame()
+	{
+		Time.timeScale = 1; // Reset time scale before restarting the game
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+	}
+	private IEnumerator WaitAndPauseGame(float waitTime)
+	{
+		yield return new WaitForSeconds(waitTime);
+		Time.timeScale = 0;
+	}
 }

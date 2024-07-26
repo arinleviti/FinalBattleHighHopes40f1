@@ -110,9 +110,12 @@ using UnityEngine;
 
 					// Set the new camera position
 					mainCamera.transform.position = newCameraPosition;
+					
+					// Find a point which is a few meters above the midpoint and have the camera look at it.
+					Vector3 cameraLookHere = new Vector3(transform.position.x,transform.position.y +1f, transform.position.z);
 
 					// Make the camera look at the midpoint
-					mainCamera.transform.LookAt(transform.position);
+					mainCamera.transform.LookAt(cameraLookHere);
 				}
 			}
 		}

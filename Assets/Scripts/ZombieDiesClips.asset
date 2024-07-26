@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61b13d967f3df264ca6670428cc7680b, type: 3}
+  m_Name: ZombieDiesClips
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: c69262ffb5b4ecd4a965c340076f0708, type: 3}
+  - {fileID: 8300000, guid: 441f686a0c189264e857c116b2b7ad16, type: 3}
+  - {fileID: 8300000, guid: 5301b54a68db05745b16e9d913ba1bac, type: 3}
+  - {fileID: 8300000, guid: 63b55187d757f314fae5d9a98b022eb4, type: 3}
+  - {fileID: 8300000, guid: d941ee0e78483614a8fe4d9f79b82b63, type: 3}
