@@ -9,9 +9,9 @@ public class PlayerStats : CharacterClass
 	public CharacterType CharacterType { get; set; }
 	// Expose the fields in the Inspector
 	[SerializeField]
-	public int hp = 5;
+	public int hp;
 	[SerializeField]
-	private int maxHP = 50;
+	private int maxHP;
 	[SerializeField]
 	private string characterName = "X";
 	[SerializeField]
@@ -21,7 +21,7 @@ public class PlayerStats : CharacterClass
 	[SerializeField]
 	private bool isDead = false;
 	[SerializeField]
-	private int potionsAvailable = 5;
+	private int potionsAvailable = 2;
 	public void Awake()
 	{
 		// Initialize the properties

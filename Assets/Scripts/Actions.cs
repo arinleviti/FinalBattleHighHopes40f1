@@ -13,53 +13,6 @@ public interface IAction
 
 
 
-
-
-
-
-
-
-
-public class HealthPotion : IAction
-{
-	public string Name { get; } = "Potion";
-	public int HPInflicted { get; }
-	//public int RequiredBattleNumber { get; set; }
-	public HealthPotion(int hpGained)
-	{
-		HPInflicted = hpGained;
-	}
-	public int Hit(ICharacter potionOwner, ICharacter attacker)
-	{
-		int addHP = potionOwner.HP + HPInflicted;
-		if (addHP <= potionOwner.MaxHP && potionOwner.PotionsAvailable > 0)
-		{
-			int nwHP = potionOwner.HP + HPInflicted;
-			Console.ForegroundColor = ConsoleColor.DarkRed;
-			Console.WriteLine($"The potion made {potionOwner.Name} regain {HPInflicted} health points!");
-			Console.ResetColor();
-			potionOwner.PotionsAvailable--;
-			return nwHP;
-		}
-		else if (addHP > potionOwner.MaxHP && potionOwner.PotionsAvailable > 0)
-		{
-			Console.ForegroundColor = ConsoleColor.DarkRed;
-			int pointsToMax = potionOwner.MaxHP - potionOwner.HP;
-			Console.WriteLine($"{potionOwner.Name} only gained {pointsToMax} HP. Their HP are already maxed out. No further increase is possible right now.");
-			potionOwner.HP = potionOwner.MaxHP;
-			potionOwner.PotionsAvailable--;
-			Console.ResetColor();
-			return potionOwner.HP;
-		}
-		else
-		{
-			Console.ForegroundColor = ConsoleColor.DarkRed;
-			Console.WriteLine("You don't have any potion available");
-			Console.ResetColor();
-			return potionOwner.HP;
-		}
-	}
-}
 public interface IExtraActions
 {
 	public string Name { get; }

@@ -36,7 +36,9 @@ public class ScoresManager : MonoBehaviour
 	private GameObject canvasYouDie;
 	private Button restartButton;
 	private bool flag1 = false;
-	
+	private Button potionButton;
+	private TextMeshProUGUI potionsLeftText;
+	public int potionsLeftInt;
 
 	//private List<ICharacter> charactersIOList;
 
@@ -59,19 +61,15 @@ public class ScoresManager : MonoBehaviour
 		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
 		//CreateIOList();
 		animScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
-
+		
+		
 		
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		//targetCharacterGOSM = GameObject.Find("UIManager").GetComponent<DynamicButtonGenerator>().targetCharacterGO;
-		//attackerGOSM = GameObject.Find("UIManager").GetComponent<DynamicButtonGenerator>().attackerGO;
-
-		//playerHP = GameObject.Find("Player").GetComponent<PlayerStats>().HP;
-		//firstMonsterHP = GameObject.Find("Zombie 1").GetComponent<MonsterStats>().HP;
-		//secondMonsterHP = GameObject.Find("Zombie 2").GetComponent<MonsterStats>().HP;
+		
 		playerHP = playerStats.HP;
 		firstMonsterHP = firstMonsterStats.HP;
 		secondMonsterHP = secondMonsterStats.HP;
@@ -81,8 +79,14 @@ public class ScoresManager : MonoBehaviour
 		playerHPText.text = $"Player HP: {playerHP}";
 		monster1HPText.text = $"Monster 1: {firstMonsterHP}";
 		monster2HPText.text = $"Monster 2: {secondMonsterHP}";
-
-
+		if (combatManager.currentTurn.CompareTag("Player") /*&& potionButton != null*/)
+		{
+			potionButton = GameObject.Find("PotionCanvasPrefab(Clone)").GetComponentInChildren<Button>();
+			potionsLeftText = potionButton.GetComponentInChildren<TextMeshProUGUI>();
+			potionsLeftInt = playerStats.PotionsAvailable;
+			potionsLeftText.text = $"{potionsLeftInt}";
+		}
+		
 		//movesLeftInt = GameObject.Find("CombatManager").GetComponent<CombatManager>().movesLeft;
 		movesLeft.text = $"Current Turn: {currentPlayer.name} Moves left: {movesLeftInt}";
 
@@ -92,6 +96,7 @@ public class ScoresManager : MonoBehaviour
 			//animScript.PlayDeathAnim(GameObject characterToRemove)
 		}
 		IsGameOver();
+		
 	}
 	
 	private void IsGameOver()

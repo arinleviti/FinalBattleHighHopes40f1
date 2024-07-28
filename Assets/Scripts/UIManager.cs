@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
 	public Canvas canvas;
+	//public Canvas canvasPotion;
 	public Button buttonPrefab;
 	public List<AttackType> attackTypes;
 
@@ -51,7 +52,10 @@ public class UIManager : MonoBehaviour
 		//RetrieveAttackerIO();
 		//CreateButtonForPlayer();
 		//MonsterAttack();
-
+		//if (combatManagerRef.currentTurn.CompareTag("Player"))
+		//{
+		//	canvasPotion = GameObject.Find("PotionCanvas").GetComponent<Canvas>();
+		//}
 	}
 
 
@@ -104,7 +108,8 @@ public class UIManager : MonoBehaviour
 		yield return StartCoroutine(RetrieveTargetIO());		
 		yield return StartCoroutine(RetrieveAttackerIO());
 		yield return StartCoroutine(InstantiateActionChoices());
-		yield return StartCoroutine(CreateButtonForPlayer());	
+		yield return StartCoroutine(CreateButtonForPlayer());
+		//yield return StartCoroutine(CreatePotionButton());
 		yield return StartCoroutine(MonsterAttack());		
 		//yield return StartCoroutine(DestroyUIManager());
 		
@@ -186,9 +191,12 @@ public class UIManager : MonoBehaviour
 
 	private IEnumerator InstantiateActionChoices()
 	{
-		actionChoicesGO = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab"));
-		actionChoicesRef = actionChoicesGO.GetComponent<ActionChoices>();
-		yield return null;
+		if (!GameObject.Find("ActionChoicesPrefab(Clone)"))
+		{
+			actionChoicesGO = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab"));
+			actionChoicesRef = actionChoicesGO.GetComponent<ActionChoices>();
+			yield return null;
+		}			
 	}
 	private IEnumerator CreateButtonForPlayer()
 	{
@@ -208,15 +216,23 @@ public class UIManager : MonoBehaviour
 				{
 					//actionChoicesRef = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab")).GetComponent<ActionChoices>();
 					Debug.Log("ActionChoicesRef instantiated: " + (actionChoicesRef != null));
-					newButton.onClick.AddListener(() => actionChoicesRef.HandleAttackChoice());
+					newButton.onClick.AddListener(() => actionChoicesRef.HandleAttackChoice(attackTypeChosen));
 				}
-
-
 			}
 		}
-		yield return null;
-		
+		yield return null;		
 	}
+	//private IEnumerator CreatePotionButton()
+	//{
+	//	if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Player") && attackerIO.PotionsAvailable >0)
+	//	{
+	//		canvasPotion.enabled = true;
+	//		Button potionButton = canvasPotion.GetComponentInChildren<Button>();
+	//		attackTypeChosen = AttackType.Potion;
+	//		potionButton.onClick.AddListener(() => actionChoicesRef.HandleAttackChoice());
+	//	}
+	//	yield return null;
+	//}
 	private IEnumerator MonsterAttack()
 	{
 		if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Monster"))
@@ -263,7 +279,7 @@ public class UIManager : MonoBehaviour
 			
 		//yield return null;
 			flagForAttackChoice = false;
-			actionChoicesRef.HandleAttackChoice();
+			actionChoicesRef.HandleAttackChoice(attackTypeChosen);
 		//yield return new WaitUntil(() => flagForAttackChoice);
 		//Destroy(actionChoicesRef);
 		isCharacterTurnOver = true;

@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class PlayerController : MonoBehaviour
 	//private GameObject UIManagerRef;
 	public GameObject attacker;
 	private GameObject UIManagerPrefab;
+	private UIManager UIManagerScript;
 	private GameObject rangeIndicatorGO;
 	public RangeIndicator rangeIndicatorScript;
 	public CombatManager CombatManagerScript;
@@ -51,7 +54,10 @@ public class PlayerController : MonoBehaviour
 
 	private Quaternion targetRotation;
 
-	
+	public Canvas canvasPotion;
+	private GameObject canvasPotionGO;
+	private GameObject actionChoicesGO;
+	private ActionChoices actionChoicesScript;
 
 	// Start is called before the first frame update
 	void Start()
@@ -84,8 +90,8 @@ public class PlayerController : MonoBehaviour
 			rb = attacker.GetComponent<Rigidbody>();
 			rb.isKinematic = true;
 		}
-		
-		
+		CreatePotionButton();
+		//UIManagerPrefab = GameObject.Find("Prefabs/UIManager");
 	}
 
 	// Update is called once per frame
@@ -95,7 +101,7 @@ public class PlayerController : MonoBehaviour
 		marker.transform.position = new Vector3(attacker.transform.position.x, attacker.transform.position.y + 2, attacker.transform.position.z);
 		ClickOnMonster();
 		//if (movesLeft < 1) CombatManagerScript.playerTurnCompleted = true;
-
+		
 
 	}
 	
@@ -307,7 +313,7 @@ public class PlayerController : MonoBehaviour
 		agent.avoidancePriority = 50;
 		/*agent.updatePosition = false;*///
 		agent.updateRotation = true; //
-		agent.radius = 0.2f;
+		//agent.radius = 0.2f; //
 		agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
 		agent.enabled = true;
 		//agent.speed = movespeed;
@@ -323,6 +329,34 @@ public class PlayerController : MonoBehaviour
 	//	//attacker.transform.rotation = animator.rootRotation;
 	//	navMeshAgentPlayer.nextPosition = rootPosition;
 	//}
-	
+	private void CreatePotionButton()
+	{
+		if (CombatManagerScript.currentTurn != null && CombatManagerScript.currentTurn.CompareTag("Player") && canvasPotionGO == null)
+		{
+			canvasPotionGO = Instantiate(Resources.Load<GameObject>("Prefabs/PotionCanvasPrefab"));
+			canvasPotion = canvasPotionGO.GetComponent<Canvas>();
+			canvasPotion.enabled = true;
+			Button potionButton = canvasPotion.GetComponentInChildren<Button>();
+			
+			potionButton.onClick.AddListener(() => OnPotionButtonClick());
+			
+		}
+		
+	}
+	private void OnPotionButtonClick()
+	{
+		//GameObject UIManagerGO = Instantiate(Resources.Load<GameObject>("Prefabs/UIManagerPrefab"));
+		//UIManager UIManagerPrefabScript = UIManagerGO.GetComponent<UIManager>();
+		//UIManagerPrefabScript.attackTypeChosen = AttackType.Potion;
+		//ActivateUIManager();
+		if (!GameObject.Find("ActionChoicesPrefab(Clone)"))
+		{
+			actionChoicesGO = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab"));
+		}
+		
+		actionChoicesScript = actionChoicesGO.GetComponent<ActionChoices>();
+		
+		actionChoicesScript.HandleAttackChoice(AttackType.Potion);
 
+	}
 }

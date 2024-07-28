@@ -30,7 +30,7 @@ public class MonstersController : MonoBehaviour
 	private float radius;
 	private GameObject currentTurn;
 	private GameObject midpoint;
-	private float threshold = 1f;
+
 	private Vector3 directionToPlayer;
 	private List<GameObject> rangeIndicatorList = new List<GameObject>();
 	private bool rangeIndicatorListTransferred = false;
@@ -120,9 +120,9 @@ public class MonstersController : MonoBehaviour
 		NavMeshAgent agent = zombieGO.GetComponent<NavMeshAgent>();
 		agent.enabled = isActive;
 		agent.speed = movespeed;
-		agent.stoppingDistance = threshold;
+		
 		agent.isStopped = false;
-		agent.stoppingDistance = 1f;
+		//agent.stoppingDistance = 1.2f;
 		navMeshAgent = agent;
 		ConfigureNavMeshAgent(navMeshAgent);
 		
@@ -155,27 +155,27 @@ public class MonstersController : MonoBehaviour
 	private void ApproachPlayer()
 	{
 		if (!reachedTarget)
-		{				
-				
-				if (!isWalkSetup1)
+		{
+			 distanceToPlayer = Vector3.Distance(monster.transform.position, playerTarget.transform.position);
+			if (!isWalkSetup1 && distanceToPlayer > 1.5f)
+			{
+				if (monster != null && monster == zombie1GO)
 				{
-					if (monster != null && monster == zombie1GO)
-					{
-						animScriptS.SetupWalkingMonster(monster, animatorZ1);
-						isWalkSetup1 = true;
-					}
-					else if (monster != null && monster == zombie2GO)
-					{
-						animScriptS.SetupWalkingMonster(monster, animatorZ2);
-						isWalkSetup1 = true;
-					}
+					animScriptS.SetupWalkingMonster(monster, animatorZ1);
+					isWalkSetup1 = true;
 				}
-				
-				if (monster != null && monster == zombie1GO && !navMeshFlag1)
+				else if (monster != null && monster == zombie2GO)
 				{
+					animScriptS.SetupWalkingMonster(monster, animatorZ2);
+					isWalkSetup1 = true;
+				}
+			}
+
+			if (monster != null && monster == zombie1GO && !navMeshFlag1)
+			{
 					navMeshAgentZ1.SetDestination(playerTarget.transform.position);
 					navMeshFlag1 = true;
-				}
+			}
 				else if (monster != null && monster == zombie2GO && !navMeshFlag1)
 				{
 					navMeshAgentZ2.SetDestination(playerTarget.transform.position);
@@ -187,11 +187,9 @@ public class MonstersController : MonoBehaviour
 				float distanceTravelled = Vector3.Distance(monster.transform.position, pointA);
 
 				if (/*distanceToPlayer < threshold || */distanceTravelled >= radius)
-				{
+				{					
 
-					//animScriptS.isRotating = true;
-
-				if (!isIdleSetup1)
+					if (!isIdleSetup1)
 					{
 						if (monster != null && monster == zombie1GO)
 						{
@@ -206,17 +204,17 @@ public class MonstersController : MonoBehaviour
 					}
 					reachedTarget = true;
 
-				TurnToPlayer(50);
+					TurnToPlayer(50);
 				
 					ResetNavMesh();
-				StopMoving();
-				combatManagerRef.monsterTurnCompleted = true;
+					StopMoving();
+					combatManagerRef.monsterTurnCompleted = true;
 
 				}
 
 			
 
-			if (rangeIndicatorList.Contains(playerTarget) /*&& Vector3.Distance(monster.transform.position, playerTarget.transform.position) >= threshold*/ /*&& !flag0*/)
+			if (rangeIndicatorList.Contains(playerTarget) && Vector3.Distance(monster.transform.position, playerTarget.transform.position) >= 1.5f /*&& !flag0*/)
 			{
 				
 				if (!isWalkSetup2)
@@ -251,7 +249,7 @@ public class MonstersController : MonoBehaviour
 			}
 			if (monster != null && monster == zombie1GO && navMeshAgentZ1 != null)
 			{
-				if (!navMeshAgentZ1.pathPending && navMeshAgentZ1.isActiveAndEnabled && navMeshAgentZ1.isOnNavMesh && navMeshAgentZ1.remainingDistance <= 1f)
+				if (!navMeshAgentZ1.pathPending && navMeshAgentZ1.isActiveAndEnabled && navMeshAgentZ1.isOnNavMesh && navMeshAgentZ1.remainingDistance <= 1.2f)
 				{
 					flag0 = true;
 
@@ -269,7 +267,7 @@ public class MonstersController : MonoBehaviour
 			}
 			else if (monster != null && monster == zombie2GO && navMeshAgentZ2 != null)
 			{
-				if (!navMeshAgentZ2.pathPending && navMeshAgentZ2.isActiveAndEnabled && navMeshAgentZ2.isOnNavMesh && navMeshAgentZ2.remainingDistance <= 1f)
+				if (!navMeshAgentZ2.pathPending && navMeshAgentZ2.isActiveAndEnabled && navMeshAgentZ2.isOnNavMesh && navMeshAgentZ2.remainingDistance <= 1.2f)
 				{
 					flag0 = true;
 
@@ -354,9 +352,9 @@ public class MonstersController : MonoBehaviour
 	private void ConfigureNavMeshAgent(NavMeshAgent agent)
 	{
 		agent.avoidancePriority = 50;
-		agent.radius = 0.2f;
-		agent.height = 2.0f;
-		agent.angularSpeed = 10000f;
+		//agent.radius = 0.2f;  //
+		//agent.height = 2.0f;  //
+		//agent.angularSpeed = 10000f;  //
 		agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
 		agent.autoBraking = true;
 	}
@@ -366,7 +364,7 @@ public class MonstersController : MonoBehaviour
 		obstacle.carving = true;
 		obstacle.shape = NavMeshObstacleShape.Capsule;
 		obstacle.center = Vector3.zero;
-		obstacle.size = new Vector3(1.0f, 2.0f, 1.0f);
+		//obstacle.size = new Vector3(1.0f, 2.0f, 1.0f);
 	}
 	
 

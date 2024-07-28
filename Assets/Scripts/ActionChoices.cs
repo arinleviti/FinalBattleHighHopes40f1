@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ActionChoices : MonoBehaviour
 {
@@ -12,17 +13,25 @@ public class ActionChoices : MonoBehaviour
 	private Animator animatorZ1;
 	private Animator animatorZ2;
 	private GameObject player;
+	private ICharacter playerIO;
 	private GameObject zombie1;
 	private GameObject zombie2;
 	private GameObject bloodObjRef;
 	private BloodSplatter bloodSplatterScript;
-	
+	//private Canvas canvasPotion;
+	private GameObject scoresManagerGO;
+	private ScoresManager scoresManagerScript;
+	private bool usedPotion = false;
 
-	public void Start()
+	public void Awake()
 	{
-		UIManager = GameObject.Find("UIManagerPrefab(Clone)");
-		UIManagerRef = UIManager.GetComponent<UIManager>();
-		Debug.Log("UIManagerRef" + UIManagerRef.name);
+		if (GameObject.Find("UIManagerPrefab(Clone)"))
+		{
+			UIManager = GameObject.Find("UIManagerPrefab(Clone)");
+			UIManagerRef = UIManager.GetComponent<UIManager>();
+		}
+		
+		
 		combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
 		//playerControllerRef = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent <PlayerController>();
 		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
@@ -49,15 +58,16 @@ public class ActionChoices : MonoBehaviour
 			bloodObjRef = GameObject.Find("BloodObj(Clone)");
 			bloodSplatterScript = bloodObjRef.GetComponent<BloodSplatter>();
 		}
-		
-
+		//canvasPotion = GameObject.Find("PotionCanvas").GetComponent<Canvas>();
+		scoresManagerGO = GameObject.Find("Canvas2");
+		scoresManagerScript = scoresManagerGO.GetComponent<ScoresManager>();
 	}
 	
 
-	public void HandleAttackChoice()
+	public void HandleAttackChoice(AttackType attacktype)
 	{
 
-		switch (UIManagerRef.attackTypeChosen)
+		switch (attacktype)
 		{
 			case AttackType.Punch:
 				UIManagerRef.actionPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PunchPrefab"));
@@ -152,17 +162,41 @@ public class ActionChoices : MonoBehaviour
 					Debug.LogError("Punch component not found on instantiated prefab!");
 				}
 				break;
+			case AttackType.Potion:
+				GameObject potionPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PotionPrefab"));
+				Potion potionScriptRef = potionPrefab.GetComponent<Potion>();
+				player = GameObject.Find("Player");
+				playerIO = player.GetComponent<PlayerStats>();
+				if (potionScriptRef != null && playerIO != null)
+				{
+					playerIO.HP = potionScriptRef.Hit(playerIO, playerIO);
+					if (scoresManagerScript.potionsLeftInt <1)
+					{
+						Button button = scoresManagerGO.GetComponentInChildren<Button>();
+						button.enabled = false;
+					}
+				}				
+				else
+				{
+					Debug.LogError("Potion component not found on instantiated prefab!");
+				}
+				usedPotion = true;
+				break;
 			default:
 				Debug.Log("Invalid attack type");
 				break;
 		}
-		if (combatManagerRef.currentTurn.CompareTag("Player"))
+		if (combatManagerRef.currentTurn.CompareTag("Player") && !usedPotion)
 		{
 			UIManagerRef.canvas.enabled = false;
 			//playerControllerRef.movesLeft--;
 			//SetupIdle();
 			UIManagerRef.isCharacterTurnOver = true;
 			//Destroy(gameObject);
+		}
+		if (combatManagerRef.currentTurn.CompareTag("Player") && usedPotion)
+		{
+			combatManagerRef.playerTurnCompleted = true;
 		}
 		if (combatManagerRef.currentTurn.CompareTag("Monster"))
 		{
