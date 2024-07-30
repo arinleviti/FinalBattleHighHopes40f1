@@ -22,24 +22,25 @@ public class ActionChoices : MonoBehaviour
 	private GameObject scoresManagerGO;
 	private ScoresManager scoresManagerScript;
 	private bool usedPotion = false;
+	private GameObject animatorObj;
 
-	public void Awake()
+	public void GetComponents()
 	{
-		if (GameObject.Find("UIManagerPrefab(Clone)"))
-		{
-			UIManager = GameObject.Find("UIManagerPrefab(Clone)");
-			UIManagerRef = UIManager.GetComponent<UIManager>();
-		}
-		
-		
-		combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
-		//playerControllerRef = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent <PlayerController>();
-		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
-		animScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
-		zombie1 = GameObject.Find("Zombie 1");
-		zombie2 = GameObject.Find("Zombie 2");
-		player = GameObject.Find("Player");
-		
+		//if (GameObject.Find("UIManagerPrefab(Clone)"))
+		//{
+		//	UIManager = GameObject.Find("UIManagerPrefab(Clone)");
+		//	UIManagerRef = UIManager.GetComponent<UIManager>();
+		//}
+
+
+		//combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
+		////playerControllerRef = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent <PlayerController>();
+		//animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
+		animScript = animatorObj.GetComponent<AnimScript>();
+		//zombie1 = GameObject.Find("Zombie 1");
+		//zombie2 = GameObject.Find("Zombie 2");
+		//player = GameObject.Find("Player");
+
 		if (zombie1 != null)
 		{
 			animatorZ1 = zombie1.GetComponentInChildren<Animator>();
@@ -59,11 +60,23 @@ public class ActionChoices : MonoBehaviour
 			bloodSplatterScript = bloodObjRef.GetComponent<BloodSplatter>();
 		}
 		//canvasPotion = GameObject.Find("PotionCanvas").GetComponent<Canvas>();
-		scoresManagerGO = GameObject.Find("Canvas2");
-		scoresManagerScript = scoresManagerGO.GetComponent<ScoresManager>();
+		//scoresManagerGO = GameObject.Find("Canvas2");
+		//scoresManagerScript = scoresManagerGO.GetComponent<ScoresManager>();
+	}
+	public void Initialize(CombatManager combatManager, ScoresManager scoresManager, Animator animator,
+		GameObject zombie1, GameObject zombie2, GameObject player, GameObject animatorObj, UIManager uiManager = null)
+	{
+		UIManagerRef = uiManager;
+		combatManagerRef = combatManager;
+		scoresManagerScript = scoresManager;
+		this.animator = animator;
+		this.zombie1 = zombie1;
+		this.zombie2 = zombie2;
+		this.player = player;
+		this.animatorObj = animatorObj;
+		GetComponents();
 	}
 	
-
 	public void HandleAttackChoice(AttackType attacktype)
 	{
 
@@ -170,8 +183,13 @@ public class ActionChoices : MonoBehaviour
 				if (potionScriptRef != null && playerIO != null)
 				{
 					playerIO.HP = potionScriptRef.Hit(playerIO, playerIO);
-					scoresManagerScript.TriggerGlowEffect();
-					AudioManager.instance.PlayEffect("PotionSoundClip", player.transform.position, 0f);
+					if (GameObject.Find("Canvas2"))
+					{
+						scoresManagerScript = GameObject.Find("Canvas2").GetComponent<ScoresManager>();
+						scoresManagerScript.TriggerGlowEffect();
+						AudioManager.instance.PlayEffect("PotionSoundClip", player.transform.position, 0f);
+					}
+					
 				}				
 				else
 				{

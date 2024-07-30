@@ -40,12 +40,20 @@ public class UIManager : MonoBehaviour
 	private bool flagForCoroutine = false;
 	public bool flagForAttackChoice = false;
 
+	private Animator animator;
+	private GameObject zombie1;
+	private GameObject zombie2;
+	private GameObject player;
+	private GameObject animatorObj;
+
+	private ScoresManager scoresManagerScript;
+
 	// Start is called before the first frame update
 	void Start()
 	{
 		combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
 		flagForCoroutine = true;
-		
+
 		//RetrievePlayerGO();
 		//RetrieveMonsterGO();
 		//RetrieveTargetIO();
@@ -56,6 +64,30 @@ public class UIManager : MonoBehaviour
 		//{
 		//	canvasPotion = GameObject.Find("PotionCanvas").GetComponent<Canvas>();
 		//}
+
+		if (GameObject.Find("AnimatorObj"))
+		{
+			animatorObj = GameObject.Find("AnimatorObj");
+		}
+		if (GameObject.Find("Zombie 2"))
+		{
+			zombie2 = GameObject.Find("Zombie 2");
+		}
+		if (GameObject.Find("Player"))
+		{
+			player = GameObject.Find("Player");
+			animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
+		}
+		if (GameObject.Find("Zombie 1"))
+		{
+			zombie1 = GameObject.Find("Zombie 1");
+		}
+		
+		if(GameObject.Find("Canvas2"))
+		{
+			scoresManagerScript = GameObject.Find("Canvas2").GetComponent<ScoresManager>();
+		}
+		
 	}
 
 
@@ -188,16 +220,34 @@ public class UIManager : MonoBehaviour
 		}
 		yield return null;
 	}
-
 	private IEnumerator InstantiateActionChoices()
 	{
 		if (!GameObject.Find("ActionChoicesPrefab(Clone)"))
 		{
 			actionChoicesGO = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab"));
 			actionChoicesRef = actionChoicesGO.GetComponent<ActionChoices>();
+			actionChoicesRef.Initialize(
+				uiManager: this,
+				combatManager: combatManagerRef,
+				scoresManager: scoresManagerScript,
+				animator: animator,
+				zombie1: zombie1,
+				zombie2: zombie2,
+				player: player,
+				animatorObj: animatorObj
+			);
 			yield return null;
-		}			
+		}
 	}
+	//private IEnumerator InstantiateActionChoices()
+	//{
+	//	if (!GameObject.Find("ActionChoicesPrefab(Clone)"))
+	//	{
+	//		actionChoicesGO = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab"));
+	//		actionChoicesRef = actionChoicesGO.GetComponent<ActionChoices>();
+	//		yield return null;
+	//	}			
+	//}
 	private IEnumerator CreateButtonForPlayer()
 	{
 		if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Player"))

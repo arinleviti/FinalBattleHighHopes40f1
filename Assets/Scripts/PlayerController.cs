@@ -62,9 +62,16 @@ public class PlayerController : MonoBehaviour
 	private ScoresManager scoresManagerScript;
 	private Button potionButton;
 
+	private GameObject zombie1;
+	private GameObject zombie2;
+	private GameObject player;
+
 	// Start is called before the first frame update
 	void Start()
 	{
+		zombie1 = GameObject.Find("Zombie 1");
+		zombie2 = GameObject.Find("Zombie 2");
+		player = GameObject.Find("Player");
 		//isPlayerTurn = true;
 		canvas = GameObject.Find("Canvas1").GetComponent<Canvas>();
 		Debug.Log(canvas);
@@ -368,6 +375,16 @@ public class PlayerController : MonoBehaviour
 		if (!GameObject.Find("ActionChoicesPrefab(Clone)"))
 		{
 			actionChoicesGO = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab"));
+			actionChoicesScript = actionChoicesGO.GetComponent<ActionChoices>();
+			actionChoicesScript.Initialize(
+				combatManager: CombatManagerScript,
+				scoresManager: scoresManagerScript,
+				animator: animator,
+				zombie1: zombie1,
+				zombie2: zombie2,
+				player: player,
+				animatorObj: animatorObj
+			);
 		}
 		
 		actionChoicesScript = actionChoicesGO.GetComponent<ActionChoices>();
