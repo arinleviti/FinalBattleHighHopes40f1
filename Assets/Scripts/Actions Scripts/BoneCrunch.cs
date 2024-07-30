@@ -10,7 +10,7 @@ public class BoneCrunch : MonoBehaviour, IAction
 	//public int RequiredBattleNumber { get; set; }
 	public int Hit(ICharacter characterHit, ICharacter attacker)
 	{
-		HPInflicted = UnityEngine.Random.Range(2, 5);
+		HPInflicted = UnityEngine.Random.Range(10, 20);
 		int newHP = characterHit.HP - HPInflicted;
 		Console.ForegroundColor = ConsoleColor.DarkRed;
 		Console.WriteLine($"{attacker.Name} has landed a Bone Crunch, dealing {HPInflicted} points of damage to {characterHit.Name}'s health.");

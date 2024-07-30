@@ -59,6 +59,9 @@ public class PlayerController : MonoBehaviour
 	private GameObject actionChoicesGO;
 	private ActionChoices actionChoicesScript;
 
+	private ScoresManager scoresManagerScript;
+	private Button potionButton;
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -331,14 +334,27 @@ public class PlayerController : MonoBehaviour
 	//}
 	private void CreatePotionButton()
 	{
-		if (CombatManagerScript.currentTurn != null && CombatManagerScript.currentTurn.CompareTag("Player") && canvasPotionGO == null)
+		if (CombatManagerScript.currentTurn != null && CombatManagerScript.currentTurn.CompareTag("Player") )
 		{
-			canvasPotionGO = Instantiate(Resources.Load<GameObject>("Prefabs/PotionCanvasPrefab"));
-			canvasPotion = canvasPotionGO.GetComponent<Canvas>();
-			canvasPotion.enabled = true;
-			Button potionButton = canvasPotion.GetComponentInChildren<Button>();
+			if(!GameObject.Find("PotionCanvasPrefab(Clone)"))
+			{
+				canvasPotionGO = Instantiate(Resources.Load<GameObject>("Prefabs/PotionCanvasPrefab"));			
+			}
+			else
+			{
+				canvasPotionGO = GameObject.Find("PotionCanvasPrefab(Clone)");
+			}
 			
-			potionButton.onClick.AddListener(() => OnPotionButtonClick());
+			canvasPotion = canvasPotionGO.GetComponent<Canvas>();
+			canvasPotion.enabled = false;
+			scoresManagerScript = GameObject.Find("Canvas2").GetComponent<ScoresManager>();
+			if (scoresManagerScript.potionsLeftInt >0)
+			{
+				canvasPotion.enabled = true;
+				potionButton = canvasPotionGO.GetComponentInChildren<Button>();			
+				potionButton.onClick.AddListener(() => OnPotionButtonClick());
+			}
+			
 			
 		}
 		
@@ -357,6 +373,10 @@ public class PlayerController : MonoBehaviour
 		actionChoicesScript = actionChoicesGO.GetComponent<ActionChoices>();
 		
 		actionChoicesScript.HandleAttackChoice(AttackType.Potion);
+		if (scoresManagerScript.potionsLeftInt <= 1)
+		{
+			canvasPotion.enabled = false;
+		}
 
 	}
 }

@@ -40,6 +40,10 @@ public class ScoresManager : MonoBehaviour
 	private TextMeshProUGUI potionsLeftText;
 	public int potionsLeftInt;
 
+	private Material textMaterial;
+	private Color originalOutlineColor;
+	private float originalOutlineWidth;
+
 	//private List<ICharacter> charactersIOList;
 
 	// Start is called before the first frame update
@@ -49,7 +53,7 @@ public class ScoresManager : MonoBehaviour
 		GameObject player = GameObject.Find("Player");
 		playerGO = player;
 		playerStats = player.GetComponent<PlayerStats>();
-
+		potionsLeftInt = playerStats.PotionsAvailable;
 		GameObject firstMonster = GameObject.Find("Zombie 1");
 		firstMonsterStats = firstMonster.GetComponent<MonsterStats>();
 
@@ -62,8 +66,9 @@ public class ScoresManager : MonoBehaviour
 		//CreateIOList();
 		animScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
 		
-		
-		
+		textMaterial = playerHPText.fontMaterial;
+		originalOutlineColor = textMaterial.GetColor(ShaderUtilities.ID_OutlineColor);
+		originalOutlineWidth = textMaterial.GetFloat(ShaderUtilities.ID_OutlineWidth);
 	}
 
 	// Update is called once per frame
@@ -129,5 +134,30 @@ public class ScoresManager : MonoBehaviour
 	{
 		yield return new WaitForSeconds(waitTime);
 		Time.timeScale = 0;
+	}
+	public void TriggerGlowEffect()
+	{
+		StartCoroutine(GlowEffect());
+	}
+	private IEnumerator GlowEffect()
+	{
+		float duration = 2f;
+		float elapsed = 0f;
+		while (elapsed < duration)
+		{
+			float t = Mathf.PingPong(elapsed * 2, 1);  // Creates a pulsing effect
+			Color glowColor = Color.Lerp(originalOutlineColor, new Color(0.5f, 0, 0.5f), t);
+			float glowWidth = Mathf.Lerp(originalOutlineWidth, originalOutlineWidth + 0.5f, t);
+
+			// Apply the outline properties to the material
+			textMaterial.SetColor(ShaderUtilities.ID_OutlineColor, glowColor);
+			textMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, glowWidth);
+
+			elapsed += Time.deltaTime;
+			yield return null;
+
+		}
+		textMaterial.SetColor(ShaderUtilities.ID_OutlineColor, originalOutlineColor);
+		textMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, originalOutlineWidth);
 	}
 }

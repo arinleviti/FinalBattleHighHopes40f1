@@ -170,11 +170,8 @@ public class ActionChoices : MonoBehaviour
 				if (potionScriptRef != null && playerIO != null)
 				{
 					playerIO.HP = potionScriptRef.Hit(playerIO, playerIO);
-					if (scoresManagerScript.potionsLeftInt <1)
-					{
-						Button button = scoresManagerGO.GetComponentInChildren<Button>();
-						button.enabled = false;
-					}
+					scoresManagerScript.TriggerGlowEffect();
+					AudioManager.instance.PlayEffect("PotionSoundClip", player.transform.position, 0f);
 				}				
 				else
 				{
@@ -208,6 +205,6 @@ public class ActionChoices : MonoBehaviour
 		//Destroy(gameObject);
 
 	}
-
 	
+
 }

@@ -111,6 +111,11 @@ public class MonstersController : MonoBehaviour
 			zombie2RB.isKinematic = false;
 		}
 		
+		GameObject PotionCanvas =GameObject.Find("PotionCanvasPrefab(Clone)");
+		if (PotionCanvas != null)
+		{
+			Destroy(PotionCanvas);
+		}
 		
 
 

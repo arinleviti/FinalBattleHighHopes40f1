@@ -402,8 +402,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Monster 2 HP: '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a2be44c51fa11c544b32a6eec1275f3b, type: 2}
-  m_sharedMaterial: {fileID: -2904801863013269645, guid: a2be44c51fa11c544b32a6eec1275f3b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d46533f6ca7409e4099be860f86bf0bc, type: 2}
+  m_sharedMaterial: {fileID: 9113721770840115801, guid: d46533f6ca7409e4099be860f86bf0bc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1569,8 +1569,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Monster 1 HP:'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a2be44c51fa11c544b32a6eec1275f3b, type: 2}
-  m_sharedMaterial: {fileID: -2904801863013269645, guid: a2be44c51fa11c544b32a6eec1275f3b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d46533f6ca7409e4099be860f86bf0bc, type: 2}
+  m_sharedMaterial: {fileID: 9113721770840115801, guid: d46533f6ca7409e4099be860f86bf0bc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -11844,8 +11844,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Moves Left:'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a2be44c51fa11c544b32a6eec1275f3b, type: 2}
-  m_sharedMaterial: {fileID: -2904801863013269645, guid: a2be44c51fa11c544b32a6eec1275f3b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d46533f6ca7409e4099be860f86bf0bc, type: 2}
+  m_sharedMaterial: {fileID: 9113721770840115801, guid: d46533f6ca7409e4099be860f86bf0bc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -17049,6 +17049,7 @@ GameObject:
   - component: {fileID: 1535674746}
   - component: {fileID: 1535674748}
   - component: {fileID: 1535674747}
+  - component: {fileID: 1535674749}
   m_Layer: 5
   m_Name: Text (TMP) Player HP
   m_TagString: Untagged
@@ -17097,8 +17098,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Player HP:'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a2be44c51fa11c544b32a6eec1275f3b, type: 2}
-  m_sharedMaterial: {fileID: -2904801863013269645, guid: a2be44c51fa11c544b32a6eec1275f3b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d46533f6ca7409e4099be860f86bf0bc, type: 2}
+  m_sharedMaterial: {fileID: 9113721770840115801, guid: d46533f6ca7409e4099be860f86bf0bc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -17172,6 +17173,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1535674745}
   m_CullTransparentMesh: 1
+--- !u!114 &1535674749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1535674745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0.23125762, g: 0.4490565, b: 0.20249908, a: 1}
+  m_EffectDistance: {x: 1.45, y: 12.12}
+  m_UseGraphicAlpha: 1
 --- !u!4 &1562005202 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4932267959246028, guid: 43b3bfc3c2f2ff146a8d85e63d0a4e26, type: 3}
@@ -24091,6 +24107,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 66dad7bbad94714409ebe96bf30c0104, type: 2}
   - {fileID: 11400000, guid: 58cf5cac290dddd4da6adc581f04cd82, type: 2}
   - {fileID: 11400000, guid: a98c4a23b3dc83f4a9944d776f62b8b1, type: 2}
+  - {fileID: 11400000, guid: 3068247b28cb813499de8e5102fadc0e, type: 2}
 --- !u!4 &2090739064
 Transform:
   m_ObjectHideFlags: 0
