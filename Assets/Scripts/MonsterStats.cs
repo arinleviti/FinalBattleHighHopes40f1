@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class MonsterStats : CharacterClass
@@ -10,9 +10,9 @@ public class MonsterStats : CharacterClass
 	public CharacterType CharacterType { get; set; }
 	// Expose the fields in the Inspector
 	[SerializeField]
-	public int hp = 10;
+	public int hp ;
 	[SerializeField]
-	private int maxHP = 10;
+	public int maxHP;
 	[SerializeField]
 	private string characterName = "MonsterX";
 	[SerializeField]
@@ -22,7 +22,7 @@ public class MonsterStats : CharacterClass
 	[SerializeField]
 	private bool isDead = false;
 	[SerializeField]
-	private int potionsAvailable = 1;
+	private int potionsAvailable;
 	private Rigidbody rb;
 	private Vector3 initialPosition;
 	private float distanceMoved;

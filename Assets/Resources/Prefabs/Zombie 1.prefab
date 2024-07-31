@@ -121,13 +121,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 417669664408eec4c93c2ba86852f2b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 10
-  maxHP: 10
+  hp: 60
+  maxHP: 60
   characterName: MonsterX
   attackT: 
   characterCategory: 1
   isDead: 0
   potionsAvailable: 1
+  maxDistanceToMove: 2
+  moveSpeed: 5
+  pushForce: 1000
+  freezeDuration: 5
 --- !u!54 &5374161982564048210
 Rigidbody:
   m_ObjectHideFlags: 0

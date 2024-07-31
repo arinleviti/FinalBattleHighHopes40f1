@@ -44,6 +44,8 @@ public class ScoresManager : MonoBehaviour
 	private Color originalOutlineColor;
 	private float originalOutlineWidth;
 
+	public Camera mainCamera;
+	public GameObject midpoint;
 	//private List<ICharacter> charactersIOList;
 
 	// Start is called before the first frame update
@@ -65,7 +67,7 @@ public class ScoresManager : MonoBehaviour
 		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
 		//CreateIOList();
 		animScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
-		
+		midpoint = GameObject.Find("Midpoint");
 		textMaterial = playerHPText.fontMaterial;
 		originalOutlineColor = textMaterial.GetColor(ShaderUtilities.ID_OutlineColor);
 		originalOutlineWidth = textMaterial.GetFloat(ShaderUtilities.ID_OutlineWidth);
@@ -82,8 +84,8 @@ public class ScoresManager : MonoBehaviour
 		currentPlayer = combatManager.currentTurn;
 
 		playerHPText.text = $"Player HP: {playerHP}";
-		monster1HPText.text = $"Monster 1: {firstMonsterHP}";
-		monster2HPText.text = $"Monster 2: {secondMonsterHP}";
+		monster1HPText.text = $"Zombie 1 HP: {firstMonsterHP}";
+		monster2HPText.text = $"Zombie 2 HP: {secondMonsterHP}";
 		if (combatManager.currentTurn.CompareTag("Player") /*&& potionButton != null*/)
 		{
 			potionButton = GameObject.Find("PotionCanvasPrefab(Clone)").GetComponentInChildren<Button>();
@@ -109,6 +111,7 @@ public class ScoresManager : MonoBehaviour
 		if (firstMonsterHP <= 0 && secondMonsterHP <= 0 && !flag1)
 		{
 			canvasYouWin = Instantiate(Resources.Load<GameObject>("Prefabs/Canvas YouWin"));
+			AudioManager.instance.PlayEffect("VictoryClips", mainCamera.transform.position, 0);
 			restartButton = canvasYouWin.GetComponentInChildren<Button>();			
 			flag1 = true;
 			restartButton.onClick.AddListener(RestartGame);
@@ -118,6 +121,8 @@ public class ScoresManager : MonoBehaviour
 		if (playerHP <= 0 && !flag1)
 		{
 			canvasYouDie = Instantiate(Resources.Load<GameObject>("Prefabs/Canvas YouDie"));
+			AudioManager.instance.PlayEffect("GameOverClips", mainCamera.transform.position , 0);
+			AudioManager.instance.PlayEffect("LastBreathClips", midpoint.transform.position, 0);
 			restartButton = canvasYouDie.GetComponentInChildren<Button>();
 			flag1 = true;
 			animScript.PlayDeathAnim(playerGO, animator);
