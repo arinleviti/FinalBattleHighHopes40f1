@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.063493334, g: 0.0520377, b: 0.056690488, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11975,38 +11974,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'How to play:
-
-
-    Player Controls: You control the Zombie Slayer, who
-    can perform two actions each turn.
-
-
-    Available Actions: Each turn, you can
-    choose from the following actions:
-
-    *Move
-
-    *Attack
-
-    *Drink Potion
-
-
-    Moving:
-    To move the player, left-click anywhere inside the Range Indicator that appears
-    around the player.
-
-
-    Drinking Potions: Potions restore 25 HP to the player.
-
-    
-
-    Attacking:
-    Each Punch attack deals between 10 and 20 HP damage to the adversary.
-
-
-    Click
-    to close.'
+  m_text: "How to play:\n\nPlayer Controls: You control the Zombie Slayer, who can
+    perform two actions each turn.\n\nAvailable Actions: Each turn, you can choose
+    from the following actions:\n*Move\n*Attack\n*Drink Potion\n\nMoving: To move
+    the player, left-click anywhere inside the Range Indicator that appears around
+    the player.\n\nDrinking Potions: Potions restore 25 HP to the player.\n\nAttacking:
+    Click on the monster's torso to initiate the attack. Each Punch attack deals
+    between 10 and 20 HP damage to the adversary. \n\nClick anywhere on this window
+    to close it."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5186315d0f1b862468fb88e07149220c, type: 2}
   m_sharedMaterial: {fileID: -3722211900989174064, guid: 5186315d0f1b862468fb88e07149220c, type: 2}
@@ -12033,7 +12008,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 7.85
+  m_fontSize: 7.45
   m_fontSizeBase: 8
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -12384,6 +12359,7 @@ Terrain:
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
   m_SplatMapDistance: 1000
+  m_HeightmapMinimumLODSimplification: 0
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 2
   m_DrawHeightmap: 1
