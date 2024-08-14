@@ -4,35 +4,22 @@ using System.Linq;
 using UnityEngine;
 
 public class CombatManager : MonoBehaviour
-{
-	//private string tag1 = "Player";
-	//private string tag2 = "Monster";
+{	
 	public bool playerTurnCompleted = false;
 	public bool monsterTurnCompleted = false;
 	public bool isEnemyTurn = false;
-
-	//public PlayerController playerControllerRef;
 	public PlayerController playerControllerRef;
-
 	public List<GameObject> TurnList = new List<GameObject>();
-
 	private GameObject PlayerControllerPrefab;
 	private GameObject monsterControllerPrefab;
 	public GameObject UIManagerPrefabGO;
-
 	public GameObject currentTurn;
 	public int movesLeft; //Each character has 2 moves for each turn
-
 	private List<CharacterClass> charactersIOList;
-
-	private bool isDead = false;
-
 	private PlayerStats playerStats;
 	private MonsterStats monsterStats;
-	//private Animator playerAnimator;
 	public AnimScript animatorScript;
 	private int playerHP;
-
 	private Animator animator;
 	private Animator animatorZ1;
 	private Animator animatorZ2;
@@ -40,18 +27,11 @@ public class CombatManager : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		//TurnList.Add(GameObject.FindGameObjectWithTag("Player"));
-		//foreach (var gameObject in GameObject.FindGameObjectsWithTag("Monster"))
-		//{
-		//	TurnList.Add(gameObject);
-		//}
-		//playerControllerRef = gameObject.GetComponent<PlayerController>();
-
+		
 		CreateTurnList();
 		string debug = string.Join(",", TurnList.Select(x => x.ToString()).ToList());
 		Debug.Log("Characters in the Turn List: " + debug);
-		TurnManager();
-		//playerAnimator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
+		TurnManager();		
 		animatorScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
 		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
 		animatorZ1 = GameObject.Find("Zombie 1").GetComponentInChildren<Animator>();
@@ -59,12 +39,7 @@ public class CombatManager : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update()
-	{
-
-
-	}
-
+	
 	public void TurnManager()
 	{
 		StartCoroutine(ExecuteTurns());
@@ -72,14 +47,9 @@ public class CombatManager : MonoBehaviour
 
 	private IEnumerator ExecuteTurns()
 	{
-		//may be redundant, delete.
+
 		while (TurnList.Count > 0)
 		{
-			//bool characterDied;
-			//do
-			//{
-			//	characterDied = false;
-
 			// Creates a copy of the TurnList to iterate over
 			List<GameObject> currentTurnList = new List<GameObject>(TurnList);
 			for (int i = 0; i < currentTurnList.Count; i++)
@@ -104,8 +74,7 @@ public class CombatManager : MonoBehaviour
 
 						 
 						CleanUpTurn();
-						PlayerControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PlayerControllerPrefab"));
-						//playerControllerRef = PlayerControllerPrefab.GetComponent<NewPlayerController>();
+						PlayerControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PlayerControllerPrefab"));						
 						playerControllerRef = PlayerControllerPrefab.GetComponent<PlayerController>();
 
 						yield return new WaitUntil(() => playerTurnCompleted);
@@ -113,10 +82,7 @@ public class CombatManager : MonoBehaviour
 						
 
 						Debug.Log("Is the turn completed in combatManager? " + playerTurnCompleted);
-						playerTurnCompleted = false;
-						//UIManagerPrefabGO = GameObject.Find("UIManagerPrefab(Clone)");
-						
-						//PlayerAnimator.Rebind();
+						playerTurnCompleted = false;						
 						movesLeft--;
 						if (movesLeft < 1)
 						{
@@ -134,9 +100,7 @@ public class CombatManager : MonoBehaviour
 						yield return new WaitUntil(() => monsterTurnCompleted);
 						yield return StartCoroutine(IsCharacterDead());
 						
-						monsterTurnCompleted = false;
-						//UIManagerPrefabGO = GameObject.Find("UIManagerPrefab(Clone)");
-						//CleanUpTurn();
+						monsterTurnCompleted = false;						
 						movesLeft--;
 						if (movesLeft < 1)
 						{
@@ -153,8 +117,7 @@ public class CombatManager : MonoBehaviour
 				if (GO != null)
 				{
 					Debug.Log("Elem in CURRENT TURN LIST:" + GO.name);
-				}
-				
+				}				
 			}
 		}
 
@@ -251,11 +214,8 @@ public class CombatManager : MonoBehaviour
 				if (characterGO != null)
 				{
 					charactersToRemove.Add(characterGO);
-					//Destroy(characterGO);
 					character.IsDead = true;
 				}
-				//isDead = true;
-
 			}
 
 		}
@@ -279,12 +239,9 @@ public class CombatManager : MonoBehaviour
 				else if (characterToRemove != null && characterToRemove.name == "Zombie 2")
 				{
 					animatorScript.PlayDeathAnim(characterToRemove, animatorZ2);
-				}				
-				
+				}							
 			}
 			TurnList.Remove(characterToRemove);
-			//TurnList.Remove(characterToRemove);
-			//Destroy(characterToRemove);
 		}
 		yield break;
 	}
@@ -296,7 +253,5 @@ public class CombatManager : MonoBehaviour
 		{
 			TurnList.Add(gameObject);
 		}
-	}
-
-	
+	}	
 }

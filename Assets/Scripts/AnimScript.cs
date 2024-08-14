@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
-//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class AnimScript : MonoBehaviour
@@ -10,16 +9,11 @@ public class AnimScript : MonoBehaviour
 	public Animator monsterAnim;
 	public CombatManager combatManager;
 
-
 	private bool isIdle = false;
 	private bool isWalking = false;
-	//private GameObject currentTurn;
+	
 	public bool turnToTarget = false;
 
-	private float speed;
-	private GameObject target;
-	private GameObject attacker;
-	private PlayerController playerControllerRef;
 	public bool isRotating = false;
 	public bool flag2 = false;
 	private float turnSpeed = 20;
@@ -31,9 +25,7 @@ public class AnimScript : MonoBehaviour
 
 	// Start is called before the first frame update
 	void Start()
-	{
-		//combatManager = GameObject.Find("CombatManager").GetComponent<CombatManager>();
-		//playerControllerRef = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent<PlayerController>();
+	{	
 		combatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
 	}
 
@@ -45,9 +37,7 @@ public class AnimScript : MonoBehaviour
 		if (isRotating )
 		{
 			PlayerTurnEndShell();
-		}
-
-		
+		}		
 	}
 
 	public void HitAnimation(IAction action, Animator animator)
@@ -72,9 +62,7 @@ public class AnimScript : MonoBehaviour
 				Debug.LogWarning("Unknown action type.");
 				break;
 		}
-
-		//AnimatorStateInfo: A structure that holds information about the current state of an Animator.Gets the current state of the Animator for the first layer (index 0).
-
+		
 		AnimatorStateInfo hitStateInfo = animator.GetCurrentAnimatorStateInfo(0);
 		while (!hitStateInfo.IsName("Attack"))
 		{
@@ -95,12 +83,10 @@ public class AnimScript : MonoBehaviour
 		PlayerTurnEndOfTurn();
 	}
 	private void PlayerTurnEndOfTurn()
-	{
-		//playerControllerRef = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent<PlayerController>();
+	{		
 		midpoint = GameObject.Find("Midpoint");
 		
-			turnDirection = midpoint.transform.position - currentTurn.transform.position;
-
+		turnDirection = midpoint.transform.position - currentTurn.transform.position;
 		
 		Quaternion turnRotation = Quaternion.LookRotation(turnDirection);
 		currentTurn.transform.rotation = Quaternion.Lerp(currentTurn.transform.rotation, turnRotation, Time.deltaTime * turnSpeed);
@@ -137,25 +123,16 @@ public class AnimScript : MonoBehaviour
 	}
 	public void SetupWalking(GameObject attacker, Animator animator)
 	{
-
 		isIdle = false;
 		animator.SetBool("IsIdle", isIdle);
-		//Vector3 direction = new Vector3(clickPosition.x, attacker.transform.position.y, clickPosition.z) - attacker.transform.position;
-		//direction.Normalize();
-		//attacker.transform.rotation = Quaternion.LookRotation(direction);
-
 		isWalking = true;
 		animator.SetBool("IsWalking", isWalking);
-
-
 	}
 
 	public void SetUpIdle(GameObject attacker, Animator animator)
 	{
-
 		isWalking = false;
 		animator.SetBool("IsWalking", isWalking);
-
 		isIdle = true;
 		animator.SetBool("IsIdle", isIdle);
 	}
@@ -166,21 +143,9 @@ public class AnimScript : MonoBehaviour
 	}
 
 	public IEnumerator SetupGetHit(Animator animAttacker, Animator animAttacked)
-	{
-		//AnimatorStateInfo hitStateInfo = animAttacker.GetCurrentAnimatorStateInfo(0);
-		//while (!hitStateInfo.IsName("Attack"))
-		//{
-		//	yield return null;
-		//	hitStateInfo = animAttacker.GetCurrentAnimatorStateInfo(0);
-		//}
-		//while (hitStateInfo.normalizedTime < 1f)
-		//{
-		//	yield return null;
-		//	hitStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-		//}
+	{		
 		yield return new WaitForSeconds(0.3f);
 		animAttacked.SetTrigger("GetHit");
-
 	}
 
 	public void TurnToTargetCapsule(float speed, GameObject target, GameObject attacker)

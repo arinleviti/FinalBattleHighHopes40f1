@@ -5,8 +5,7 @@ using UnityEngine.UI;
 
 public class ActionChoices : MonoBehaviour
 {
-	private UIManager UIManagerRef;
-	private GameObject UIManager;
+	private UIManager UIManagerRef;	
 	private CombatManager combatManagerRef;
 	private AnimScript animScript;
 	private Animator animator;
@@ -17,30 +16,15 @@ public class ActionChoices : MonoBehaviour
 	private GameObject zombie1;
 	private GameObject zombie2;
 	private GameObject bloodObjRef;
-	private BloodSplatter bloodSplatterScript;
-	//private Canvas canvasPotion;
-	private GameObject scoresManagerGO;
+	private BloodSplatter bloodSplatterScript;	
 	private ScoresManager scoresManagerScript;
 	private bool usedPotion = false;
 	private GameObject animatorObj;
 
 	public void GetComponents()
-	{
-		//if (GameObject.Find("UIManagerPrefab(Clone)"))
-		//{
-		//	UIManager = GameObject.Find("UIManagerPrefab(Clone)");
-		//	UIManagerRef = UIManager.GetComponent<UIManager>();
-		//}
-
-
-		//combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
-		////playerControllerRef = GameObject.Find("PlayerControllerPrefab(Clone)").GetComponent <PlayerController>();
-		//animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
+	{		
 		animScript = animatorObj.GetComponent<AnimScript>();
-		//zombie1 = GameObject.Find("Zombie 1");
-		//zombie2 = GameObject.Find("Zombie 2");
-		//player = GameObject.Find("Player");
-
+		
 		if (zombie1 != null)
 		{
 			animatorZ1 = zombie1.GetComponentInChildren<Animator>();
@@ -58,10 +42,7 @@ public class ActionChoices : MonoBehaviour
 		{
 			bloodObjRef = GameObject.Find("BloodObj(Clone)");
 			bloodSplatterScript = bloodObjRef.GetComponent<BloodSplatter>();
-		}
-		//canvasPotion = GameObject.Find("PotionCanvas").GetComponent<Canvas>();
-		//scoresManagerGO = GameObject.Find("Canvas2");
-		//scoresManagerScript = scoresManagerGO.GetComponent<ScoresManager>();
+		}		
 	}
 	public void Initialize(CombatManager combatManager, ScoresManager scoresManager, Animator animator,
 		GameObject zombie1, GameObject zombie2, GameObject player, GameObject animatorObj, UIManager uiManager = null)
@@ -86,15 +67,13 @@ public class ActionChoices : MonoBehaviour
 				UIManagerRef.actionPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PunchPrefab"));
 				Punch punchScriptRef = UIManagerRef.actionPrefab.GetComponent<Punch>();
 				if (punchScriptRef != null)
-				{
-					//animatorRef.SetTrigger("IsPunching");
+				{				
 
 					UIManagerRef.targetCharacterIO.HP = punchScriptRef.Hit(UIManagerRef.targetCharacterIO, UIManagerRef.attackerIO);
 					Debug.Log("Punch Hit logic executed");
-					//StartCoroutine(HandlePunchAnimation());
-
+					
 					animScript.HitAnimation(punchScriptRef, animator);
-					//UIManagerRef.targetCharacterIO.HP = punchScriptRef.Hit(UIManagerRef.targetCharacterIO, UIManagerRef.attackerIO);
+					
 					
 					if (UIManagerRef.targetCharacterGO != null && UIManagerRef.targetCharacterGO.name == "Zombie 1" )
 					{
@@ -141,9 +120,7 @@ public class ActionChoices : MonoBehaviour
 						AudioManager.instance.PlayEffect("CharacterIsPunchedClips", player.transform.position, 0.35f);
 						bloodSplatterScript.ActivateCorBlood(UIManagerRef.targetCharacterGO);
 					}
-					
-						
-					
+									
 				}
 				else
 				{
@@ -204,10 +181,9 @@ public class ActionChoices : MonoBehaviour
 		if (combatManagerRef.currentTurn.CompareTag("Player") && !usedPotion)
 		{
 			UIManagerRef.canvas.enabled = false;
-			//playerControllerRef.movesLeft--;
-			//SetupIdle();
+
 			UIManagerRef.isCharacterTurnOver = true;
-			//Destroy(gameObject);
+
 		}
 		if (combatManagerRef.currentTurn.CompareTag("Player") && usedPotion)
 		{
@@ -216,13 +192,7 @@ public class ActionChoices : MonoBehaviour
 		if (combatManagerRef.currentTurn.CompareTag("Monster"))
 		{
 			UIManagerRef.SetAttackChoiceHandled(true);
-			//Destroy(gameObject);
 		}
-
-
-		//Destroy(gameObject);
-
 	}
 	
-
 }

@@ -19,8 +19,7 @@ public class MonstersController : MonoBehaviour
 	public bool reachedTarget = false;
 	private bool isWalkSetup1 = false;
 	private bool isWalkSetup2 = false;
-	private bool isIdleSetup1 = false;
-	private bool isIdleSetup2 = false;
+	private bool isIdleSetup1 = false;	
 	private AnimScript animScriptS;
 	private Animator animatorZ1;
 	private Animator animatorZ2;
@@ -30,11 +29,9 @@ public class MonstersController : MonoBehaviour
 	private float radius;
 	private GameObject currentTurn;
 	private GameObject midpoint;
-
 	private Vector3 directionToPlayer;
 	private List<GameObject> rangeIndicatorList = new List<GameObject>();
-	private bool rangeIndicatorListTransferred = false;
-	//private Rigidbody rb;
+	private bool rangeIndicatorListTransferred = false;	
 	private NavMeshAgent navMeshAgentZ1;
 	private NavMeshAgent navMeshAgentZ2;
 	private NavMeshObstacle navMeshObstacleZ2;
@@ -47,8 +44,7 @@ public class MonstersController : MonoBehaviour
 	private float distanceToPlayer;
 	private Rigidbody zombie1RB;
 	private Rigidbody zombie2RB;
-	
-	
+		
 
 	void Start()
 	{
@@ -127,7 +123,6 @@ public class MonstersController : MonoBehaviour
 		agent.speed = movespeed;
 		
 		agent.isStopped = false;
-		//agent.stoppingDistance = 1.2f;
 		navMeshAgent = agent;
 		ConfigureNavMeshAgent(navMeshAgent);
 		
@@ -143,11 +138,8 @@ public class MonstersController : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate()
 	{
-		
-		//rangeIndicatorList = rangeIndicatorScript.targetsInRange;
 		marker.transform.position = new Vector3(monster.transform.position.x, monster.transform.position.y + 2, monster.transform.position.z);
-		midpoint = GameObject.Find("Midpoint");
-		//rangeIndicatorList = rangeIndicatorScript.targetsInRange;
+		midpoint = GameObject.Find("Midpoint");		
 		
 		if (!rangeIndicatorListTransferred)
 		{
@@ -191,7 +183,7 @@ public class MonstersController : MonoBehaviour
 				distanceToPlayer = Vector3.Distance(playerTarget.transform.position, monster.transform.position);
 				float distanceTravelled = Vector3.Distance(monster.transform.position, pointA);
 
-				if (/*distanceToPlayer < threshold || */distanceTravelled >= radius)
+				if (distanceTravelled >= radius)
 				{					
 
 					if (!isIdleSetup1)
@@ -257,14 +249,9 @@ public class MonstersController : MonoBehaviour
 				if (!navMeshAgentZ1.pathPending && navMeshAgentZ1.isActiveAndEnabled && navMeshAgentZ1.isOnNavMesh && navMeshAgentZ1.remainingDistance <= 1.2f)
 				{
 					flag0 = true;
-
-
-					reachedTarget = true;
-					
+					reachedTarget = true;					
 					ResetNavMesh();
-
 					TurnToPlayer(50);
-					//animScriptS.isRotating = true;
 					UpdateUIManager();
 					StopMoving();
 					Debug.Log("It's blocking here 2");
@@ -275,21 +262,14 @@ public class MonstersController : MonoBehaviour
 				if (!navMeshAgentZ2.pathPending && navMeshAgentZ2.isActiveAndEnabled && navMeshAgentZ2.isOnNavMesh && navMeshAgentZ2.remainingDistance <= 1.2f)
 				{
 					flag0 = true;
-
-
-					reachedTarget = true;
-					
-					ResetNavMesh();
-					
+					reachedTarget = true;					
+					ResetNavMesh();					
 					TurnToPlayer(50);
 					UpdateUIManager();
 					StopMoving();
 					Debug.Log("It's blocking here 2");
-
 				}
-			}
-			
-			
+			}		
 		}
 	}
 	private void TurnToPlayer(float speed)
@@ -344,22 +324,14 @@ public class MonstersController : MonoBehaviour
 
 		if (!GameObject.Find("UIManagerPrefab(Clone)"))
 		{
-
 			UIManagerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/UIManagerPrefab"));
-
 			Debug.Log("Is UIManagerPrefab for the monster instantiated?" + UIManagerPrefab.name);
 		}
-
-
-
 	}
 
 	private void ConfigureNavMeshAgent(NavMeshAgent agent)
 	{
 		agent.avoidancePriority = 50;
-		//agent.radius = 0.2f;  //
-		//agent.height = 2.0f;  //
-		//agent.angularSpeed = 10000f;  //
 		agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
 		agent.autoBraking = true;
 	}
@@ -368,10 +340,6 @@ public class MonstersController : MonoBehaviour
 	{
 		obstacle.carving = true;
 		obstacle.shape = NavMeshObstacleShape.Capsule;
-		obstacle.center = Vector3.zero;
-		//obstacle.size = new Vector3(1.0f, 2.0f, 1.0f);
+		obstacle.center = Vector3.zero;		
 	}
-	
-
-
 }

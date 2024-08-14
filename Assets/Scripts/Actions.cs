@@ -40,10 +40,10 @@ public class ThunderBlast : IExtraActions
 		SelfInflicted = UnityEngine.Random.Range(0, MAXHPSelfInflicted);
 		int newHP = characterHit.HP - HPInflicted;
 		attacker.HP -= SelfInflicted;
-		Console.ForegroundColor = ConsoleColor.DarkRed;
-		Console.WriteLine($"{attacker.Name} has landed a ThunderBlast, dealing {HPInflicted} points of damage to {characterHit.Name}'s health.");
-		Console.WriteLine($"{attacker.Name} has suffered {SelfInflicted} HP. Their new HP is {attacker.HP}");
-		Console.ResetColor();
+		//Console.ForegroundColor = ConsoleColor.DarkRed;
+		//Console.WriteLine($"{attacker.Name} has landed a ThunderBlast, dealing {HPInflicted} points of damage to {characterHit.Name}'s health.");
+		//Console.WriteLine($"{attacker.Name} has suffered {SelfInflicted} HP. Their new HP is {attacker.HP}");
+		//Console.ResetColor();
 		return newHP;
 	}
 }
@@ -69,20 +69,20 @@ public class Annihilator : IExtraActions
 		{
 			characterHit.HP -= HPInflicted;
 			attacker.HP = 0;
-			Console.ForegroundColor = ConsoleColor.DarkRed;
-			Console.WriteLine($"{attacker.Name} has landed an Annihilator, dealing {HPInflicted} points of damage to {characterHit.Name}'s health.");
-			Console.WriteLine($"{Name} was too powerful for {attacker.Name}.");
-			Console.ResetColor();
+			//Console.ForegroundColor = ConsoleColor.DarkRed;
+			//Console.WriteLine($"{attacker.Name} has landed an Annihilator, dealing {HPInflicted} points of damage to {characterHit.Name}'s health.");
+			//Console.WriteLine($"{Name} was too powerful for {attacker.Name}.");
+			//Console.ResetColor();
 		}
 		else
 		{
 			SelfInflicted = UnityEngine.Random.Range(1, MAXHPSelfInflicted);
 			attacker.HP -= SelfInflicted;
 			characterHit.HP -= HPInflicted;
-			Console.ForegroundColor = ConsoleColor.DarkRed;
-			Console.WriteLine($"{attacker.Name} has landed an Annihilator, dealing {HPInflicted} points of damage to {characterHit.Name}'s health.");
-			Console.WriteLine($"{attacker.Name} has suffered {SelfInflicted} HP. Their new HP is {attacker.HP}");
-			Console.ResetColor();
+			//Console.ForegroundColor = ConsoleColor.DarkRed;
+			//Console.WriteLine($"{attacker.Name} has landed an Annihilator, dealing {HPInflicted} points of damage to {characterHit.Name}'s health.");
+			//Console.WriteLine($"{attacker.Name} has suffered {SelfInflicted} HP. Their new HP is {attacker.HP}");
+			//Console.ResetColor();
 		}
 		return characterHit.HP;
 	}

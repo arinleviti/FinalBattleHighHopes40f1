@@ -7,18 +7,6 @@ public class BloodSplatter : MonoBehaviour
 	private GameObject bloodSplatterGO;
 	private ParticleSystem bloodSplatterPS;
 
-	// Start is called before the first frame update
-	void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 	public void ActivateCorBlood(GameObject characterHit)
 	{
 		StartCoroutine(ActivateBlood(characterHit));
@@ -30,9 +18,7 @@ public class BloodSplatter : MonoBehaviour
 		Destroy(GameObject.Find("BloodPSPrefabM(Clone)(Clone)"));
 		Destroy(GameObject.Find("BloodPSPrefabP(Clone)"));
 		Destroy(GameObject.Find("BloodPSPrefabP(Clone)(Clone)"));
-		
-		//GameObject bloodSplatterGO = new GameObject();
-		//ParticleSystem bloodSplatterPS = new ParticleSystem();
+	
 
 		if (characterHit != null && characterHit.CompareTag("Monster"))
 		{

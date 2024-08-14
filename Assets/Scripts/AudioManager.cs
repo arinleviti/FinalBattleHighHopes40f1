@@ -39,8 +39,7 @@ public class AudioManager : Singleton<AudioManager>
         {
             Debug.LogWarningFormat("Effect {0} has no clips to play.", effectName);
             return;
-        }
-        //AudioSource.PlayClipAtPoint(clip, worldPosition);
+        }      
         StartCoroutine(PlayWithDelay(clip, worldPosition, delay));
     }
     private IEnumerator PlayWithDelay( AudioClip clip, Vector3 worldPosition, float delay)

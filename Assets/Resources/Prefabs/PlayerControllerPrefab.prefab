@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5340534176080374974}
   - component: {fileID: 3441393472059313201}
-  - component: {fileID: -8218342662373499857}
   - component: {fileID: 3034619171507746148}
   - component: {fileID: 1855681221151402285}
   m_Layer: 0
@@ -56,26 +55,7 @@ MonoBehaviour:
   isIdle: 0
   midpoint: {fileID: 0}
   turnSpeed: 20
---- !u!114 &-8218342662373499857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3730691018316744350}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d863dbc5ed233448a138e3e7b20117a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canvas: {fileID: 0}
-  rangeIndicatorScript: {fileID: 0}
-  CombatManagerScript: {fileID: 0}
-  midpoint: {fileID: 0}
-  mode: 1
-  isMovingParameterName: Moving
-  sidewaysSpeedParameterName: X Speed
-  forwardSpeedParameterName: Z Speed
+  canvasPotion: {fileID: 0}
 --- !u!195 &3034619171507746148
 NavMeshAgent:
   m_ObjectHideFlags: 0

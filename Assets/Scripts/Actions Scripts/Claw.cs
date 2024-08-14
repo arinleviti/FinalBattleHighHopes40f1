@@ -11,10 +11,7 @@ public class Claw : MonoBehaviour, IAction
 	public int Hit(ICharacter characterHit, ICharacter attacker)
 	{
 		HPInflicted = UnityEngine.Random.Range(5, 10);
-		int newHP = characterHit.HP - HPInflicted;
-		Console.ForegroundColor = ConsoleColor.DarkRed;
-		Console.WriteLine($"{attacker.Name} has landed a Claw, dealing {HPInflicted} points of damage to {characterHit.Name}'s health.");
-		Console.ResetColor();
+		int newHP = characterHit.HP - HPInflicted;		
 		return newHP;
 	}
 }

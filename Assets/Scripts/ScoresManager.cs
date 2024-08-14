@@ -12,18 +12,13 @@ public class ScoresManager : MonoBehaviour
 	public TextMeshProUGUI monster1HPText;
 	public TextMeshProUGUI monster2HPText;
 	public TextMeshProUGUI movesLeft;
-
 	private PlayerStats playerStats;
 	private MonsterStats firstMonsterStats;
 	private MonsterStats secondMonsterStats;
 	private CombatManager combatManager;
 	private GameObject playerGO;
 	private GameObject currentPlayer;
-
 	public GameObject monsterGO;
-	//private GameObject targetCharacterGOSM;
-	//private GameObject attackerGOSM;
-
 	private int playerHP;
 	private int firstMonsterHP;
 	private int secondMonsterHP;
@@ -31,7 +26,6 @@ public class ScoresManager : MonoBehaviour
 	private Animator animator;
 	private AnimScript animScript;
 	private bool isCharacterDead = false;
-
 	private GameObject canvasYouWin;
 	private GameObject canvasYouDie;
 	private Button restartButton;
@@ -39,14 +33,11 @@ public class ScoresManager : MonoBehaviour
 	private Button potionButton;
 	private TextMeshProUGUI potionsLeftText;
 	public int potionsLeftInt;
-
 	private Material textMaterial;
 	private Color originalOutlineColor;
 	private float originalOutlineWidth;
-
 	public Camera mainCamera;
 	public GameObject midpoint;
-	//private List<ICharacter> charactersIOList;
 
 	// Start is called before the first frame update
 	private void Start()
@@ -58,14 +49,11 @@ public class ScoresManager : MonoBehaviour
 		potionsLeftInt = playerStats.PotionsAvailable;
 		GameObject firstMonster = GameObject.Find("Zombie 1");
 		firstMonsterStats = firstMonster.GetComponent<MonsterStats>();
-
 		GameObject secondMonster = GameObject.Find("Zombie 2");
 		secondMonsterStats = secondMonster.GetComponent<MonsterStats>();
-
 		GameObject combatManagerObject = GameObject.Find("CombatManager");
 		combatManager = combatManagerObject.GetComponent<CombatManager>();
-		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
-		//CreateIOList();
+		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();		
 		animScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
 		midpoint = GameObject.Find("Midpoint");
 		textMaterial = playerHPText.fontMaterial;
@@ -75,8 +63,7 @@ public class ScoresManager : MonoBehaviour
 
 	// Update is called once per frame
 	void Update()
-	{
-		
+	{		
 		playerHP = playerStats.HP;
 		firstMonsterHP = firstMonsterStats.HP;
 		secondMonsterHP = secondMonsterStats.HP;
@@ -93,17 +80,12 @@ public class ScoresManager : MonoBehaviour
 			potionsLeftInt = playerStats.PotionsAvailable;
 			potionsLeftText.text = $"{potionsLeftInt}";
 		}
-		
-		//movesLeftInt = GameObject.Find("CombatManager").GetComponent<CombatManager>().movesLeft;
 		movesLeft.text = $"Current Turn: {currentPlayer.name} Moves left: {movesLeftInt}";
-
 		if (playerHP <= 0 && !isCharacterDead )
 		{
-			isCharacterDead = true;
-			//animScript.PlayDeathAnim(GameObject characterToRemove)
+			isCharacterDead = true;			
 		}
-		IsGameOver();
-		
+		IsGameOver();		
 	}
 	
 	private void IsGameOver()
@@ -153,14 +135,11 @@ public class ScoresManager : MonoBehaviour
 			float t = Mathf.PingPong(elapsed * 2, 1);  // Creates a pulsing effect
 			Color glowColor = Color.Lerp(originalOutlineColor, new Color(0.5f, 0, 0.5f), t);
 			float glowWidth = Mathf.Lerp(originalOutlineWidth, originalOutlineWidth + 0.5f, t);
-
 			// Apply the outline properties to the material
 			textMaterial.SetColor(ShaderUtilities.ID_OutlineColor, glowColor);
 			textMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, glowWidth);
-
 			elapsed += Time.deltaTime;
 			yield return null;
-
 		}
 		textMaterial.SetColor(ShaderUtilities.ID_OutlineColor, originalOutlineColor);
 		textMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, originalOutlineWidth);

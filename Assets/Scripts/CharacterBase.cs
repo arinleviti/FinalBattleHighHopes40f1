@@ -8,14 +8,10 @@ public interface ICharacter
 	public int HP { get; set; }
 	public int MaxHP { get; set; }
 	public string Name { get; set; }
-	//public int BattlesWon { get; set; }
 	public List<AttackType> AttackT { get; set; }
 	public Category CharacterCategory { get; set; }
-	public bool IsDead { get; set; }
-	//public bool Turn { get; set; }
+	public bool IsDead { get; set; }	
 	public int PotionsAvailable { get; set; }
-	//public AttackModifier AttackModifier { get; set; }
-	//public int HitsTakenPerBattle { get; set; }
 }
 
 
@@ -30,7 +26,6 @@ public class CharacterClass : MonoBehaviour, ICharacter
 	public bool IsDead { get; set; }
 	public bool Turn { get; set; }
 	public int PotionsAvailable { get; set; }
-	//public AttackModifier AttackModifier { get; set; }
 	public int HitsTakenPerBattle { get; set; } = 0;
 	
 }
