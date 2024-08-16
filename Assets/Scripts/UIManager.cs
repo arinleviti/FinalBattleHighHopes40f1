@@ -101,23 +101,23 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    IEnumerator ExecuteMethodsInSequence()
+    private void ExecuteMethodsInSequence()
     {
-        yield return StartCoroutine(RetrievePlayerGO());
-        yield return StartCoroutine(RetrieveMonsterGO());
-        yield return StartCoroutine(RetrieveTargetIO());
-        yield return StartCoroutine(RetrieveAttackerIO());
-        yield return StartCoroutine(InstantiateActionChoices());
-        yield return StartCoroutine(CreateButtonForPlayer());
-        yield return StartCoroutine(MonsterAttack());
+        /*yield return StartCoroutine(*/RetrievePlayerGO();
+        RetrieveMonsterGO();
+        RetrieveTargetIO();
+        RetrieveAttackerIO();
+        InstantiateActionChoices();
+        CreateButtonForPlayer();
+        MonsterAttack();
     }
 
     void TriggerSequence()
     {
-        StartCoroutine(ExecuteMethodsInSequence());
+        /*StartCoroutine(*/ExecuteMethodsInSequence();
         flagForCoroutine = false;
     }
-    private IEnumerator RetrievePlayerGO()
+    private void RetrievePlayerGO()
     {
         if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Player"))
         {
@@ -128,11 +128,11 @@ public class UIManager : MonoBehaviour
             attackerGO = playerControllerRef.attacker.gameObject;
             targetCharacterGO = playerControllerRef.Hit.collider.gameObject;
             canvas.enabled = true;
-            yield return null;
+            //yield return null;
         }
     }
 
-    private IEnumerator RetrieveMonsterGO()
+    private void RetrieveMonsterGO()
     {
         if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Monster"))
         {
@@ -140,11 +140,11 @@ public class UIManager : MonoBehaviour
             monstersControllerRef = monstersControllerGO.GetComponent<MonstersController>();
             attackerGO = monstersControllerRef.monster.gameObject;
             targetCharacterGO = monstersControllerRef.playerTarget.gameObject;
-            yield return null;
+            //yield return null;
         }
     }
 
-    private IEnumerator RetrieveTargetIO()
+    private void RetrieveTargetIO()
     {
         if (targetCharacterGO != null && targetCharacterGO.CompareTag("Monster"))
         {
@@ -156,10 +156,10 @@ public class UIManager : MonoBehaviour
             ICharacter target = targetCharacterGO.GetComponent<PlayerStats>();
             targetCharacterIO = target;
         }
-        yield return null;
+        //yield return null;
     }
 
-    private IEnumerator RetrieveAttackerIO()
+    private void RetrieveAttackerIO()
     {
         if (attackerGO != null && attackerGO.CompareTag("Monster"))
         {
@@ -180,9 +180,9 @@ public class UIManager : MonoBehaviour
             attackerIO = attacker;
             Debug.Log(attackerIO);
         }
-        yield return null;
+        //yield return null;
     }
-    private IEnumerator InstantiateActionChoices()
+    private void InstantiateActionChoices()
     {
         if (!GameObject.Find("ActionChoicesPrefab(Clone)"))
         {
@@ -198,11 +198,11 @@ public class UIManager : MonoBehaviour
                 player: player,
                 animatorObj: animatorObj
             );
-            yield return null;
+            //yield return null;
         }
     }
 
-    private IEnumerator CreateButtonForPlayer()
+    private void CreateButtonForPlayer()
     {
         if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Player"))
         {
@@ -224,10 +224,10 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
-        yield return null;
+        //yield return null;
     }
 
-    private IEnumerator MonsterAttack()
+    private void MonsterAttack()
     {
         if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Monster"))
         {
@@ -250,7 +250,7 @@ public class UIManager : MonoBehaviour
                 InstantiateAndProceed();
             }
         }
-        yield return null;
+        //yield return null;
     }
     void InstantiateAndProceed()
     {
@@ -262,12 +262,12 @@ public class UIManager : MonoBehaviour
     {
         flagForAttackChoice = value;
     }
-    private IEnumerator DestroyUIManager()
-    {
-        if (gameObject != null)
-        {
-            Destroy(gameObject);
-        }
-        yield return null;
-    }
+    //private IEnumerator DestroyUIManager()
+    //{
+    //    if (gameObject != null)
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //    yield return null;
+    //}
 }
