@@ -21,6 +21,11 @@ public class RangeIndicator : MonoBehaviour
         targetsInRange = new List<GameObject>();
         targetsInRange = GetInRangeTargets();
     }
+    public void ResetValues()
+    {
+        targetsInRange = new List<GameObject>();
+        targetsInRange = GetInRangeTargets();
+    }
 
     // Update is called once per frame
     void Update()

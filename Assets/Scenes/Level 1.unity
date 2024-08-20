@@ -251,7 +251,8 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6911591918714848918, guid: 1ebe7a4c9ece0a1418df1bf7938f3fbd, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7151161256427839416, guid: 1ebe7a4c9ece0a1418df1bf7938f3fbd, type: 3}
@@ -323,6 +324,7 @@ MonoBehaviour:
   isEnemyTurn: 0
   playerControllerRef: {fileID: 0}
   TurnList: []
+  PlayerControllerPrefab: {fileID: 0}
   UIManagerPrefabGO: {fileID: 0}
   currentTurn: {fileID: 0}
   movesLeft: 0
@@ -24894,18 +24896,18 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 963194228}
   - {fileID: 705507995}
   - {fileID: 95114526}
   - {fileID: 1112027776351985645}
   - {fileID: 8056571221608458146}
+  - {fileID: 181586447}
+  - {fileID: 2137193685}
   - {fileID: 714921409}
   - {fileID: 142483052}
   - {fileID: 734011528}
   - {fileID: 639214018}
-  - {fileID: 2137193685}
   - {fileID: 1632314553}
-  - {fileID: 181586447}
-  - {fileID: 963194228}
   - {fileID: 1597047981}
   - {fileID: 180204076}
   - {fileID: 1299286040}

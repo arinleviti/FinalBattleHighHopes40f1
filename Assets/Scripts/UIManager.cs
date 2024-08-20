@@ -82,11 +82,11 @@ public class UIManager : MonoBehaviour
 
             if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Player"))
             {
-                Destroy(playerControllerGO);
-                if (GameObject.Find("PlayerControllerPrefab"))
-                {
-                    Debug.Log("ERROR: Player Controller Prefab still alive");
-                }
+                //Destroy(playerControllerGO);
+                //if (GameObject.Find("PlayerControllerPrefab"))
+                //{
+                //    Debug.Log("ERROR: Player Controller Prefab still alive");
+                //}
                 combatManagerRef.playerTurnCompleted = true;
             }
             if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Monster"))

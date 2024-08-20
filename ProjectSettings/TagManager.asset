@@ -9,6 +9,7 @@ TagManager:
   - UIManager
   - Action
   - RangeIndicator
+  - PlayerController
   layers:
   - Default
   - TransparentFX

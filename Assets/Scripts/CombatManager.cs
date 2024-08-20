@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System;
 
 public class CombatManager : MonoBehaviour
 {	
@@ -10,7 +11,7 @@ public class CombatManager : MonoBehaviour
 	public bool isEnemyTurn = false;
 	public PlayerController playerControllerRef;
 	public List<GameObject> TurnList = new List<GameObject>();
-	private GameObject PlayerControllerPrefab;
+	public GameObject PlayerControllerPrefab;
 	private GameObject monsterControllerPrefab;
 	public GameObject UIManagerPrefabGO;
 	public GameObject currentTurn;
@@ -23,23 +24,41 @@ public class CombatManager : MonoBehaviour
 	private Animator animator;
 	private Animator animatorZ1;
 	private Animator animatorZ2;
+	private GameObject potionButton;
+	private GameObject potionCanvasPrefab;
 
+	public event Action OnPlayerTurnPotionButtonOn;
+	public event Action OnPlayerTurnPotionButtonOff;
 	// Start is called before the first frame update
-	void Start()
+	void Awake()
 	{
 		
 		CreateTurnList();
 		string debug = string.Join(",", TurnList.Select(x => x.ToString()).ToList());
 		Debug.Log("Characters in the Turn List: " + debug);
-		TurnManager();		
+        		
 		animatorScript = GameObject.Find("AnimatorObj").GetComponent<AnimScript>();
 		animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
 		animatorZ1 = GameObject.Find("Zombie 1").GetComponentInChildren<Animator>();
 		animatorZ2 = GameObject.Find("Zombie 2").GetComponentInChildren<Animator>();
-	}
+		//potionButton = Instantiate(Resources.Load<GameObject>("Prefabs/PotionButton"));
+		if (PlayerControllerPrefab == null)
+		{
+			PlayerControllerPrefab =Resources.Load<GameObject>("Prefabs/PlayerControllerPrefab");
+			ObjPoolManager.Instance.CreateObjectPool(PlayerControllerPrefab, "PlayerControllerPool");
+		}
+		potionButton = Instantiate(Resources.Load<GameObject>("Prefabs/PotionButton"));
+        potionCanvasPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PotionCanvasPrefab"));
+
+        ExecuteTurnManager();
+		
+    }
 
 	// Update is called once per frame
-	
+	public void ExecuteTurnManager()
+	{
+		TurnManager();
+	}
 	public void TurnManager()
 	{
 		StartCoroutine(ExecuteTurns());
@@ -71,10 +90,11 @@ public class CombatManager : MonoBehaviour
 
 					if (gameObject != null && gameObject.CompareTag("Player"))
 					{
+						OnPlayerTurnPotionButtonOn.Invoke();
 
-						 
 						CleanUpTurn();
-						PlayerControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PlayerControllerPrefab"));						
+						//PlayerControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PlayerControllerPrefab"));						
+						PlayerControllerPrefab = ObjPoolManager.Instance.GetPooledObject("PlayerControllerPool");
 						playerControllerRef = PlayerControllerPrefab.GetComponent<PlayerController>();
 
 						yield return new WaitUntil(() => playerTurnCompleted);
@@ -88,8 +108,10 @@ public class CombatManager : MonoBehaviour
 						{
 							yield return StartCoroutine(WaitAndContinue2());
 						}
-						
-					}
+                        ObjPoolManager.Instance.ReturnToPool("PlayerControllerPool", PlayerControllerPrefab);
+						OnPlayerTurnPotionButtonOff.Invoke();
+                        CleanUpTurn() ;
+                    }
 
 					if (gameObject != null && gameObject.CompareTag("Monster"))
 					{
@@ -107,8 +129,8 @@ public class CombatManager : MonoBehaviour
 							yield return StartCoroutine(WaitAndContinue2());
 						}
 						else yield return StartCoroutine(WaitAndContinue1());
-
-					}
+                        
+                    }
 				}
 				
 			}
@@ -139,7 +161,8 @@ public class CombatManager : MonoBehaviour
 		Destroy(GameObject.Find("ButtonPrefab(Clone)(Clone)"));
 		Destroy(GameObject.Find("RangeIndicatorPrefab(Clone)"));
 		Destroy(GameObject.Find("MonstersControllerPrefab(Clone)"));
-		Destroy(GameObject.Find("PlayerControllerPrefab(Clone)"));
+		//Destroy(GameObject.Find("PlayerControllerPrefab(Clone)"));
+		//ObjPoolManager.Instance.ReturnToPool("PlayerControllerPool", PlayerControllerPrefab);
 		Destroy(GameObject.Find("ActionChoicesPrefab(Clone)"));
 
 		GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Action");

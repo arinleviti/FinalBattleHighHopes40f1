@@ -73,13 +73,13 @@ public class ScoresManager : MonoBehaviour
 		playerHPText.text = $"Player HP: {playerHP}";
 		monster1HPText.text = $"Zombie 1 HP: {firstMonsterHP}";
 		monster2HPText.text = $"Zombie 2 HP: {secondMonsterHP}";
-		if (combatManager.currentTurn.CompareTag("Player") /*&& potionButton != null*/)
-		{
-			potionButton = GameObject.Find("PotionCanvasPrefab(Clone)").GetComponentInChildren<Button>();
-			potionsLeftText = potionButton.GetComponentInChildren<TextMeshProUGUI>();
-			potionsLeftInt = playerStats.PotionsAvailable;
-			potionsLeftText.text = $"{potionsLeftInt}";
-		}
+		//if (combatManager.currentTurn.CompareTag("Player") /*&& potionButton != null*/)
+		//{
+		//	potionButton = GameObject.Find("PotionCanvasPrefab").GetComponentInChildren<Button>();
+		//	potionsLeftText = potionButton.GetComponentInChildren<TextMeshProUGUI>();
+		//	potionsLeftInt = playerStats.PotionsAvailable;
+		//	potionsLeftText.text = $"{potionsLeftInt}";
+		//}
 		movesLeft.text = $"Current Turn: {currentPlayer.name} Moves left: {movesLeftInt}";
 		if (playerHP <= 0 && !isCharacterDead )
 		{
