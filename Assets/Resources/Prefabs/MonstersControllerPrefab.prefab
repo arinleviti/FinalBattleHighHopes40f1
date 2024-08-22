@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7681531993225845698}
   m_Layer: 0
   m_Name: MonstersControllerPrefab
-  m_TagString: Untagged
+  m_TagString: MonstersController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monster: {fileID: 0}
-  Marker: {fileID: 0}
+  marker: {fileID: 0}
   movespeed: 5
-  UIManagerRef: {fileID: 0}
   playerTarget: {fileID: 0}
+  reachedTarget: 0
+  rangeIndicatorScript: {fileID: 0}

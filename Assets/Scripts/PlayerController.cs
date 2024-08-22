@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
         
         rangeIndicatorGO.transform.position = new Vector3(attacker.transform.position.x, 0.5f, attacker.transform.position.z);
         rangeIndicatorScript = rangeIndicatorGO.GetComponent<RangeIndicator>();
-        rangeIndicatorScript.ResetValues();
+        //rangeIndicatorScript.ResetValues();
         
         CombatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
         animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
@@ -99,9 +99,12 @@ public class PlayerController : MonoBehaviour
         canvas.enabled = false;
         if(rangeIndicatorGO == null)
         {
-            rangeIndicatorGO = Instantiate(Resources.Load<GameObject>("Prefabs/RangeIndicatorPrefab"));
+            rangeIndicatorGO = Resources.Load<GameObject>("Prefabs/RangeIndicatorPrefab");
             ObjPoolManager.Instance.CreateObjectPool(rangeIndicatorGO, "RangeIndicator");
-        }      
+        }
+        
+        rangeIndicatorGO = ObjPoolManager.Instance.GetPooledObject("RangeIndicator");
+        
         rangeIndicatorGO.transform.position = new Vector3(attacker.transform.position.x, 0.5f, attacker.transform.position.z);
         rangeIndicatorScript = rangeIndicatorGO.GetComponent<RangeIndicator>();
         CombatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
@@ -138,7 +141,10 @@ public class PlayerController : MonoBehaviour
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
 
-                if (Physics.Raycast(ray, out hit))
+                // Define a layer mask that excludes the FogLayer (assuming it's layer 8)
+                int layerMask = ~LayerMask.GetMask("FogSystem");
+                
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
                 {
                     clickPosition = hit.point;
                     Hit = hit;

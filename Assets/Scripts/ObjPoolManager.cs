@@ -45,12 +45,21 @@ public class ObjPoolManager : MonoBehaviour
             GameObject obj = objectPools[objectName];
             if (obj != null)
             {
-                obj.SetActive(true);
-                
+                obj.SetActive(true);                
             }
             if (obj.CompareTag("PlayerController"))
             {
                 PlayerController objScript = obj.GetComponent<PlayerController>();
+                objScript.ResetValues();
+            }
+            if (obj.CompareTag("MonstersController"))
+            {
+                MonstersController objScript = obj.GetComponent<MonstersController>();
+                objScript.ResetValues();
+            }          
+            if (obj.CompareTag("RangeIndicator"))
+            {
+                RangeIndicator objScript = obj.GetComponent<RangeIndicator>();
                 objScript.ResetValues();
             }
             return obj;
@@ -62,6 +71,7 @@ public class ObjPoolManager : MonoBehaviour
     {
         
         obj.SetActive(false);
+        
         if (!objectPools.ContainsKey(objectName))
         {
             objectPools[objectName] = obj;
@@ -81,4 +91,13 @@ public class ObjPoolManager : MonoBehaviour
             Debug.LogWarning("ObjectPool with name " + objectName + " already exists.");
         }
     }
+    public void ClearAllPools()
+    {
+        foreach (var pool in objectPools.Values)
+        {
+            Destroy(pool);
+        }
+        objectPools.Clear();
+    }
+
 }

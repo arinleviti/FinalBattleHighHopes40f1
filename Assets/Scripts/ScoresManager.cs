@@ -46,7 +46,7 @@ public class ScoresManager : MonoBehaviour
 		GameObject player = GameObject.Find("Player");
 		playerGO = player;
 		playerStats = player.GetComponent<PlayerStats>();
-		potionsLeftInt = playerStats.PotionsAvailable;
+		//potionsLeftInt = playerStats.PotionsAvailable;
 		GameObject firstMonster = GameObject.Find("Zombie 1");
 		firstMonsterStats = firstMonster.GetComponent<MonsterStats>();
 		GameObject secondMonster = GameObject.Find("Zombie 2");
@@ -112,11 +112,32 @@ public class ScoresManager : MonoBehaviour
 			StartCoroutine(WaitAndPauseGame(2));
 		}
 	}
-	private void RestartGame()
-	{
-		Time.timeScale = 1; // Reset time scale before restarting the game
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-	}
+
+    private void RestartGame()
+    {
+        // Ensure all object pools are cleared
+        if (ObjPoolManager.Instance != null)
+        {
+            ObjPoolManager.Instance.ClearAllPools();
+
+            // Optionally destroy the singleton instance to ensure it's recreated
+            Destroy(ObjPoolManager.Instance.gameObject);
+        }
+
+        // Reset time scale to ensure gameplay resumes correctly
+        Time.timeScale = 1;
+
+        // Optional: Force garbage collection to clean up unused objects
+        System.GC.Collect();
+
+        // Reload the current scene to reset the game
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+ //   private void RestartGame()
+	//{
+	//	Time.timeScale = 1; // Reset time scale before restarting the game
+	//	SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+	//}
 	private IEnumerator WaitAndPauseGame(float waitTime)
 	{
 		yield return new WaitForSeconds(waitTime);

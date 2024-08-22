@@ -68,6 +68,7 @@ public class PotionButton : MonoBehaviour
             if (!GameObject.Find("PotionCanvasPrefab(Clone)"))
             {
                 canvasPotionGO = Instantiate(Resources.Load<GameObject>("Prefabs/PotionCanvasPrefab"));
+                
             }
             else
             {
@@ -81,6 +82,7 @@ public class PotionButton : MonoBehaviour
             {
                 canvasPotion.enabled = true;
                 potionButton = canvasPotionGO.GetComponentInChildren<Button>();
+                potionButton.onClick.RemoveAllListeners();
                 potionButton.onClick.AddListener(() => OnPotionButtonClick());
             }
         }

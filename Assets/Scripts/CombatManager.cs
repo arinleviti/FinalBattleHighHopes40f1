@@ -49,7 +49,11 @@ public class CombatManager : MonoBehaviour
 		}
 		potionButton = Instantiate(Resources.Load<GameObject>("Prefabs/PotionButton"));
         potionCanvasPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PotionCanvasPrefab"));
-
+		if (monsterControllerPrefab == null)
+		{
+			monsterControllerPrefab = Resources.Load<GameObject>("Prefabs/MonstersControllerPrefab");
+            ObjPoolManager.Instance.CreateObjectPool(monsterControllerPrefab, "MonstersControllerPool");
+        }
         ExecuteTurnManager();
 		
     }
@@ -117,13 +121,16 @@ public class CombatManager : MonoBehaviour
 					{
 						
 						CleanUpTurn();
-						monsterControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/MonstersControllerPrefab"));
-
-						yield return new WaitUntil(() => monsterTurnCompleted);
+                        //monsterControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/MonstersControllerPrefab"));
+                        monsterControllerPrefab = ObjPoolManager.Instance.GetPooledObject("MonstersControllerPool");
+                        yield return new WaitUntil(() => monsterTurnCompleted);
 						yield return StartCoroutine(IsCharacterDead());
 						
 						monsterTurnCompleted = false;						
 						movesLeft--;
+
+                        ObjPoolManager.Instance.ReturnToPool("MonstersControllerPool", monsterControllerPrefab);
+                        
 						if (movesLeft < 1)
 						{
 							yield return StartCoroutine(WaitAndContinue2());
@@ -159,8 +166,8 @@ public class CombatManager : MonoBehaviour
 		Destroy(GameObject.Find("UIManagerPrefab(Clone)"));
 		Destroy(GameObject.Find("ButtonPrefab(Clone)"));
 		Destroy(GameObject.Find("ButtonPrefab(Clone)(Clone)"));
-		Destroy(GameObject.Find("RangeIndicatorPrefab(Clone)"));
-		Destroy(GameObject.Find("MonstersControllerPrefab(Clone)"));
+		//Destroy(GameObject.Find("RangeIndicatorPrefab(Clone)"));
+		//Destroy(GameObject.Find("MonstersControllerPrefab(Clone)"));
 		//Destroy(GameObject.Find("PlayerControllerPrefab(Clone)"));
 		//ObjPoolManager.Instance.ReturnToPool("PlayerControllerPool", PlayerControllerPrefab);
 		Destroy(GameObject.Find("ActionChoicesPrefab(Clone)"));

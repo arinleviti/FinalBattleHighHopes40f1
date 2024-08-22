@@ -91,11 +91,11 @@ public class UIManager : MonoBehaviour
             }
             if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Monster"))
             {
-                Destroy(monstersControllerGO);
-                if (GameObject.Find("MonstersControllerPrefab(Clone)"))
-                {
-                    Debug.Log("ERROR: Monster Controller Prefab still alive");
-                }
+                //Destroy(monstersControllerGO);
+                //if (GameObject.Find("MonstersControllerPrefab(Clone)"))
+                //{
+                //    Debug.Log("ERROR: Monster Controller Prefab still alive");
+                //}
                 combatManagerRef.monsterTurnCompleted = true;
             }
         }

@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class RangeIndicator : MonoBehaviour
 {
-    public bool isTargetInRange = false;
-    public List<GameObject> targetsInRange;
+    /*ublic bool isTargetInRange = false;*/
+    public List<GameObject> targetsInRange = new List<GameObject>();
     public Material originalMaterial;
     public Material newMaterial;
     public CombatManager combatManagerScript;
@@ -23,6 +23,9 @@ public class RangeIndicator : MonoBehaviour
     }
     public void ResetValues()
     {
+        //isTargetInRange = false;
+        originalMaterial = GetComponent<Material>();
+        combatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
         targetsInRange = new List<GameObject>();
         targetsInRange = GetInRangeTargets();
     }
@@ -47,7 +50,7 @@ public class RangeIndicator : MonoBehaviour
 
     public void CheckRange()
     {
-        targetsInRange.Clear();
+        //targetsInRange.Clear();
         detectionRadius = gameObject.transform.localScale.x / 2;
         Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRadius, detectionLayer);
         foreach (Collider collider in colliders)

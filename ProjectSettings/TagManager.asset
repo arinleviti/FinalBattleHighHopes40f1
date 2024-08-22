@@ -10,6 +10,7 @@ TagManager:
   - Action
   - RangeIndicator
   - PlayerController
+  - MonstersController
   layers:
   - Default
   - TransparentFX

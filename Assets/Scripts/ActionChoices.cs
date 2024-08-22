@@ -20,8 +20,10 @@ public class ActionChoices : MonoBehaviour
 	private ScoresManager scoresManagerScript;
 	private bool usedPotion = false;
 	private GameObject animatorObj;
+	private GameObject potionPrefab;
 
-	public void GetComponents()
+
+    public void GetComponents()
 	{		
 		animScript = animatorObj.GetComponent<AnimScript>();
 		
@@ -153,8 +155,13 @@ public class ActionChoices : MonoBehaviour
 				}
 				break;
 			case AttackType.Potion:
-				GameObject potionPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PotionPrefab"));
-				Potion potionScriptRef = potionPrefab.GetComponent<Potion>();
+				if (potionPrefab == null)
+				{
+					potionPrefab = Resources.Load<GameObject>("Prefabs/PotionPrefab");
+					ObjPoolManager.Instance.CreateObjectPool(potionPrefab, "PotionPool");
+				}
+				ObjPoolManager.Instance.GetPooledObject("PotionPool");
+                Potion potionScriptRef = potionPrefab.GetComponent<Potion>();
 				player = GameObject.Find("Player");
 				playerIO = player.GetComponent<PlayerStats>();
 				if (potionScriptRef != null && playerIO != null)
@@ -173,6 +180,7 @@ public class ActionChoices : MonoBehaviour
 					Debug.LogError("Potion component not found on instantiated prefab!");
 				}
 				usedPotion = true;
+				ObjPoolManager.Instance.ReturnToPool("PotionPool", potionPrefab);
 				break;
 			default:
 				Debug.Log("Invalid attack type");
