@@ -157,10 +157,24 @@ public class ActionChoices : MonoBehaviour
 			case AttackType.Potion:
 				if (potionPrefab == null)
 				{
-					potionPrefab = Resources.Load<GameObject>("Prefabs/PotionPrefab");
-					ObjPoolManager.Instance.CreateObjectPool(potionPrefab, "PotionPool");
-				}
-				ObjPoolManager.Instance.GetPooledObject("PotionPool");
+					if(!ObjPoolManager.Instance.IsObjectInPool("PotionPool"))
+					{
+						potionPrefab = Resources.Load<GameObject>("Prefabs/PotionPrefab");
+						ObjPoolManager.Instance.CreateObjectPool(potionPrefab, "PotionPool");
+						potionPrefab = ObjPoolManager.Instance.GetPooledObject("PotionPool");
+                    }
+					else if(ObjPoolManager.Instance.IsObjectInPool("PotionPool"))
+					{
+                        potionPrefab = ObjPoolManager.Instance.GetPooledObject("PotionPool");
+                    }
+                }
+				else if (potionPrefab != null)
+				{
+                    if (ObjPoolManager.Instance.IsObjectInPoolAndInactive("PotionPool"))
+					{
+						potionPrefab = ObjPoolManager.Instance.GetPooledObject("PotionPool");
+                    }
+                }
                 Potion potionScriptRef = potionPrefab.GetComponent<Potion>();
 				player = GameObject.Find("Player");
 				playerIO = player.GetComponent<PlayerStats>();

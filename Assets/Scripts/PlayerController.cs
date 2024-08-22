@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     public RaycastHit Hit;
     private bool isUIManagerActivated = false;
     public GameObject attacker;
-    private GameObject UIManagerPrefab;
+    public GameObject UIManagerPrefab;
     private GameObject rangeIndicatorGO;
     public RangeIndicator rangeIndicatorScript;
     public CombatManager CombatManagerScript;
@@ -182,7 +182,7 @@ public class PlayerController : MonoBehaviour
                 reachedTarget = true;
                 ObjPoolManager.Instance.ReturnToPool("RangeIndicator", rangeIndicatorGO);
                 ActivateUIManager();
-
+                //DeactivateUIManager();
             }
 
             if (clickPosition != Vector3.zero && Hit.collider.CompareTag("RangeIndicator"))
@@ -214,11 +214,37 @@ public class PlayerController : MonoBehaviour
 
     void ActivateUIManager()
     {
-        if (!isUIManagerActivated)
+        if (UIManagerPrefab == null)
         {
-            UIManagerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/UIManagerPrefab"));
-            isUIManagerActivated = true;
+            if (!ObjPoolManager.Instance.IsObjectInPool("UIManagerPool"))
+            {
+                UIManagerPrefab = Resources.Load<GameObject>("Prefabs/UIManagerPrefab");
+                ObjPoolManager.Instance.CreateObjectPool(UIManagerPrefab, "UIManagerPool");
+                UIManagerPrefab = ObjPoolManager.Instance.GetPooledObject("UIManagerPool");
+            }
+            else if (ObjPoolManager.Instance.IsObjectInPool("UIManagerPool"))
+            {
+                UIManagerPrefab = ObjPoolManager.Instance.GetPooledObject("UIManagerPool");
+            }
+
         }
+        else if (UIManagerPrefab != null)
+        {
+            if (ObjPoolManager.Instance.IsObjectInPoolAndInactive("UIManagerPool"))
+            {
+                UIManagerPrefab = ObjPoolManager.Instance.GetPooledObject("UIManagerPool");
+            }
+            
+        }
+
+
+    }
+    void DeactivateUIManager()
+    {
+        if (UIManagerPrefab != null)
+        {
+            ObjPoolManager.Instance.ReturnToPool("UIManagerPool", UIManagerPrefab);
+        }        
     }
 
     private bool IsPointerOverUIElement()
