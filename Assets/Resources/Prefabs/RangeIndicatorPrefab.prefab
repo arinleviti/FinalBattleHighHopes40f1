@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 66ca1d9a4f2162646b85fd076151e3dd, type: 3}
+  - {fileID: -876546973899608171, guid: c6591e3c88b1f9c49b6b9e922983bf6e, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -97,10 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bf813bd25d1ab948b51b2193a417d0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTargetInRange: 0
   targetsInRange: []
-  originalMaterial: {fileID: -876546973899608171, guid: 66ca1d9a4f2162646b85fd076151e3dd, type: 3}
-  newMaterial: {fileID: -876546973899608171, guid: 1c2644c58558c594291da7f9ca2a9706, type: 3}
+  originalMaterial: {fileID: -876546973899608171, guid: c6591e3c88b1f9c49b6b9e922983bf6e, type: 3}
+  newMaterial: {fileID: -876546973899608171, guid: cc5b63a134edcf944bd835b7534895e5, type: 3}
   combatManagerScript: {fileID: 0}
   detectionRadius: 1
   detectionLayer:

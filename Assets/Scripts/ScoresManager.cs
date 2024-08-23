@@ -80,7 +80,7 @@ public class ScoresManager : MonoBehaviour
 		//	potionsLeftInt = playerStats.PotionsAvailable;
 		//	potionsLeftText.text = $"{potionsLeftInt}";
 		//}
-		movesLeft.text = $"Current Turn: {currentPlayer.name} Moves left: {movesLeftInt}";
+		movesLeft.text = $"Current Turn: {currentPlayer.name.Trim()}\nMoves left: {movesLeftInt}";
 		if (playerHP <= 0 && !isCharacterDead )
 		{
 			isCharacterDead = true;			
