@@ -323,7 +323,6 @@ MonoBehaviour:
   monsterTurnCompleted: 0
   isEnemyTurn: 0
   playerControllerRef: {fileID: 0}
-  monsterControllerScript: {fileID: 0}
   TurnList: []
   PlayerControllerPrefab: {fileID: 0}
   UIManagerPrefabGO: {fileID: 0}
@@ -1910,7 +1909,6 @@ MonoBehaviour:
   canvas: {fileID: 734011527}
   movespeed: 5
   attacker: {fileID: 0}
-  UIManagerPrefab: {fileID: 0}
   rangeIndicatorScript: {fileID: 0}
   CombatManagerScript: {fileID: 0}
   isWalking: 0
@@ -2165,7 +2163,7 @@ GameObject:
   - component: {fileID: 735748768}
   - component: {fileID: 735748767}
   - component: {fileID: 735748766}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Fog_PS
   m_TagString: Untagged
   m_Icon: {fileID: 0}

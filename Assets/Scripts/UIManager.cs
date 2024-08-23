@@ -36,40 +36,10 @@ public class UIManager : MonoBehaviour
     private ScoresManager scoresManagerScript;
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
         flagForCoroutine = true;
-
-        if (GameObject.Find("AnimatorObj"))
-        {
-            animatorObj = GameObject.Find("AnimatorObj");
-        }
-        if (GameObject.Find("Zombie 2"))
-        {
-            zombie2 = GameObject.Find("Zombie 2");
-        }
-        if (GameObject.Find("Player"))
-        {
-            player = GameObject.Find("Player");
-            animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
-        }
-        if (GameObject.Find("Zombie 1"))
-        {
-            zombie1 = GameObject.Find("Zombie 1");
-        }
-
-        if (GameObject.Find("Canvas2"))
-        {
-            scoresManagerScript = GameObject.Find("Canvas2").GetComponent<ScoresManager>();
-        }
-    }
-    public void ResetValues()
-    {
-        flagForCoroutine = true;
-        isCharacterTurnOver = false;        
-        flagForAttackChoice = false;
-        combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
 
         if (GameObject.Find("AnimatorObj"))
         {
@@ -215,7 +185,7 @@ public class UIManager : MonoBehaviour
     private void InstantiateActionChoices()
     {
         if (!GameObject.Find("ActionChoicesPrefab(Clone)"))
-        {          
+        {
             actionChoicesGO = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab"));
             actionChoicesRef = actionChoicesGO.GetComponent<ActionChoices>();
             actionChoicesRef.Initialize(

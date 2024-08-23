@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
-using System.Linq;
 
 public class ObjPoolManager : MonoBehaviour
 {
@@ -63,11 +62,6 @@ public class ObjPoolManager : MonoBehaviour
                 RangeIndicator objScript = obj.GetComponent<RangeIndicator>();
                 objScript.ResetValues();
             }
-            if (obj.CompareTag("UIManager"))
-            {
-                UIManager objScript = obj.GetComponent<UIManager>();
-                objScript.ResetValues();
-            }
             return obj;
         }
         Debug.LogWarning("No available object in the pool with name: " + objectName);
@@ -77,11 +71,7 @@ public class ObjPoolManager : MonoBehaviour
     {
         
         obj.SetActive(false);
-        //if (obj.CompareTag("UIManager"))
-        //{
-        //    UIManager objScript = obj.GetComponent<UIManager>();
-        //    objScript.ResetValues();
-        //}
+        
         if (!objectPools.ContainsKey(objectName))
         {
             objectPools[objectName] = obj;
@@ -109,39 +99,5 @@ public class ObjPoolManager : MonoBehaviour
         }
         objectPools.Clear();
     }
-    public bool IsObjectInPoolAndActive(string objectName)
-    {
-        // Check if the dictionary contains the key
-        if (objectPools.ContainsKey(objectName))
-        {
-            // Retrieve the GameObject associated with the key
-            GameObject obj = objectPools[objectName];
-            // Return true if the object is active in the hierarchy
-            return obj.activeInHierarchy;
-        }
 
-        // If the key is not present in the dictionary, return false
-        return false;
-    }
-    public bool IsObjectInPoolAndInactive(string objectName)
-    {
-        // Check if the dictionary contains the key
-        if (objectPools.ContainsKey(objectName))
-        {
-            // Retrieve the GameObject associated with the key
-            GameObject obj = objectPools[objectName];
-            // Return true if the object is active in the hierarchy
-            return !obj.activeInHierarchy;
-        }
-
-        // If the key is not present in the dictionary, return false
-        return false;
-    }
-    public bool IsObjectInPool(string objectName)
-    {
-        if (objectPools.ContainsKey(objectName))
-            return true;
-        else return false;
-
-    }
 }

@@ -10,9 +10,7 @@ public class CombatManager : MonoBehaviour
 	public bool monsterTurnCompleted = false;
 	public bool isEnemyTurn = false;
 	public PlayerController playerControllerRef;
-	public MonstersController monsterControllerScript;
-
-    public List<GameObject> TurnList = new List<GameObject>();
+	public List<GameObject> TurnList = new List<GameObject>();
 	public GameObject PlayerControllerPrefab;
 	private GameObject monsterControllerPrefab;
 	public GameObject UIManagerPrefabGO;
@@ -114,11 +112,9 @@ public class CombatManager : MonoBehaviour
 						{
 							yield return StartCoroutine(WaitAndContinue2());
 						}
-						ReturnToPoolUIManager();
                         ObjPoolManager.Instance.ReturnToPool("PlayerControllerPool", PlayerControllerPrefab);
 						OnPlayerTurnPotionButtonOff.Invoke();
-                        CleanUpTurn();
-						
+                        CleanUpTurn() ;
                     }
 
 					if (gameObject != null && gameObject.CompareTag("Monster"))
@@ -127,13 +123,12 @@ public class CombatManager : MonoBehaviour
 						CleanUpTurn();
                         //monsterControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/MonstersControllerPrefab"));
                         monsterControllerPrefab = ObjPoolManager.Instance.GetPooledObject("MonstersControllerPool");
-						monsterControllerScript = monsterControllerPrefab.GetComponent<MonstersController>();
                         yield return new WaitUntil(() => monsterTurnCompleted);
 						yield return StartCoroutine(IsCharacterDead());
 						
 						monsterTurnCompleted = false;						
 						movesLeft--;
-						ReturnToPoolUIManager();
+
                         ObjPoolManager.Instance.ReturnToPool("MonstersControllerPool", monsterControllerPrefab);
                         
 						if (movesLeft < 1)
@@ -141,7 +136,7 @@ public class CombatManager : MonoBehaviour
 							yield return StartCoroutine(WaitAndContinue2());
 						}
 						else yield return StartCoroutine(WaitAndContinue1());
-						
+                        
                     }
 				}
 				
@@ -168,7 +163,7 @@ public class CombatManager : MonoBehaviour
 	void CleanUpTurn()
 	{
 		Debug.Log("Cleaning up turn artifacts.");
-		//Destroy(GameObject.Find("UIManagerPrefab(Clone)"));
+		Destroy(GameObject.Find("UIManagerPrefab(Clone)"));
 		Destroy(GameObject.Find("ButtonPrefab(Clone)"));
 		Destroy(GameObject.Find("ButtonPrefab(Clone)(Clone)"));
 		//Destroy(GameObject.Find("RangeIndicatorPrefab(Clone)"));
@@ -183,25 +178,6 @@ public class CombatManager : MonoBehaviour
 			Destroy(obj);
 		}
 		
-	}
-	void ReturnToPoolUIManager()
-	{
-		if (ObjPoolManager.Instance.IsObjectInPoolAndActive("UIManagerPool"))
-		{
-            if(currentTurn.CompareTag("Player"))
-			{
-				UIManagerPrefabGO= playerControllerRef.UIManagerPrefab;
-			}
-			else if (currentTurn.CompareTag("Monster"))
-			{
-				UIManagerPrefabGO = monsterControllerScript.UIManagerPrefab;
-
-            }
-			
-
-            ObjPoolManager.Instance.ReturnToPool("UIManagerPool", UIManagerPrefabGO);
-
-        }
 	}
 	// Creates a list with the scripts attached to the GO. Used in IsCharacterDead().
 	private void CreateIOList()

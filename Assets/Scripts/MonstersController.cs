@@ -13,7 +13,7 @@ public class MonstersController : MonoBehaviour
     private GameObject zombie2GO;
     public GameObject marker;
     public float movespeed = 3f;
-    public GameObject UIManagerPrefab;
+    private GameObject UIManagerPrefab;
     public GameObject playerTarget;
     private CombatManager combatManagerRef;
     public bool reachedTarget = false;
@@ -341,7 +341,6 @@ public class MonstersController : MonoBehaviour
                     StopMoving();
                     ObjPoolManager.Instance.ReturnToPool("RangeIndicatorM", rangeIndicatorGO);
                     Debug.Log("It's blocking here 2");
-                    //DeactivateUIManager();
                 }
             }
             else if (monster != null && monster == zombie2GO && navMeshAgentZ2 != null)
@@ -356,7 +355,6 @@ public class MonstersController : MonoBehaviour
                     StopMoving();
                     ObjPoolManager.Instance.ReturnToPool("RangeIndicatorM", rangeIndicatorGO);
                     Debug.Log("It's blocking here 2");
-                    //DeactivateUIManager();
                 }
             }
         }
@@ -409,28 +407,12 @@ public class MonstersController : MonoBehaviour
         }
     }
     private void UpdateUIManager()
-    {      
-        if (UIManagerPrefab == null)
-        {
-            if (!ObjPoolManager.Instance.IsObjectInPool("UIManagerPool"))
-            {
-                UIManagerPrefab = Resources.Load<GameObject>("Prefabs/UIManagerPrefab");
-                ObjPoolManager.Instance.CreateObjectPool(UIManagerPrefab, "UIManagerPool");
-                UIManagerPrefab = ObjPoolManager.Instance.GetPooledObject("UIManagerPool");
-            }
-            else if (ObjPoolManager.Instance.IsObjectInPool("UIManagerPool"))
-            {
-                UIManagerPrefab = ObjPoolManager.Instance.GetPooledObject("UIManagerPool");
-            }
-            
-        }
-        else if (UIManagerPrefab != null)
-        {
-            if (ObjPoolManager.Instance.IsObjectInPoolAndInactive("UIManagerPool"))
-            {
-                UIManagerPrefab = ObjPoolManager.Instance.GetPooledObject("UIManagerPool");
-            }
+    {
 
+        if (!GameObject.Find("UIManagerPrefab(Clone)"))
+        {
+            UIManagerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/UIManagerPrefab"));
+            Debug.Log("Is UIManagerPrefab for the monster instantiated?" + UIManagerPrefab.name);
         }
     }
 
@@ -446,13 +428,5 @@ public class MonstersController : MonoBehaviour
         obstacle.carving = true;
         obstacle.shape = NavMeshObstacleShape.Capsule;
         obstacle.center = Vector3.zero;
-    }
-    
-    void DeactivateUIManager()
-    {
-        if (UIManagerPrefab != null)
-        {
-            ObjPoolManager.Instance.ReturnToPool("UIManagerPool", UIManagerPrefab);
-        }
     }
 }

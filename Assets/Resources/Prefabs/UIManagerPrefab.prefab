@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7242593001309154744}
   m_Layer: 0
   m_Name: UIManagerPrefab
-  m_TagString: UIManager
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -57,4 +57,3 @@ MonoBehaviour:
   monstersControllerGO: {fileID: 0}
   playerControllerRef: {fileID: 0}
   monstersControllerRef: {fileID: 0}
-  flagForAttackChoice: 0
