@@ -9,6 +9,10 @@ The `UIManager` class instantiates the `ActionChoices` class, where elements suc
 ## Notes
 
 - If the Zombie Slayer decides to use a potion, the `UIManager` is bypassed.
-- Currently, the only class that properly implements Dependency Injection (DI) is `ActionChoices`. Implementing DI throughout the project is still a work in progress.
+- Currently, the only class that properly implements Dependency Injection (DI) is `ActionChoices`. Implementing DI throughout the project is still a work in progress.*
 - Object pooling is likely to be implemented instead of the current initialize/destroy object approach.
 - The zombies and the Zombie Slayer are assets obtained from the Unity Asset Store.
+
+## Notes 08/22/2024
+
+- * Object pooling implemented on most "Manager" or "Service" classes. I've noticed a noticeable increase in FPS, which is good.
