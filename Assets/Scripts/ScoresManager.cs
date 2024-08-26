@@ -30,8 +30,6 @@ public class ScoresManager : MonoBehaviour
 	private GameObject canvasYouDie;
 	private Button restartButton;
 	private bool flag1 = false;
-	private Button potionButton;
-	private TextMeshProUGUI potionsLeftText;
 	public int potionsLeftInt;
 	private Material textMaterial;
 	private Color originalOutlineColor;
@@ -46,7 +44,6 @@ public class ScoresManager : MonoBehaviour
 		GameObject player = GameObject.Find("Player");
 		playerGO = player;
 		playerStats = player.GetComponent<PlayerStats>();
-		//potionsLeftInt = playerStats.PotionsAvailable;
 		GameObject firstMonster = GameObject.Find("Zombie 1");
 		firstMonsterStats = firstMonster.GetComponent<MonsterStats>();
 		GameObject secondMonster = GameObject.Find("Zombie 2");
@@ -73,13 +70,7 @@ public class ScoresManager : MonoBehaviour
 		playerHPText.text = $"Player HP: {playerHP}";
 		monster1HPText.text = $"Zombie 1 HP: {firstMonsterHP}";
 		monster2HPText.text = $"Zombie 2 HP: {secondMonsterHP}";
-		//if (combatManager.currentTurn.CompareTag("Player") /*&& potionButton != null*/)
-		//{
-		//	potionButton = GameObject.Find("PotionCanvasPrefab").GetComponentInChildren<Button>();
-		//	potionsLeftText = potionButton.GetComponentInChildren<TextMeshProUGUI>();
-		//	potionsLeftInt = playerStats.PotionsAvailable;
-		//	potionsLeftText.text = $"{potionsLeftInt}";
-		//}
+		
 		movesLeft.text = $"Current Turn: {currentPlayer.name.Trim()}\nMoves left: {movesLeftInt}";
 		if (playerHP <= 0 && !isCharacterDead )
 		{
@@ -133,11 +124,7 @@ public class ScoresManager : MonoBehaviour
         // Reload the current scene to reset the game
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
- //   private void RestartGame()
-	//{
-	//	Time.timeScale = 1; // Reset time scale before restarting the game
-	//	SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-	//}
+ 
 	private IEnumerator WaitAndPauseGame(float waitTime)
 	{
 		yield return new WaitForSeconds(waitTime);

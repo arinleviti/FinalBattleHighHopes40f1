@@ -16,7 +16,7 @@ public class RangeIndicator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        originalMaterial = GetComponent<Material>();
+        //originalMaterial = GetComponent<Material>();
         combatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
         targetsInRange = new List<GameObject>();
         targetsInRange = GetInRangeTargets();
@@ -24,29 +24,12 @@ public class RangeIndicator : MonoBehaviour
     public void ResetValues()
     {
         //isTargetInRange = false;
-        originalMaterial = GetComponent<Material>();
+        //originalMaterial = GetComponent<Material>();
         combatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
         targetsInRange = new List<GameObject>();
         targetsInRange = GetInRangeTargets();
+        
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        if (combatManagerScript.currentTurn.CompareTag("Player") && combatManagerScript.movesLeft < 2)
-        {
-
-            GetComponent<Renderer>().material = newMaterial;
-        }
-
-        if (combatManagerScript.currentTurn.CompareTag("Monster") && combatManagerScript.movesLeft < 2)
-        {
-
-            GetComponent<Renderer>().material = newMaterial;
-        }
-    }
-
 
     public void CheckRange()
     {
@@ -66,11 +49,28 @@ public class RangeIndicator : MonoBehaviour
         {
             Debug.Log($"Range Indicator contains: {target.name} with InstanceID: {target.GetInstanceID()}");
         }
+        
+
     }
 
     public List<GameObject> GetInRangeTargets()
     {
         CheckRange();
+        if ( combatManagerScript.movesLeft < 2)
+        {
+
+            GetComponent<Renderer>().material = newMaterial;
+        }
+
+        if ( combatManagerScript.movesLeft < 2)
+        {
+
+            GetComponent<Renderer>().material = newMaterial;
+        }
+        if (combatManagerScript.movesLeft == 2)
+        {
+            GetComponent<Renderer>().material = originalMaterial;
+        }
         return targetsInRange;
     }
 }

@@ -17,8 +17,6 @@ public class CombatManager : MonoBehaviour
 	public GameObject currentTurn;
 	public int movesLeft; //Each character has 2 moves for each turn
 	private List<CharacterClass> charactersIOList;
-	private PlayerStats playerStats;
-	private MonsterStats monsterStats;
 	public AnimScript animatorScript;
 	private int playerHP;
 	private Animator animator;
@@ -97,7 +95,7 @@ public class CombatManager : MonoBehaviour
 						OnPlayerTurnPotionButtonOn.Invoke();
 
 						CleanUpTurn();
-						//PlayerControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/PlayerControllerPrefab"));						
+												
 						PlayerControllerPrefab = ObjPoolManager.Instance.GetPooledObject("PlayerControllerPool");
 						playerControllerRef = PlayerControllerPrefab.GetComponent<PlayerController>();
 
@@ -121,7 +119,7 @@ public class CombatManager : MonoBehaviour
 					{
 						
 						CleanUpTurn();
-                        //monsterControllerPrefab = Instantiate(Resources.Load<GameObject>("Prefabs/MonstersControllerPrefab"));
+                        
                         monsterControllerPrefab = ObjPoolManager.Instance.GetPooledObject("MonstersControllerPool");
                         yield return new WaitUntil(() => monsterTurnCompleted);
 						yield return StartCoroutine(IsCharacterDead());
@@ -166,10 +164,7 @@ public class CombatManager : MonoBehaviour
 		Destroy(GameObject.Find("UIManagerPrefab(Clone)"));
 		Destroy(GameObject.Find("ButtonPrefab(Clone)"));
 		Destroy(GameObject.Find("ButtonPrefab(Clone)(Clone)"));
-		//Destroy(GameObject.Find("RangeIndicatorPrefab(Clone)"));
-		//Destroy(GameObject.Find("MonstersControllerPrefab(Clone)"));
-		//Destroy(GameObject.Find("PlayerControllerPrefab(Clone)"));
-		//ObjPoolManager.Instance.ReturnToPool("PlayerControllerPool", PlayerControllerPrefab);
+		
 		Destroy(GameObject.Find("ActionChoicesPrefab(Clone)"));
 
 		GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Action");

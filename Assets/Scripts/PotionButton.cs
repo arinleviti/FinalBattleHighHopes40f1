@@ -50,16 +50,6 @@ public class PotionButton : MonoBehaviour
         attacker = playerGO;
         animatorObj = GameObject.Find("AnimatorObj");
     }
-    public void ResetValues()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void CreatePotionButton()
     {
@@ -76,7 +66,7 @@ public class PotionButton : MonoBehaviour
             }
             canvasPotion = canvasPotionGO.GetComponent<Canvas>();
             canvasPotion.enabled = false;
-            //scoresManagerScript = GameObject.Find("Canvas2").GetComponent<ScoresManager>();
+            
             UpdatePotionNumber();
             if (potionsLeftInt > 0)
             {
@@ -122,7 +112,7 @@ public class PotionButton : MonoBehaviour
 
     public void UpdatePotionNumber()
     {
-        if (combatManagerScript.currentTurn.CompareTag("Player") /*&& potionButton != null*/)
+        if (combatManagerScript.currentTurn.CompareTag("Player"))
         {
             potionButton = canvasPotionGO.GetComponentInChildren<Button>();
             potionsLeftText = potionButton.GetComponentInChildren<TextMeshProUGUI>();

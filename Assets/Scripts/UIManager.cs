@@ -82,20 +82,12 @@ public class UIManager : MonoBehaviour
 
             if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Player"))
             {
-                //Destroy(playerControllerGO);
-                //if (GameObject.Find("PlayerControllerPrefab"))
-                //{
-                //    Debug.Log("ERROR: Player Controller Prefab still alive");
-                //}
+                
                 combatManagerRef.playerTurnCompleted = true;
             }
             if (combatManagerRef.currentTurn != null && combatManagerRef.currentTurn.CompareTag("Monster"))
             {
-                //Destroy(monstersControllerGO);
-                //if (GameObject.Find("MonstersControllerPrefab(Clone)"))
-                //{
-                //    Debug.Log("ERROR: Monster Controller Prefab still alive");
-                //}
+                
                 combatManagerRef.monsterTurnCompleted = true;
             }
         }
@@ -103,7 +95,7 @@ public class UIManager : MonoBehaviour
 
     private void ExecuteMethodsInSequence()
     {
-        /*yield return StartCoroutine(*/RetrievePlayerGO();
+        RetrievePlayerGO();
         RetrieveMonsterGO();
         RetrieveTargetIO();
         RetrieveAttackerIO();
@@ -114,7 +106,7 @@ public class UIManager : MonoBehaviour
 
     void TriggerSequence()
     {
-        /*StartCoroutine(*/ExecuteMethodsInSequence();
+        ExecuteMethodsInSequence();
         flagForCoroutine = false;
     }
     private void RetrievePlayerGO()
@@ -128,7 +120,7 @@ public class UIManager : MonoBehaviour
             attackerGO = playerControllerRef.attacker.gameObject;
             targetCharacterGO = playerControllerRef.Hit.collider.gameObject;
             canvas.enabled = true;
-            //yield return null;
+            
         }
     }
 
@@ -140,7 +132,7 @@ public class UIManager : MonoBehaviour
             monstersControllerRef = monstersControllerGO.GetComponent<MonstersController>();
             attackerGO = monstersControllerRef.monster.gameObject;
             targetCharacterGO = monstersControllerRef.playerTarget.gameObject;
-            //yield return null;
+            
         }
     }
 
@@ -156,7 +148,7 @@ public class UIManager : MonoBehaviour
             ICharacter target = targetCharacterGO.GetComponent<PlayerStats>();
             targetCharacterIO = target;
         }
-        //yield return null;
+        
     }
 
     private void RetrieveAttackerIO()
@@ -180,7 +172,7 @@ public class UIManager : MonoBehaviour
             attackerIO = attacker;
             Debug.Log(attackerIO);
         }
-        //yield return null;
+        
     }
     private void InstantiateActionChoices()
     {
@@ -198,7 +190,7 @@ public class UIManager : MonoBehaviour
                 player: player,
                 animatorObj: animatorObj
             );
-            //yield return null;
+            
         }
     }
 
@@ -224,7 +216,7 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
-        //yield return null;
+       
     }
 
     private void MonsterAttack()
@@ -250,7 +242,7 @@ public class UIManager : MonoBehaviour
                 InstantiateAndProceed();
             }
         }
-        //yield return null;
+        
     }
     void InstantiateAndProceed()
     {
@@ -262,12 +254,4 @@ public class UIManager : MonoBehaviour
     {
         flagForAttackChoice = value;
     }
-    //private IEnumerator DestroyUIManager()
-    //{
-    //    if (gameObject != null)
-    //    {
-    //        Destroy(gameObject);
-    //    }
-    //    yield return null;
-    //}
 }

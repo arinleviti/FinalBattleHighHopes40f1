@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-//using UnityEditor.Experimental.GraphView;
+
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -29,7 +29,7 @@ public class MonstersController : MonoBehaviour
     private float radius;
     private GameObject currentTurn;
     private GameObject midpoint;
-    private Vector3 directionToPlayer;
+    //private Vector3 directionToPlayer;
     private List<GameObject> rangeIndicatorList = new List<GameObject>();
     private bool rangeIndicatorListTransferred = false;
     private NavMeshAgent navMeshAgentZ1;
@@ -39,8 +39,6 @@ public class MonstersController : MonoBehaviour
     private bool navMeshFlag1 = false;
     private bool navMeshFlag2 = false;
     private bool flag0 = false;
-    private bool flag1 = false;
-    private bool flag2 = false;
     private float distanceToPlayer;
     private Rigidbody zombie1RB;
     private Rigidbody zombie2RB;
@@ -49,12 +47,12 @@ public class MonstersController : MonoBehaviour
     void Start()
     {
         playerTarget = GameObject.Find("Player");
-        //marker = GameObject.Find("Marker");
+        
         combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
         monster = combatManagerRef.currentTurn;
         marker = GameObject.Find("MarkerPrefab");
         marker.transform.position = new Vector3(monster.transform.position.x, monster.transform.position.y + 2, monster.transform.position.z);
-        //rangeIndicatorGO = Instantiate(Resources.Load<GameObject>("Prefabs/RangeIndicatorPrefab"));
+        
         if (rangeIndicatorGO == null)
         {
             rangeIndicatorGO = Instantiate(Resources.Load<GameObject>("Prefabs/RangeIndicatorPrefab"));
@@ -132,12 +130,12 @@ public class MonstersController : MonoBehaviour
         rangeIndicatorListTransferred = false;
 
         playerTarget = GameObject.Find("Player");
-        //marker = GameObject.Find("Marker");
+        
         combatManagerRef = GameObject.Find("CombatManager").GetComponent<CombatManager>();
         monster = combatManagerRef.currentTurn;
         marker = GameObject.Find("MarkerPrefab");
         marker.transform.position = new Vector3(monster.transform.position.x, monster.transform.position.y + 2, monster.transform.position.z);
-        //rangeIndicatorGO = Instantiate(Resources.Load<GameObject>("Prefabs/RangeIndicatorPrefab"));
+        
         if (rangeIndicatorGO == null)
         {
             rangeIndicatorGO = Resources.Load<GameObject>("Prefabs/RangeIndicatorPrefab");
@@ -149,7 +147,7 @@ public class MonstersController : MonoBehaviour
         rangeIndicatorGO.transform.position = new Vector3(monster.transform.position.x, 0.5f, monster.transform.position.z);
         rangeIndicatorScript = rangeIndicatorGO.GetComponent<RangeIndicator>();
         rangeIndicatorList = rangeIndicatorScript.targetsInRange;
-        //rangeIndicatorScript.ResetValues();
+        
         radius = rangeIndicatorGO.transform.localScale.x / 2;
         pointA = monster.transform.position;
         zombie1GO = GameObject.Find("Zombie 1");
@@ -224,12 +222,7 @@ public class MonstersController : MonoBehaviour
     {
         marker.transform.position = new Vector3(monster.transform.position.x, monster.transform.position.y + 2, monster.transform.position.z);
         midpoint = GameObject.Find("Midpoint");
-
-        //if (!rangeIndicatorListTransferred)
-        //{
-        //    rangeIndicatorList = rangeIndicatorScript.targetsInRange;
-        //    rangeIndicatorListTransferred = true;
-        //}
+        
         ApproachPlayer();
 
     }

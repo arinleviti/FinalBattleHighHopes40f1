@@ -35,32 +35,27 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     public float turnSpeed = 50;
     public Canvas canvasPotion;
-    private GameObject canvasPotionGO;
-    private GameObject actionChoicesGO;
-    private ActionChoices actionChoicesScript;
-    private ScoresManager scoresManagerScript;
-    private Button potionButton;
     private GameObject zombie1;
     private GameObject zombie2;
-    //private GameObject player;
+    
 
     public void ResetValues()
     {
         zombie1 = GameObject.Find("Zombie 1");
         zombie2 = GameObject.Find("Zombie 2");
-        //player = GameObject.Find("Player");
+        
         canvas = GameObject.Find("Canvas1").GetComponent<Canvas>();
         Debug.Log(canvas);
         marker = GameObject.Find("MarkerPrefab");
         attacker = GameObject.Find("Player");
         marker.transform.position = new Vector3(attacker.transform.position.x, attacker.transform.position.y + 2, attacker.transform.position.z);
         canvas.enabled = false;
-        //rangeIndicatorGO = Instantiate(Resources.Load<GameObject>("Prefabs/RangeIndicatorPrefab"));
+        
         rangeIndicatorGO = ObjPoolManager.Instance.GetPooledObject("RangeIndicator");
         
         rangeIndicatorGO.transform.position = new Vector3(attacker.transform.position.x, 0.5f, attacker.transform.position.z);
         rangeIndicatorScript = rangeIndicatorGO.GetComponent<RangeIndicator>();
-        //rangeIndicatorScript.ResetValues();
+        
         
         CombatManagerScript = GameObject.Find("CombatManager").GetComponent<CombatManager>();
         animator = GameObject.Find("OrkAssasin").GetComponent<Animator>();
@@ -90,7 +85,7 @@ public class PlayerController : MonoBehaviour
     {
         zombie1 = GameObject.Find("Zombie 1");
         zombie2 = GameObject.Find("Zombie 2");
-        //player = GameObject.Find("Player");
+        
         canvas = GameObject.Find("Canvas1").GetComponent<Canvas>();
         Debug.Log(canvas);
         marker = GameObject.Find("MarkerPrefab");
@@ -119,7 +114,7 @@ public class PlayerController : MonoBehaviour
             rb = attacker.GetComponent<Rigidbody>();
             rb.isKinematic = true;
         }
-        //CreatePotionButton();
+        
     }
 
     // Update is called once per frame
@@ -255,53 +250,4 @@ public class PlayerController : MonoBehaviour
         agent.stoppingDistance = 0.1f;
 
     }
-
-    //private void CreatePotionButton()
-    //{
-    //	if (CombatManagerScript.currentTurn != null && CombatManagerScript.currentTurn.CompareTag("Player") )
-    //	{
-    //		if(!GameObject.Find("PotionCanvasPrefab(Clone)"))
-    //		{
-    //			canvasPotionGO = Instantiate(Resources.Load<GameObject>("Prefabs/PotionCanvasPrefab"));			
-    //		}
-    //		else
-    //		{
-    //			canvasPotionGO = GameObject.Find("PotionCanvasPrefab(Clone)");
-    //		}			
-    //		canvasPotion = canvasPotionGO.GetComponent<Canvas>();
-    //		canvasPotion.enabled = false;
-    //		scoresManagerScript = GameObject.Find("Canvas2").GetComponent<ScoresManager>();
-    //		if (scoresManagerScript.potionsLeftInt >0)
-    //		{
-    //			canvasPotion.enabled = true;
-    //			potionButton = canvasPotionGO.GetComponentInChildren<Button>();			
-    //			potionButton.onClick.AddListener(() => OnPotionButtonClick());
-    //		}			
-    //	}		
-    //}
-    //private void OnPotionButtonClick()
-    //{	
-    //	if (!GameObject.Find("ActionChoicesPrefab(Clone)"))
-    //	{
-    //		actionChoicesGO = Instantiate(Resources.Load<GameObject>("Prefabs/ActionChoicesPrefab"));
-    //		actionChoicesScript = actionChoicesGO.GetComponent<ActionChoices>();
-    //		actionChoicesScript.Initialize(
-    //			combatManager: CombatManagerScript,
-    //			scoresManager: scoresManagerScript,
-    //			animator: animator,
-    //			zombie1: zombie1,
-    //			zombie2: zombie2,
-    //			player: attacker,
-    //			animatorObj: animatorObj
-    //		);
-    //	}	
-    //	actionChoicesScript = actionChoicesGO.GetComponent<ActionChoices>();		
-    //	actionChoicesScript.HandleAttackChoice(AttackType.Potion);
-    //	if (scoresManagerScript.potionsLeftInt <= 1)
-    //	{
-    //		canvasPotion.enabled = false;
-    //	}
-    //}
-
-
 }
