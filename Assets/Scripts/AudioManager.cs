@@ -10,7 +10,7 @@ public class AudioManager : Singleton<AudioManager>
     private Dictionary<string, SoundEffect> _effectDictionary;
     private AudioListener _listener;
 
-    private void Awake ()
+    protected override void Awake ()
     {
         _effectDictionary = new Dictionary<string, SoundEffect>();
         foreach (var effect in effects)
